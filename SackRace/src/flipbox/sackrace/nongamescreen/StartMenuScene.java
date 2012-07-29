@@ -6,6 +6,7 @@ package flipbox.sackrace.nongamescreen;
 
 import flipbox.sackrace.game.GameMidlet;
 import flipbox.sackrace.game.IGameScene;
+import flipbox.sackrace.gamescreen.GameKuburan;
 import flipbox.sackrace.ui.ButtonImageItem;
 import flipbox.sackrace.ui.ImageItem;
 import java.io.IOException;
@@ -160,6 +161,7 @@ public class StartMenuScene implements IGameScene {
     private void buttonStart_Click() {
         try {
             GameMidlet.gameCanvas.setGameScene(new MapScene());
+            //GameMidlet.gameCanvas.setGameScene(new GameKuburan());
         } catch (Exception e) {
             e.printStackTrace();
         }

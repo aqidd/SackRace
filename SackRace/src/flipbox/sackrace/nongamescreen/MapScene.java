@@ -6,6 +6,7 @@ package flipbox.sackrace.nongamescreen;
 
 import flipbox.sackrace.game.GameMidlet;
 import flipbox.sackrace.game.IGameScene;
+import flipbox.sackrace.gamescreen.GameKuburan;
 import flipbox.sackrace.ui.ButtonImageItem;
 import flipbox.sackrace.ui.ImageItem;
 import java.io.IOException;
@@ -105,11 +106,17 @@ public class MapScene implements IGameScene {
                 && x >= buttonHome.getX() && x <= (buttonHome.getX() + buttonHome.getWidth())
                 && y >= buttonHome.getY() && y <= (buttonHome.getY() + buttonHome.getHeight())) {
             resetButton();
+            
         }
         if (buttonGrave.isOnPressed()
                 && x >= buttonGrave.getX() && x <= (buttonGrave.getX() + buttonGrave.getWidth())
                 && y >= buttonGrave.getY() && y <= (buttonGrave.getY() + buttonGrave.getHeight())) {
             resetButton();
+            try {
+                GameMidlet.gameCanvas.setGameScene(new GameKuburan());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
         if (buttonStage.isOnPressed()
                 && x >= buttonStage.getX() && x <= (buttonStage.getX() + buttonStage.getWidth())

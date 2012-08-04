@@ -93,7 +93,7 @@ public class GameRumah implements IGameScene {
 
             Font font = Font.getFont(Font.FACE_MONOSPACE, Font.STYLE_BOLD, Font.SIZE_LARGE);
             g.setFont(font);
-            g.setColor(42342);
+            g.setColor(42339);
             
             g.drawString("nilai", buttonCoin.getX(), buttonCoin.getY(), Graphics.RIGHT | Graphics.TOP);
             if (buttonSlide.isOnPressed()) {

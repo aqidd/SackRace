@@ -6,6 +6,7 @@ package flipbox.sackrace.gamescreen;
 
 import flipbox.sackrace.game.GameMidlet;
 import flipbox.sackrace.game.IGameScene;
+import flipbox.sackrace.level.LevelGenerator;
 import flipbox.sackrace.object.Player;
 import flipbox.sackrace.staticvalue.StaticData;
 import flipbox.sackrace.ui.AnimatedSprite;
@@ -36,6 +37,12 @@ public class GameKuburan implements IGameScene {
         midlet = midelet;
     }
 
+    private void initObstacles()
+    {
+        LevelGenerator.initConstraint();
+        LevelGenerator.generateObstacles();
+    }
+    
     private void initPlayer() {
         try {
             player = new Player();
@@ -59,6 +66,7 @@ public class GameKuburan implements IGameScene {
     public void initResource() throws IOException {
         initPlayer();
         initBackground();
+        initObstacles();
         hasInit = true;
         start = true;
     }
@@ -75,6 +83,7 @@ public class GameKuburan implements IGameScene {
         }
         if (start) {
             //clear(g);
+            LevelGenerator.run(g);
             System.out.println(backgroundImage.getWidth());
             player.getSprite().update(timeLapsed);
             timeLapsed++;
@@ -84,15 +93,15 @@ public class GameKuburan implements IGameScene {
     }
 
     public void pointerPressed(int x, int y) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        System.out.println(x+""+y+"");
     }
 
     public void pointerReleased(int x, int y) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        System.out.println(x+""+y+"");
     }
 
     public void pointerDragged(int x, int y) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        System.out.println(x+""+y+"");
     }
 
     public void clear(Graphics g) {

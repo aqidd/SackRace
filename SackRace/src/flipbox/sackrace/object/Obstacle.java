@@ -5,6 +5,7 @@
 package flipbox.sackrace.object;
 
 import flipbox.sackrace.ui.AnimatedSprite;
+import flipbox.sackrace.ui.ImageItem;
 
 /**
  *
@@ -14,13 +15,13 @@ public class Obstacle {
     
     int type;
     int damage;
-    AnimatedSprite sprite;
+    ImageItem sprite;
 
-    public AnimatedSprite getSprite() {
+    public ImageItem getSprite() {
         return sprite;
     }
 
-    public void setSprite(AnimatedSprite sprite) {
+    public void setSprite(ImageItem sprite) {
         this.sprite = sprite;
     }
     

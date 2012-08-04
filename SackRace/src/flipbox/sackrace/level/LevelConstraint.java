@@ -4,7 +4,9 @@
  */
 package flipbox.sackrace.level;
 
-import javax.microedition.lcdui.List;
+import flipbox.sackrace.nongamescreen.MapScene;
+import java.util.Vector;
+
 
 /**
  *
@@ -35,4 +37,5 @@ public class LevelConstraint {
     long minBerserkDistance;
     
     LevelObjective objective;
+  
 }

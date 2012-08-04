@@ -19,22 +19,22 @@ public class LevelConstraint {
     //untuk menentukan obstacle minimum yang keluar. semua obstacle dianggap sama bobotnya
     int minObstacles, maxObstacles;
     //untuk menentukan jarak minimum obstacle (makin tinggi level makin kecil jaraknya)
-    long minObstacleDistance;
+    int minObstacleDistance;
     
     //untuk menentukan darah minimum yang keluar
     int minBloods, maxBloods;
     //untuk menentukan jarak minimum item bertipe blood (makin tinggi level makin besar jaraknya)
-    long minBloodDistance;
+    int minBloodDistance;
     
     //untuk menentukan koin minimun yang keluar
     int minCoins, maxCoins;
     //untuk menentukan jarak minimum coin
-    long minCoinDistance;
+    int minCoinDistance;
     
     //untuk menentukan berserk minimum yang keluar dalam sebuah level
     int minBerserks, maxBerserks;
     //untuk menentukan jarak minimum obstacle (makin tinggi level makin besar jaraknya)
-    long minBerserkDistance;
+    int minBerserkDistance;
     
     LevelObjective objective;
   

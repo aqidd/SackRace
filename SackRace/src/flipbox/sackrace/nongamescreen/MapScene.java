@@ -138,7 +138,7 @@ public class MapScene implements IGameScene {
     }
 
     public void pointerDragged(int x, int y) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //hrow new UnsupportedOperationException("Not supported yet.");
     }
 
     public void clear(Graphics g) {

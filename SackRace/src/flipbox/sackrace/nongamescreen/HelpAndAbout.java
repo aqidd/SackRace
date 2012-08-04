@@ -29,7 +29,7 @@ public class HelpAndAbout implements IGameScene {
         buttonBack = new ButtonImageItem("/resource/nav/button_exit.png", "/resource/nav/button_exit_pressed.png");
         if(!isHelp){
             buttonBack.setX(192).setY(45);
-            background = Image.createImage("/resource/about.jpg");
+            background = Image.createImage("/resource/about.png");
             System.out.print("about lho***********");
         }
         else{

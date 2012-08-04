@@ -7,6 +7,7 @@ package flipbox.sackrace.level;
 import flipbox.sackrace.object.Obstacle;
 import flipbox.sackrace.ui.ImageItem;
 import java.io.IOException;
+import java.util.Random;
 import java.util.Vector;
 import javax.microedition.lcdui.Graphics;
 
@@ -17,26 +18,35 @@ import javax.microedition.lcdui.Graphics;
 public class LevelGenerator {
 
     static LevelConstraint constraint = new LevelConstraint();
-    
     //baca boolean isInitialized dari constraint buat deteksi apakah constraint sudah disetting
     static Vector obstacleList = new Vector();
     static Vector coinList = new Vector();
     static Vector berserkList = new Vector();
     static Vector bloodList = new Vector();
+    static String[] obstaclesUp = {"/resource/obstacles/obstacle_bat.png", "/resource/obstacles/obstacle_bird.png",
+        "/resource/obstacles/obstacle_balon.png", "/resource/obstacles/obstacle_awan.png"};
+    static String[] obstaclesDown = {"/resource/obstacles/lubangkuburan.png",
+        "/resource/obstacles/lubangjalan.png", "/resource/obstacles/obstacle_batu.png", "/resource/obstacles/obstacle_tai.png",
+        "/resource/obstacles/obstacle_hidran.png"};
 
-    public static void initConstraint()
-    {
-        constraint.minObstacles = 2;
+    public static void initConstraint() {
+        constraint.minObstacles = 10;
         constraint.maxObstacles = 6;
     }
-    
+
     public static void generateObstacles() {
         for (int k = 0; k < constraint.minObstacles; k++) {
             ImageItem image = null;
             try {
-                image = new ImageItem("/resource/obstacles/obstacle_bat.png");
+                Random number = new Random();
+                float f = number.nextFloat()*100000;
+                number.setSeed(System.currentTimeMillis());
+                System.out.println("nilai f " + f);
+                int val = ((int) f) % obstaclesUp.length;
+                System.out.println("nilai val " + val);
+                image = new ImageItem(obstaclesUp[val]);
                 image.setX(50);
-                image.setY(400+ (k*100));
+                image.setY(400 + (k * 100));
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -58,15 +68,14 @@ public class LevelGenerator {
     }
 
     public static void run(Graphics g) {
-        for(int x=0; x<obstacleList.size(); x++)
-        {
+        for (int x = 0; x < obstacleList.size(); x++) {
             Obstacle obj = (Obstacle) obstacleList.elementAt(x);
             ImageItem img = obj.getSprite();
-            if(img.getY()>-150)
-                img.setY(img.getY()-1);
+            if (img.getY() > -150) {
+                img.setY(img.getY() - 3);
+            }
             System.out.println("lokasi img y " + img.getY() + "xx : " + x);
-//            if(img.getY() <= 330)
-            {
+            if (img.getY() <= 330) {
                 g.drawImage(img.getImage(), img.getX(), img.getY(), Graphics.TOP | Graphics.LEFT);
             }
             obj.setSprite(img);

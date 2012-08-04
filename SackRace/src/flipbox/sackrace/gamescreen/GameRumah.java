@@ -12,10 +12,13 @@ import flipbox.sackrace.staticvalue.StaticData;
 import flipbox.sackrace.ui.AnimatedSprite;
 import flipbox.sackrace.ui.ButtonImageItem;
 import flipbox.sackrace.ui.ImageItem;
+//import flipbox.sackrace.ui.Sprite;
 import java.io.IOException;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.game.Sprite;
+
 /**
  *
  * @author Yulistiyan Wardhana
@@ -23,7 +26,7 @@ import javax.microedition.lcdui.Image;
 public class GameRumah implements IGameScene {
 
     private Player player;
-    ImageItem backgroundImage, buttonCoin, buttonLife;
+    ImageItem backgroundImage, buttonCoin, buttonLife1, buttonLife2, buttonLife3;
     ButtonImageItem buttonSlide;
     //AnimatedSprite sprite;
     boolean start;
@@ -59,9 +62,14 @@ public class GameRumah implements IGameScene {
     private void initButton() throws IOException {
         buttonSlide = new ButtonImageItem("/resource/button/slide.png", "/resource/button/slide.png");
         buttonCoin = new ImageItem("/resource/button/coin.png");
-        buttonLife = new ImageItem("/resource/button/heart.png");
+        buttonLife1 = new ImageItem("/resource/button/heart.png");
+        buttonLife2 = new ImageItem("/resource/button/heart.png");
+        buttonLife3 = new ImageItem("/resource/button/heart.png");
         //buttonSlide.setX(10).setY(10);
         buttonCoin.setX(230).setY(10 + 230);
+        buttonLife1.setX(230).setY(10);
+        buttonLife2.setX(230).setY(10 + buttonLife2.getWidth() + 10);
+        buttonLife3.setX(230).setY(10 + 2 * buttonLife3.getWidth() + 2 * 10);
 //        buttonCoin.setX(Graphics.TOP).setY(Graphics.RIGHT);
 //        buttonLife.setX(Graphics.TOP).setY(Graphics.LEFT);
     }
@@ -83,38 +91,53 @@ public class GameRumah implements IGameScene {
             g.drawImage(backgroundImage.getImage(), 0, 0, Graphics.LEFT | Graphics.TOP);
             g.drawImage(backgroundImage.getImage(), 0, backgroundImage.getWidth() - 40, Graphics.LEFT | Graphics.TOP);
             g.drawImage(buttonCoin.getImage(), buttonCoin.getX(), buttonCoin.getY(), Graphics.RIGHT | Graphics.TOP);
-            
+
             hasRenderBackground = true;
         }
         if (start) {
-            //clear(g);
-            //System.out.println(backgroundImage.getWidth());
-            //System.out.println(player.getSprite().getFrame() + "Frame " + player.getSprite().getFrameSequenceLength());
+            try {
+                //clear(g);
+                //System.out.println(backgroundImage.getWidth());
+                //System.out.println(player.getSprite().getFrame() + "Frame " + player.getSprite().getFrameSequenceLength());
+                //drawbutton
+                g.drawImage(buttonLife1.getImage(), buttonLife1.getX(), buttonLife1.getY(), Graphics.RIGHT | Graphics.TOP);
+                g.drawImage(buttonLife2.getImage(), buttonLife2.getX(), buttonLife2.getY(), Graphics.RIGHT | Graphics.TOP);
+                g.drawImage(buttonLife3.getImage(), buttonLife3.getX(), buttonLife3.getY(), Graphics.RIGHT | Graphics.TOP);
 
-            Font font = Font.getFont(Font.FACE_MONOSPACE, Font.STYLE_BOLD, Font.SIZE_LARGE);
-            g.setFont(font);
-            g.setColor(42339);
-            
-            g.drawString("nilai", buttonCoin.getX(), buttonCoin.getY(), Graphics.RIGHT | Graphics.TOP);
-            if (buttonSlide.isOnPressed()) {
-                if (player.getSprite().getFrame() == player.getSprite().getFrameSequenceLength() - 1) {
-                    System.out.println(player.getSprite().getFrame());
-                    player.getSprite().setFrame(player.getSprite().getFrameSequenceLength() - 1);
+                Image mutableImage = Image.createImage(20, 20);
+                Graphics grImage = mutableImage.getGraphics();
+                grImage.drawString("00", 0, 0, Graphics.LEFT | Graphics.TOP);
+                
+                g.drawImage(StaticData.rotateImage(mutableImage, 90),buttonCoin.getX()-15, buttonCoin.getY()+50, Graphics.RIGHT | Graphics.TOP);
+                //Sprite s = new Sprite
+//                Font font = Font.getFont(Font.FACE_MONOSPACE, Font.STYLE_BOLD, Font.SIZE_LARGE);
+//                
+//                g.setFont(font);
+//                g.setColor(12339);
+//                g.translate(20, 20);
+//                g.drawString("nilai", buttonCoin.getX(), buttonCoin.getY(), Graphics.RIGHT | Graphics.TOP);
+                if (buttonSlide.isOnPressed()) {
+                    if (player.getSprite().getFrame() == player.getSprite().getFrameSequenceLength() - 1) {
+                        System.out.println(player.getSprite().getFrame());
+                        player.getSprite().setFrame(player.getSprite().getFrameSequenceLength() - 1);
+                    } else {
+                        player.getSprite().update(timeLapsed);
+                        timeLapsed++;
+                    }
                 } else {
                     player.getSprite().update(timeLapsed);
                     timeLapsed++;
                 }
-            } else {
-                player.getSprite().update(timeLapsed);
-                timeLapsed++;
-            }
 
-            player.getSprite().paint(g);
-            if (buttonSlide.isVisible()) {
-                g.drawImage(buttonSlide.getImage(), buttonSlide.getX(), buttonSlide.getY(), Graphics.TOP | Graphics.LEFT);
-            }
+                player.getSprite().paint(g);
+                if (buttonSlide.isVisible()) {
+                    g.drawImage(buttonSlide.getImage(), buttonSlide.getX(), buttonSlide.getY(), Graphics.TOP | Graphics.LEFT);
+                }
 
-            hasRenderBackground = false;
+                hasRenderBackground = false;
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 

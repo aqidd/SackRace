@@ -51,14 +51,13 @@ public class LevelGenerator {
         constraint.minBerserkDistance = berDis;
     }
 
-    public static void initObjective(int type, int value)
-    {
+    public static void initObjective(int type, int value) {
         LevelObjective objective = new LevelObjective();
         objective.objectiveType = type;
         objective.qualifiedValue = value;
         constraint.objective = objective;
     }
-    
+
     public static void generateObstacles() {
         if (constraint.isInitialized) {
             int obstaclesCount = randomValue(constraint.minObstacles, constraint.maxObstacles);
@@ -94,7 +93,7 @@ public class LevelGenerator {
             int bloodCount = randomValue(constraint.minBloods, constraint.maxBloods);
             for (int k = 0; k < bloodCount; k++) {
                 ImageItem image = null;
-                try {                  
+                try {
                     image = new ImageItem("/resource/items/heart.png");
                     image.setX(50);
                     image.setY(400 + (k * constraint.minBloodDistance));
@@ -135,8 +134,8 @@ public class LevelGenerator {
             System.out.println("constraint not initialized");
         }
     }
+    static int distance = 0;
 
-    static int distance=0;
     public static boolean run(Graphics g) {
         for (int x = 0; x < obstacleList.size(); x++) {
             Obstacle obj = (Obstacle) obstacleList.elementAt(x);
@@ -177,18 +176,20 @@ public class LevelGenerator {
             obj.setSprite(img);
             bloodList.setElementAt(obj, x);
         }
-        distance+=3;
-        
+        distance += 3;
+
         //CURRENTLY AVAILABLE OBJECTIVE : DISTANCE
-        if(constraint.objective.objectiveType == TypeList.DISTANCE)
-        {
-            if(distance == constraint.objective.qualifiedValue)
-            {
-                //true artinya udah selesai
-                return true;
+        if (constraint.objective.objectiveType == TypeList.DISTANCE) {
+            if (constraint.objective.qualifiedValue - distance < 200) {
+                char[] finish = {'f', 'i', 'n', 'i', 's', 'h'};
+                g.drawChars(finish, 0, 6, 20, 100+(constraint.objective.qualifiedValue - distance), Graphics.TOP | Graphics.LEFT);
+                if (constraint.objective.qualifiedValue - distance <= 0) {
+                    //true artinya udah selesai
+                    return true;
+                }
             }
         }
-        
+
         return false;
     }
 

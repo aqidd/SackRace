@@ -35,6 +35,10 @@ public class GameRumah implements IGameScene {
     private GameMidlet midlet;
     private static long timeLapsed = 0;
     private boolean hasRenderBackground;
+    private static int BACKGROUND_POSA;
+    private static int BACKGROUND_POSB;
+//    private static final int BACKGROUND_POSA;
+//    private static final int BACKGROUND_POSB;
 
     public void setGameMidlet(GameMidlet midelet) {
         midlet = midelet;
@@ -57,8 +61,14 @@ public class GameRumah implements IGameScene {
 
     private void initBackground() throws IOException {
         backgroundImage = new ImageItem("/resource/rumah/Sack Runner-01.jpg");
+        BACKGROUND_POSA = 0;
+        BACKGROUND_POSB = backgroundImage.getWidth() - 40;
     }
 
+    private void resetBackgroundPos() {
+        BACKGROUND_POSA = 0;
+        BACKGROUND_POSB = backgroundImage.getWidth() - 40;
+    }
     private void initButton() throws IOException {
         buttonSlide = new ButtonImageItem("/resource/button/slide.png", "/resource/button/slide.png");
         buttonCoin = new ImageItem("/resource/button/coin.png");
@@ -87,12 +97,13 @@ public class GameRumah implements IGameScene {
             return;
         }
         if (!hasRenderBackground) {
-            clear(g);
-            g.drawImage(backgroundImage.getImage(), 0, 0, Graphics.LEFT | Graphics.TOP);
-            g.drawImage(backgroundImage.getImage(), 0, backgroundImage.getWidth() - 40, Graphics.LEFT | Graphics.TOP);
+            renderBackground(3, g);
+//            clear(g);
+//            g.drawImage(backgroundImage.getImage(), 0, 0, Graphics.LEFT | Graphics.TOP);
+//            g.drawImage(backgroundImage.getImage(), 0, backgroundImage.getWidth() - 40, Graphics.LEFT | Graphics.TOP);
             g.drawImage(buttonCoin.getImage(), buttonCoin.getX(), buttonCoin.getY(), Graphics.RIGHT | Graphics.TOP);
 
-            hasRenderBackground = true;
+            //hasRenderBackground = true;
         }
         if (start) {
             try {
@@ -193,5 +204,16 @@ public class GameRumah implements IGameScene {
         g.setColor(255, 255, 255);
         g.fillRect(0, 0, 240, 320);
         hasRenderBackground = false;
+    }
+    
+    private void renderBackground(int fpr, Graphics g) {
+        clear(g);
+        g.drawImage(backgroundImage.getImage(), 0, BACKGROUND_POSA, Graphics.LEFT | Graphics.TOP);
+        g.drawImage(backgroundImage.getImage(), 0, BACKGROUND_POSB, Graphics.LEFT | Graphics.TOP);
+        g.drawImage(backgroundImage.getImage(), 0, 2*BACKGROUND_POSB, Graphics.LEFT | Graphics.TOP);
+        System.out.println(BACKGROUND_POSA+" hahaha");
+        BACKGROUND_POSA -= fpr;
+        BACKGROUND_POSB -= fpr;
+        hasRenderBackground = true;
     }
 }

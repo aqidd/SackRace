@@ -6,9 +6,11 @@ package flipbox.sackrace.gamescreen;
 
 import flipbox.sackrace.game.GameMidlet;
 import flipbox.sackrace.game.IGameScene;
+import flipbox.sackrace.level.LevelGenerator;
 import flipbox.sackrace.nongamescreen.StartMenuScene;
 import flipbox.sackrace.object.Player;
 import flipbox.sackrace.staticvalue.StaticData;
+import flipbox.sackrace.staticvalue.TypeList;
 import flipbox.sackrace.ui.AnimatedSprite;
 import flipbox.sackrace.ui.ButtonImageItem;
 import flipbox.sackrace.ui.ImageItem;
@@ -44,6 +46,15 @@ public class GameRumah implements IGameScene {
         midlet = midelet;
     }
 
+    private void initLevel()
+    {
+        LevelGenerator.initConstraints(6,10, 0,0, 1,2, 30,50);
+        LevelGenerator.initDistance(100, 300, 180, 200);
+        LevelGenerator.initObjective(TypeList.DISTANCE, 1000);
+        LevelGenerator.generateObstacles();
+        LevelGenerator.generateCoins();
+    }
+    
     private void initPlayer() {
         try {
             player = new Player();
@@ -88,6 +99,7 @@ public class GameRumah implements IGameScene {
         initPlayer();
         initBackground();
         initButton();
+        initLevel();
         hasInit = true;
         start = true;
     }
@@ -111,6 +123,7 @@ public class GameRumah implements IGameScene {
                 //System.out.println(backgroundImage.getWidth());
                 //System.out.println(player.getSprite().getFrame() + "Frame " + player.getSprite().getFrameSequenceLength());
                 //drawbutton
+                LevelGenerator.run(g);
                 g.drawImage(buttonLife1.getImage(), buttonLife1.getX(), buttonLife1.getY(), Graphics.RIGHT | Graphics.TOP);
                 g.drawImage(buttonLife2.getImage(), buttonLife2.getX(), buttonLife2.getY(), Graphics.RIGHT | Graphics.TOP);
                 g.drawImage(buttonLife3.getImage(), buttonLife3.getX(), buttonLife3.getY(), Graphics.RIGHT | Graphics.TOP);

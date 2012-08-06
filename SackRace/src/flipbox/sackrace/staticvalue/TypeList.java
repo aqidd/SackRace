@@ -19,4 +19,10 @@ public class TypeList {
     public static final int COIN=1;
     public static final int BERSERK=2;
     public static final int LIFE=3;
+    
+    //type of objectives
+    public static final int TIME=1;
+    public static final int COINS=2;
+    public static final int DISTANCE=3;
+    public static final int BLOOD=4;
 }

@@ -4,7 +4,9 @@
  */
 package flipbox.sackrace.level;
 
+import flipbox.sackrace.object.Item;
 import flipbox.sackrace.object.Obstacle;
+import flipbox.sackrace.staticvalue.TypeList;
 import flipbox.sackrace.ui.ImageItem;
 import java.io.IOException;
 import java.util.Random;
@@ -49,6 +51,14 @@ public class LevelGenerator {
         constraint.minBerserkDistance = berDis;
     }
 
+    public static void initObjective(int type, int value)
+    {
+        LevelObjective objective = new LevelObjective();
+        objective.objectiveType = type;
+        objective.qualifiedValue = value;
+        constraint.objective = objective;
+    }
+    
     public static void generateObstacles() {
         if (constraint.isInitialized) {
             int obstaclesCount = randomValue(constraint.minObstacles, constraint.maxObstacles);
@@ -57,11 +67,11 @@ public class LevelGenerator {
                 try {
                     int valUp = randomValue(0, obstaclesUp.length);
                     int valDown = randomValue(0, obstaclesDown.length);
-                    if (randomValue(0, 1) == 0) {
+                    if (randomValue(0, 30) >= 15) {
                         image = new ImageItem(obstaclesUp[valUp]);
                         image.setX(50);
                     } else {
-                        image = new ImageItem(obstaclesUp[valDown]);
+                        image = new ImageItem(obstaclesDown[valDown]);
                         image.setX(10);
                     }
                     image.setY(400 + (k * constraint.minObstacleDistance));
@@ -81,22 +91,20 @@ public class LevelGenerator {
 
     public static void generateBloods() {
         if (constraint.isInitialized) {
-            int obstaclesCount = randomValue(constraint.minObstacles, constraint.maxObstacles);
-            for (int k = 0; k < obstaclesCount; k++) {
+            int bloodCount = randomValue(constraint.minBloods, constraint.maxBloods);
+            for (int k = 0; k < bloodCount; k++) {
                 ImageItem image = null;
-                try {
-                    int val = randomValue(0, obstaclesUp.length);
-                    image = new ImageItem(obstaclesUp[val]);
+                try {                  
+                    image = new ImageItem("/resource/items/heart.png");
                     image.setX(50);
-                    image.setY(400 + (k * 100));
+                    image.setY(400 + (k * constraint.minBloodDistance));
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
-                Obstacle obj = new Obstacle();
+                Item obj = new Item();
                 obj.setSprite(image);
-                obj.setType(0);
-                obj.setDamage(1);
-                obstacleList.addElement(obj);
+                obj.setType(TypeList.LIFE);
+                bloodList.addElement(obj);
             }
         } else {
             System.out.println("constraint not initialized");
@@ -118,10 +126,9 @@ public class LevelGenerator {
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
-                Obstacle obj = new Obstacle();
+                Item obj = new Item();
                 obj.setSprite(image);
-                obj.setType(0);
-                obj.setDamage(1);
+                obj.setType(TypeList.COIN);
                 coinList.addElement(obj);
             }
         } else {
@@ -129,7 +136,8 @@ public class LevelGenerator {
         }
     }
 
-    public static void run(Graphics g) {
+    static int distance=0;
+    public static boolean run(Graphics g) {
         for (int x = 0; x < obstacleList.size(); x++) {
             Obstacle obj = (Obstacle) obstacleList.elementAt(x);
             ImageItem img = obj.getSprite();
@@ -144,7 +152,7 @@ public class LevelGenerator {
             obstacleList.setElementAt(obj, x);
         }
         for (int x = 0; x < coinList.size(); x++) {
-            Obstacle obj = (Obstacle) coinList.elementAt(x);
+            Item obj = (Item) coinList.elementAt(x);
             ImageItem img = obj.getSprite();
             if (img.getY() > -150) {
                 img.setY(img.getY() - 3);
@@ -156,6 +164,32 @@ public class LevelGenerator {
             obj.setSprite(img);
             coinList.setElementAt(obj, x);
         }
+        for (int x = 0; x < bloodList.size(); x++) {
+            Item obj = (Item) bloodList.elementAt(x);
+            ImageItem img = obj.getSprite();
+            if (img.getY() > -150) {
+                img.setY(img.getY() - 3);
+            }
+
+            if (img.getY() <= 330) {
+                g.drawImage(img.getImage(), img.getX(), img.getY(), Graphics.TOP | Graphics.LEFT);
+            }
+            obj.setSprite(img);
+            bloodList.setElementAt(obj, x);
+        }
+        distance+=3;
+        
+        //CURRENTLY AVAILABLE OBJECTIVE : DISTANCE
+        if(constraint.objective.objectiveType == TypeList.DISTANCE)
+        {
+            if(distance == constraint.objective.qualifiedValue)
+            {
+                //true artinya udah selesai
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     public static int randomValue(int min, int max) {

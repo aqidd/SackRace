@@ -10,6 +10,7 @@ import flipbox.sackrace.level.LevelGenerator;
 import flipbox.sackrace.nongamescreen.StartMenuScene;
 import flipbox.sackrace.object.Player;
 import flipbox.sackrace.staticvalue.StaticData;
+import flipbox.sackrace.staticvalue.TypeList;
 import flipbox.sackrace.ui.AnimatedSprite;
 import flipbox.sackrace.ui.ButtonImageItem;
 import flipbox.sackrace.ui.ImageItem;
@@ -41,10 +42,11 @@ public class GameRumah implements IGameScene {
         midlet = midelet;
     }
 
-    private void initObstacles()
+    private void initLevel()
     {
         LevelGenerator.initConstraints(6,10, 0,0, 1,2, 30,50);
         LevelGenerator.initDistance(100, 300, 180, 200);
+        LevelGenerator.initObjective(TypeList.DISTANCE, 1000);
         LevelGenerator.generateObstacles();
         LevelGenerator.generateCoins();
     }
@@ -87,7 +89,7 @@ public class GameRumah implements IGameScene {
         initPlayer();
         initBackground();
         initButton();
-        initObstacles();
+        initLevel();
         hasInit = true;
         start = true;
     }

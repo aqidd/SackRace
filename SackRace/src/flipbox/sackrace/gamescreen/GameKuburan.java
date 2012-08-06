@@ -7,8 +7,10 @@ package flipbox.sackrace.gamescreen;
 import flipbox.sackrace.game.GameMidlet;
 import flipbox.sackrace.game.IGameScene;
 import flipbox.sackrace.level.LevelGenerator;
+import flipbox.sackrace.nongamescreen.MapScene;
 import flipbox.sackrace.object.Player;
 import flipbox.sackrace.staticvalue.StaticData;
+import flipbox.sackrace.staticvalue.TypeList;
 import flipbox.sackrace.ui.AnimatedSprite;
 import flipbox.sackrace.ui.ButtonImageItem;
 import flipbox.sackrace.ui.ImageItem;
@@ -41,6 +43,7 @@ public class GameKuburan implements IGameScene {
     {
         LevelGenerator.initConstraints(6,10, 0,0, 1,2, 30,50);
         LevelGenerator.initDistance(100, 300, 180, 200);
+        LevelGenerator.initObjective(TypeList.DISTANCE, 1000);
         LevelGenerator.generateObstacles();
         LevelGenerator.generateCoins();
     }
@@ -73,6 +76,8 @@ public class GameKuburan implements IGameScene {
         start = true;
     }
 
+    boolean finish;
+    
     public void render(Graphics g) {
         if (!hasInit) {
             return;
@@ -85,12 +90,20 @@ public class GameKuburan implements IGameScene {
         }
         if (start) {
             //clear(g);
-            LevelGenerator.run(g);
+            finish = LevelGenerator.run(g);
             System.out.println(backgroundImage.getWidth());
             player.getSprite().update(timeLapsed);
             timeLapsed++;
             player.getSprite().paint(g);
             hasRenderBackground = false;
+        }
+        if(finish)
+        {
+            try {
+                GameMidlet.gameCanvas.setGameScene(new MapScene());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 

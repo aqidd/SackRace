@@ -35,6 +35,7 @@ public class GameRumah implements IGameScene {
     boolean start;
     private boolean hasInit;
     boolean soundOn;
+    boolean finish;
     private GameMidlet midlet;
     private static long timeLapsed = 0;
     private boolean hasRenderBackground;
@@ -44,19 +45,20 @@ public class GameRumah implements IGameScene {
 
     public void setGameMidlet(GameMidlet midelet) {
         midlet = midelet;
+        System.out.println("selesai set game midlet");
     }
 
     public void initResource() throws IOException {
+        System.out.println("masuk init resource");
         initPlayer();
         initBackground();
         initButton();
         initLevel();
         hasInit = true;
         start = true;
+        System.out.println("selesai init resource");
     }
 
-    
-    boolean finish;
     public void render(Graphics g) {
         //Tidak bisa dipanggil langsung apabila belum diinisialisasi
         if (!hasInit) {
@@ -87,7 +89,7 @@ public class GameRumah implements IGameScene {
                 if (buttonSlide.isOnPressed()) {
                     if (player.getSprite().getFrame() == player.getSprite().
                             getFrameSequenceLength() - 1) {
-                        System.out.println(player.getSprite().getFrame());
+//                        System.out.println(player.getSprite().getFrame());
                         player.getSprite().setFrame(player.getSprite().
                                 getFrameSequenceLength() - 1);
                     } else {
@@ -115,15 +117,31 @@ public class GameRumah implements IGameScene {
                 ex.printStackTrace();
             }
         }
-        
-        if(finish)
-        {
+
+        if (finish) {
+            releaseMemory();
             try {
                 GameMidlet.gameCanvas.setGameScene(new MapScene());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }
+    }
+
+    public void releaseMemory() {
+        LevelGenerator.stop();
+        player = null;
+        backgroundImage = null;
+        buttonCoin = null;
+        buttonLife1 = buttonLife2 = buttonLife3 = null;
+        buttonSlide = null;
+        
+        start = false;
+        finish = false;
+        hasInit = false;
+        GameMidlet midlet = null;
+        timeLapsed = 0;
+        hasRenderBackground = false;
     }
 
     public void pointerPressed(int x, int y) {
@@ -172,6 +190,7 @@ public class GameRumah implements IGameScene {
         LevelGenerator.initObjective(TypeList.DISTANCE, 1000);
         LevelGenerator.generateObstacles();
         LevelGenerator.generateCoins();
+        System.out.println("selesai init level");
     }
 
     /*
@@ -185,6 +204,7 @@ public class GameRumah implements IGameScene {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        System.out.println("selesai init player");
     }
 
     /*
@@ -193,6 +213,7 @@ public class GameRumah implements IGameScene {
     private void initBackground() throws IOException {
         backgroundImage = new ImageItem("/resource/rumah/Sack Runner-01.jpg");
         resetBackgroundPos();
+        System.out.println("selesai init bg");
     }
 
     /*
@@ -219,6 +240,7 @@ public class GameRumah implements IGameScene {
         buttonLife1.setX(230).setY(10);
         buttonLife2.setX(230).setY(10 + buttonLife2.getWidth() + 10);
         buttonLife3.setX(230).setY(10 + 2 * buttonLife3.getWidth() + 2 * 10);
+        System.out.println("selesai init button");
     }
 
     /*

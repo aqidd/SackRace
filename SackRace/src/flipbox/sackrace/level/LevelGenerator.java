@@ -30,6 +30,8 @@ public class LevelGenerator {
     static String[] obstaclesDown = {"/resource/obstacles/lubangkuburan.png",
         "/resource/obstacles/lubangjalan.png", "/resource/obstacles/obstacle_batu.png", "/resource/obstacles/obstacle_tai.png",
         "/resource/obstacles/obstacle_hidran.png"};
+    
+    static int distance = 0;
 
     public static void initConstraints(int minObs, int maxObs, int minBerk, int maxBerk,
             int minBlo, int maxBlo, int minCo, int maxCo) {
@@ -134,7 +136,6 @@ public class LevelGenerator {
             System.out.println("constraint not initialized");
         }
     }
-    static int distance = 0;
 
     public static boolean run(Graphics g) {
         for (int x = 0; x < obstacleList.size(); x++) {
@@ -182,7 +183,7 @@ public class LevelGenerator {
         if (constraint.objective.objectiveType == TypeList.DISTANCE) {
             if (constraint.objective.qualifiedValue - distance < 200) {
                 char[] finish = {'f', 'i', 'n', 'i', 's', 'h'};
-                g.drawChars(finish, 0, 6, 20, 100+(constraint.objective.qualifiedValue - distance), Graphics.TOP | Graphics.LEFT);
+                g.drawChars(finish, 0, 6, 20, 100 + (constraint.objective.qualifiedValue - distance), Graphics.TOP | Graphics.LEFT);
                 if (constraint.objective.qualifiedValue - distance <= 0) {
                     //true artinya udah selesai
                     return true;
@@ -191,6 +192,15 @@ public class LevelGenerator {
         }
 
         return false;
+    }
+
+    public static void stop() {
+        distance = 0;
+        constraint = new LevelConstraint();
+        obstacleList.removeAllElements();
+        coinList.removeAllElements();
+        berserkList.removeAllElements();
+        bloodList.removeAllElements();
     }
 
     public static int randomValue(int min, int max) {

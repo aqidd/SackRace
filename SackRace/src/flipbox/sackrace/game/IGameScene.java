@@ -23,6 +23,5 @@ public interface IGameScene {
     void pointerReleased(int x, int y);
     void pointerDragged(int x, int y);
     void clear(Graphics g);
-    
-   
+       
 }

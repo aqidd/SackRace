@@ -54,9 +54,8 @@ public class GameKuburan implements IGameScene {
         hasInit = true;
         start = true;
     }
-
-    
     boolean finish;
+
     public void render(Graphics g) {
         //Tidak bisa dipanggil langsung apabila belum diinisialisasi
         if (!hasInit) {
@@ -87,7 +86,7 @@ public class GameKuburan implements IGameScene {
                 if (buttonSlide.isOnPressed()) {
                     if (player.getSprite().getFrame() == player.getSprite().
                             getFrameSequenceLength() - 1) {
-                        System.out.println(player.getSprite().getFrame());
+//                        System.out.println(player.getSprite().getFrame());
                         player.getSprite().setFrame(player.getSprite().
                                 getFrameSequenceLength() - 1);
                     } else {
@@ -115,15 +114,32 @@ public class GameKuburan implements IGameScene {
                 ex.printStackTrace();
             }
         }
-        
-        if(finish)
-        {
+
+        if (finish) {
+            releaseMemory();
             try {
                 GameMidlet.gameCanvas.setGameScene(new MapScene());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+
         }
+    }
+
+    public void releaseMemory() {
+        LevelGenerator.stop();
+        player = null;
+        backgroundImage = null;
+        buttonCoin = null;
+        buttonLife1 = buttonLife2 = buttonLife3 = null;
+        buttonSlide = null;
+
+        start = false;
+        finish = false;
+        hasInit = false;
+        GameMidlet midlet = null;
+        timeLapsed = 0;
+        hasRenderBackground = false;
     }
 
     public void pointerPressed(int x, int y) {

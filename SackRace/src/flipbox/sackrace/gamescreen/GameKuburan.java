@@ -31,6 +31,8 @@ public class GameKuburan implements IGameScene {
     //AnimatedSprite sprite;
     boolean start;
     private boolean hasInit;
+    private static int BACKGROUND_POSA;
+    private static int BACKGROUND_POSB;
     boolean soundOn;
     private GameMidlet midlet;
     private static long timeLapsed = 0;
@@ -40,15 +42,14 @@ public class GameKuburan implements IGameScene {
         midlet = midelet;
     }
 
-    private void initObstacles()
-    {
-        LevelGenerator.initConstraints(6,10, 0,0, 1,2, 30,50);
+    private void initObstacles() {
+        LevelGenerator.initConstraints(6, 10, 0, 0, 1, 2, 30, 50);
         LevelGenerator.initDistance(100, 300, 180, 200);
         LevelGenerator.initObjective(TypeList.DISTANCE, 1000);
         LevelGenerator.generateObstacles();
         LevelGenerator.generateCoins();
     }
-    
+
     private void initPlayer() {
         try {
             player = PlayerData.getBagong();
@@ -59,11 +60,12 @@ public class GameKuburan implements IGameScene {
         }
     }
 
-    
     private void initBackground() throws IOException {
+        BACKGROUND_POSA = 0;
+        BACKGROUND_POSB = backgroundImage.getWidth() - 40;
         backgroundImage = new ImageItem("/resource/grave/Sack Runner-03.jpg");
     }
-    
+
     public void initResource() throws IOException {
         initPlayer();
         initBackground();
@@ -78,11 +80,8 @@ public class GameKuburan implements IGameScene {
         if (!hasInit) {
             return;
         }
-        if(!hasRenderBackground){
-            clear(g);
-            g.drawImage(backgroundImage.getImage(), 0, 0, Graphics.LEFT | Graphics.TOP);
-            g.drawImage(backgroundImage.getImage(), 0, backgroundImage.getWidth()-40, Graphics.LEFT | Graphics.TOP);
-            hasRenderBackground = true;
+        if (!hasRenderBackground) {
+            renderBackground(3, g);
         }
         if (start) {
             //clear(g);
@@ -104,20 +103,30 @@ public class GameKuburan implements IGameScene {
     }
 
     public void pointerPressed(int x, int y) {
-        System.out.println(x+""+y+"");
+        System.out.println(x + "" + y + "");
     }
 
     public void pointerReleased(int x, int y) {
-        System.out.println(x+""+y+"");
+        System.out.println(x + "" + y + "");
     }
 
     public void pointerDragged(int x, int y) {
-        System.out.println(x+""+y+"");
+        System.out.println(x + "" + y + "");
     }
 
     public void clear(Graphics g) {
         g.setColor(255, 255, 255);
-        g.fillRect(0, 0,  240, 320);
+        g.fillRect(0, 0, 240, 320);
         hasRenderBackground = false;
+    }
+
+    private void renderBackground(int fpr, Graphics g) {
+        clear(g);
+        g.drawImage(backgroundImage.getImage(), 0, BACKGROUND_POSA, Graphics.LEFT | Graphics.TOP);
+        g.drawImage(backgroundImage.getImage(), 0, BACKGROUND_POSB, Graphics.LEFT | Graphics.TOP);
+        System.out.println(BACKGROUND_POSA+" hahaha");
+        BACKGROUND_POSA -= fpr;
+        BACKGROUND_POSB -= fpr;
+        hasRenderBackground = true;
     }
 }

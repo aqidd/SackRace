@@ -7,8 +7,10 @@ package flipbox.sackrace.gamescreen;
 import flipbox.sackrace.game.GameMidlet;
 import flipbox.sackrace.game.IGameScene;
 import flipbox.sackrace.level.LevelGenerator;
+import flipbox.sackrace.nongamescreen.MapScene;
 import flipbox.sackrace.nongamescreen.StartMenuScene;
 import flipbox.sackrace.object.Player;
+import flipbox.sackrace.object.PlayerData;
 import flipbox.sackrace.staticvalue.StaticData;
 import flipbox.sackrace.staticvalue.TypeList;
 import flipbox.sackrace.ui.AnimatedSprite;
@@ -42,23 +44,17 @@ public class GameRumah implements IGameScene {
         midlet = midelet;
     }
 
-    private void initLevel()
-    {
-        LevelGenerator.initConstraints(6,10, 0,0, 1,2, 30,50);
+    private void initLevel() {
+        LevelGenerator.initConstraints(6, 10, 0, 0, 1, 2, 30, 50);
         LevelGenerator.initDistance(100, 300, 180, 200);
         LevelGenerator.initObjective(TypeList.DISTANCE, 1000);
         LevelGenerator.generateObstacles();
         LevelGenerator.generateCoins();
     }
-    
+
     private void initPlayer() {
         try {
-            player = new Player();
-            Image bagong = StaticData.rotateImage(Image.createImage("/resource/chars/bagong_lompat.png"), 90);
-            player.setSprite(new AnimatedSprite(bagong, 76, 55, 3));
-            player.setJumpHeight(10);
-            player.setName("Bagong");
-            player.setBloodLevel(5);
+            player = PlayerData.getBagong();
             player.getSprite().setPosition(17, 150);
             player.getSprite().play();
         } catch (Exception ex) {
@@ -93,6 +89,7 @@ public class GameRumah implements IGameScene {
         hasInit = true;
         start = true;
     }
+    boolean finish;
 
     public void render(Graphics g) {
         if (!hasInit) {
@@ -112,7 +109,7 @@ public class GameRumah implements IGameScene {
                 //System.out.println(backgroundImage.getWidth());
                 //System.out.println(player.getSprite().getFrame() + "Frame " + player.getSprite().getFrameSequenceLength());
                 //drawbutton
-                LevelGenerator.run(g);
+                finish = LevelGenerator.run(g);
                 g.drawImage(buttonLife1.getImage(), buttonLife1.getX(), buttonLife1.getY(), Graphics.RIGHT | Graphics.TOP);
                 g.drawImage(buttonLife2.getImage(), buttonLife2.getX(), buttonLife2.getY(), Graphics.RIGHT | Graphics.TOP);
                 g.drawImage(buttonLife3.getImage(), buttonLife3.getX(), buttonLife3.getY(), Graphics.RIGHT | Graphics.TOP);
@@ -120,8 +117,8 @@ public class GameRumah implements IGameScene {
                 Image mutableImage = Image.createImage(20, 20);
                 Graphics grImage = mutableImage.getGraphics();
                 grImage.drawString("00", 0, 0, Graphics.LEFT | Graphics.TOP);
-                
-                g.drawImage(StaticData.rotateImage(mutableImage, 90),buttonCoin.getX()-15, buttonCoin.getY()+50, Graphics.RIGHT | Graphics.TOP);
+
+                g.drawImage(StaticData.rotateImage(mutableImage, 90), buttonCoin.getX() - 15, buttonCoin.getY() + 50, Graphics.RIGHT | Graphics.TOP);
                 //Sprite s = new Sprite
 //                Font font = Font.getFont(Font.FACE_MONOSPACE, Font.STYLE_BOLD, Font.SIZE_LARGE);
 //                
@@ -149,6 +146,13 @@ public class GameRumah implements IGameScene {
 
                 hasRenderBackground = false;
             } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        if (finish) {
+            try {
+                GameMidlet.gameCanvas.setGameScene(new MapScene());
+            } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }

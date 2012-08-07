@@ -9,6 +9,7 @@ import flipbox.sackrace.game.IGameScene;
 import flipbox.sackrace.level.LevelGenerator;
 import flipbox.sackrace.nongamescreen.MapScene;
 import flipbox.sackrace.object.Player;
+import flipbox.sackrace.object.PlayerData;
 import flipbox.sackrace.staticvalue.StaticData;
 import flipbox.sackrace.staticvalue.TypeList;
 import flipbox.sackrace.ui.AnimatedSprite;
@@ -50,12 +51,7 @@ public class GameKuburan implements IGameScene {
     
     private void initPlayer() {
         try {
-            player = new Player();
-            Image bagong = StaticData.rotateImage(Image.createImage("/resource/chars/bagong_lompat.png"), 90);
-            player.setSprite(new AnimatedSprite(bagong, 76, 55, 3));
-            player.setJumpHeight(10);
-            player.setName("Bagong");
-            player.setBloodLevel(5);
+            player = PlayerData.getBagong();
             player.getSprite().setPosition(17, 50);
             player.getSprite().play();
         } catch (Exception ex) {

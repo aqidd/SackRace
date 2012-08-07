@@ -7,8 +7,10 @@ package flipbox.sackrace.gamescreen;
 import flipbox.sackrace.game.GameMidlet;
 import flipbox.sackrace.game.IGameScene;
 import flipbox.sackrace.level.LevelGenerator;
+import flipbox.sackrace.nongamescreen.MapScene;
 import flipbox.sackrace.nongamescreen.StartMenuScene;
 import flipbox.sackrace.object.Player;
+import flipbox.sackrace.object.PlayerData;
 import flipbox.sackrace.staticvalue.StaticData;
 import flipbox.sackrace.staticvalue.TypeList;
 import flipbox.sackrace.ui.AnimatedSprite;
@@ -53,6 +55,8 @@ public class GameRumah implements IGameScene {
         start = true;
     }
 
+    
+    boolean finish;
     public void render(Graphics g) {
         //Tidak bisa dipanggil langsung apabila belum diinisialisasi
         if (!hasInit) {
@@ -68,7 +72,7 @@ public class GameRumah implements IGameScene {
         if (start) {
             try {
                 //Generate rintangan
-                LevelGenerator.run(g);
+                finish = LevelGenerator.run(g);
 
                 //Peletakkan gambar nyawa yang dimiliki di layar
                 renderLife(g);
@@ -108,6 +112,15 @@ public class GameRumah implements IGameScene {
                 //selanjutnya diset false lagi
                 hasRenderBackground = false;
             } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        
+        if(finish)
+        {
+            try {
+                GameMidlet.gameCanvas.setGameScene(new MapScene());
+            } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }
@@ -166,13 +179,7 @@ public class GameRumah implements IGameScene {
      */
     private void initPlayer() {
         try {
-            player = new Player();
-            Image bagong = StaticData.rotateImage(Image.createImage(
-                    "/resource/chars/bagong_lompat.png"), 90);
-            player.setSprite(new AnimatedSprite(bagong, 76, 55, 3));
-            player.setJumpHeight(10);
-            player.setName("Bagong");
-            player.setBloodLevel(5);
+            player = PlayerData.getBagong();
             player.getSprite().setPosition(17, 150);
             player.getSprite().play();
         } catch (Exception ex) {

@@ -226,7 +226,7 @@ public class GameKuburan implements IGameScene {
      */
     private void initButton() throws IOException {
         buttonSlide = new ButtonImageItem("/resource/button/slide.png",
-                "/resource/button/slide.png");
+                "/resource/button/slide_pressed.png");
         buttonCoin = new ImageItem("/resource/button/coin.png");
         buttonLife1 = new ImageItem("/resource/button/heart.png");
         buttonLife2 = new ImageItem("/resource/button/heart.png");

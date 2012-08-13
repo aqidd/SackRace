@@ -110,6 +110,10 @@ public class GameRumah implements IGameScene {
                     g.drawImage(buttonSlide.getImage(), buttonSlide.getX(),
                             buttonSlide.getY(), Graphics.TOP | Graphics.LEFT);
                 }
+                if (buttonJump.isVisible()) {
+                    g.drawImage(buttonJump.getImage(), buttonJump.getX(),
+                            buttonJump.getY(), Graphics.TOP | Graphics.LEFT);
+                }
                 //Akhir dari peletakan item di layar, flag penggambaran background 
                 //selanjutnya diset false lagi
                 hasRenderBackground = false;
@@ -174,7 +178,20 @@ public class GameRumah implements IGameScene {
             //resetButton();
             try {
                 setNormal();
-                buttonSlide.setOnPressed(false);
+                //buttonSlide.setOnPressed(false);
+                resetButton();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        if (buttonJump.isOnPressed()
+                && x >= buttonJump.getX() && x <= (buttonJump.getX() + buttonJump.getWidth())
+                && y >= buttonJump.getY() && y <= (buttonJump.getY() + buttonJump.getHeight())) {
+            //resetButton();
+            try {
+                setNormal();
+                //buttonSlide.setOnPressed(false);
+                resetButton();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -241,13 +258,14 @@ public class GameRumah implements IGameScene {
      */
     private void initButton() throws IOException {
         buttonSlide = new ButtonImageItem("/resource/button/slide.png",
-                "/resource/button/slide.png");
-        buttonJump = new ButtonImageItem("/resource/button/slide.png",
-                "/resource/button/jump.png");
+                "/resource/button/slide_pressed.png");
+        buttonJump = new ButtonImageItem("/resource/button/jump.png",
+                "/resource/button/jump_pressed.png");
         buttonCoin = new ImageItem("/resource/button/coin.png");
         buttonLife1 = new ImageItem("/resource/button/heart.png");
         buttonLife2 = new ImageItem("/resource/button/heart.png");
         buttonLife3 = new ImageItem("/resource/button/heart.png");
+        buttonJump.setX(50).setY(50);
         buttonCoin.setX(230).setY(10 + 230);
         buttonLife1.setX(230).setY(10);
         buttonLife2.setX(230).setY(10 + buttonLife2.getWidth() + 10);
@@ -271,7 +289,7 @@ public class GameRumah implements IGameScene {
     private void setLompat() throws Exception {
         Image bagong = StaticData.rotateImage(Image.createImage(
                 "/resource/chars/sprite loncat bagong.png"), 90);
-        player.setSprite(new AnimatedSprite(bagong, 100, bagong.getHeight() / 7, 1));
+        player.setSprite(new AnimatedSprite(bagong, 100, bagong.getHeight() / 7, 2));
         player.getSprite().setPosition(17, 150);
     }
 
@@ -279,8 +297,8 @@ public class GameRumah implements IGameScene {
      * Metode untuk menormalisasi tampilan karakter
      */
     private void setNormal() throws Exception {
-        Image bagong = StaticData.rotateImage(Image.createImage(
-                "/resource/chars/bagong_lompat.png"), 90);
+//        Image bagong = StaticData.rotateImage(Image.createImage(
+//                "/resource/chars/bagong_lompat.png"), 90);
         player.setSprite(PlayerData.getBagong().getSprite());
         player.getSprite().setPosition(17, 150);
         //resetButton();
@@ -291,6 +309,7 @@ public class GameRumah implements IGameScene {
      */
     private void resetButton() {
         buttonSlide.setOnPressed(false);
+        buttonJump.setOnPressed(false);
     }
 
     /*

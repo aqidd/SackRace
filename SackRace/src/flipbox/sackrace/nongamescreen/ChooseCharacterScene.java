@@ -20,6 +20,7 @@ public class ChooseCharacterScene implements IGameScene {
 
     ButtonImageItem buttonLeftArrow, buttonRightArrow, buttonBack, buttonStory, buttonInfinite;
     ImageItem backgroundImage, gareng, petruk, bagong, nameGareng, namePetruk, nameBagong;
+    boolean gpos, bpos, ppos;
     boolean start;
     boolean hasInit;
     boolean soundOn;
@@ -30,34 +31,33 @@ public class ChooseCharacterScene implements IGameScene {
         soundOn = GameMidlet.isSoundOn();
 
         backgroundImage = new ImageItem("/resource/background_menu.jpg");
-        buttonLeftArrow = new ButtonImageItem("/resource/nav/button_exit.png", "/resource/nav/button_exit_pressed.png");
-        buttonRightArrow = new ButtonImageItem("/resource/nav/button_exit.png", "/resource/nav/button_exit_pressed.png");
+        buttonLeftArrow = new ButtonImageItem("/resource/chars/arrow_right.png", "/resource/chars/arrow_right.png");
+        buttonRightArrow = new ButtonImageItem("/resource/chars/arrow_left.png", "/resource/chars/arrow_left.png");
         buttonBack = new ButtonImageItem("/resource/nav/back.png", "/resource/nav/back_pressed.png");
         buttonStory = new ButtonImageItem("/resource/button_start.png", "/resource/button_start_pressed.png");
-        
+
         gareng = new ImageItem("/resource/chars/gareng.png");
         bagong = new ImageItem("/resource/chars/bagong.png");
         petruk = new ImageItem("/resource/chars/petruk.png");
         nameGareng = new ImageItem("/resource/chars/nametag_gareng.png");
         namePetruk = new ImageItem("/resource/chars/nametag_petruk.png");
         nameBagong = new ImageItem("/resource/chars/nametag_bagong.png");
-        
+
         try {
-            backgroundImage.setImage(StaticData.rotateImage(backgroundImage.getImage(), 270));
+            backgroundImage.setImage(StaticData.rotateImage(backgroundImage.getImage(), 90));
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        
-        gareng.setX(90).setY(105);
-        gareng.setVisible(true);
-        bagong.setX(90).setY(105);
-        bagong.setVisible(false);
-        petruk.setX(90).setY(105);
-        bagong.setVisible(false);
-        
-        buttonStory.setX(40).setY(105);
-        buttonLeftArrow.setX(185).setY(250);
-        buttonRightArrow.setX(190).setY(10);
+
+        gareng.setX(95).setY(115);
+        gpos = true;
+        bpos = ppos = false;
+        bagong.setX(95).setY(115);
+        petruk.setX(95).setY(115);
+
+        buttonStory.setX(30).setY(105);
+        buttonLeftArrow.setX(90).setY(220);
+        buttonRightArrow.setX(90).setY(60);
         buttonBack.setX(190).setY(10);
         hasInit = true;
         start = true;
@@ -68,6 +68,7 @@ public class ChooseCharacterScene implements IGameScene {
             return;
         }
         if (start) {
+//            System.out.println(" g : " + gareng.isVisible() + " b : " + bagong.isVisible() + " p : " + petruk.isVisible());
             //drawing background
             g.drawImage(backgroundImage.getImage(), 0, 0, Graphics.LEFT | Graphics.TOP);
 
@@ -80,16 +81,16 @@ public class ChooseCharacterScene implements IGameScene {
             if (buttonRightArrow.isVisible()) {
                 g.drawImage(buttonRightArrow.getImage(), buttonRightArrow.getX(), buttonRightArrow.getY(), Graphics.TOP | Graphics.LEFT);
             }
-            if(buttonStory.isVisible()){
+            if (buttonStory.isVisible()) {
                 g.drawImage(buttonStory.getImage(), buttonStory.getX(), buttonStory.getY(), Graphics.TOP | Graphics.LEFT);
             }
-            if(gareng.isVisible()){
+            if (gareng.isVisible() && gpos) {
                 g.drawImage(gareng.getImage(), gareng.getX(), gareng.getY(), Graphics.TOP | Graphics.LEFT);
             }
-            if(petruk.isVisible()){
+            if (petruk.isVisible() && ppos) {
                 g.drawImage(petruk.getImage(), petruk.getX(), petruk.getY(), Graphics.TOP | Graphics.LEFT);
             }
-            if(bagong.isVisible()){
+            if (bagong.isVisible() && bpos) {
                 g.drawImage(bagong.getImage(), bagong.getX(), bagong.getY(), Graphics.TOP | Graphics.LEFT);
             }
         }
@@ -100,6 +101,21 @@ public class ChooseCharacterScene implements IGameScene {
                 && x >= buttonBack.getX() && x <= (buttonBack.getX() + buttonBack.getWidth())
                 && y >= buttonBack.getY() && y <= (buttonBack.getY() + buttonBack.getHeight())) {
             buttonBack.setOnPressed(true);
+        }
+        if (buttonLeftArrow.isCanClick()
+                && x >= buttonLeftArrow.getX() && x <= (buttonLeftArrow.getX() + buttonLeftArrow.getWidth())
+                && y >= buttonLeftArrow.getY() && y <= (buttonLeftArrow.getY() + buttonLeftArrow.getHeight())) {
+            buttonLeftArrow.setOnPressed(true);
+        }
+        if (buttonRightArrow.isCanClick()
+                && x >= buttonRightArrow.getX() && x <= (buttonRightArrow.getX() + buttonRightArrow.getWidth())
+                && y >= buttonRightArrow.getY() && y <= (buttonRightArrow.getY() + buttonRightArrow.getHeight())) {
+            buttonRightArrow.setOnPressed(true);
+        }
+        if (buttonStory.isCanClick()
+                && x >= buttonStory.getX() && x <= (buttonStory.getX() + buttonStory.getWidth())
+                && y >= buttonStory.getY() && y <= (buttonStory.getY() + buttonStory.getHeight())) {
+            buttonStory.setOnPressed(true);
         }
     }
 
@@ -114,14 +130,57 @@ public class ChooseCharacterScene implements IGameScene {
                 ex.printStackTrace();
             }
         }
+        if (buttonStory.isOnPressed()
+                && x >= buttonStory.getX() && x <= (buttonStory.getX() + buttonStory.getWidth())
+                && y >= buttonStory.getY() && y <= (buttonStory.getY() + buttonStory.getHeight())) {
+            resetButton();
+            try {
+                GameMidlet.gameCanvas.setGameScene(new MapScene());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        if (buttonLeftArrow.isOnPressed()
+                && x >= buttonLeftArrow.getX() && x <= (buttonLeftArrow.getX() + buttonLeftArrow.getWidth())
+                && y >= buttonLeftArrow.getY() && y <= (buttonLeftArrow.getY() + buttonLeftArrow.getHeight())) {
+            resetButton();
+            if (gpos) {
+                ppos = true;
+                bpos = gpos = false;
+            } else if (ppos) {
+                bpos = true;
+                gpos = ppos = false;
+            } else if (bpos) {
+                gpos = true;
+                bpos = ppos = false;
+            }
+        }
+        if (buttonRightArrow.isOnPressed()
+                && x >= buttonRightArrow.getX() && x <= (buttonRightArrow.getX() + buttonRightArrow.getWidth())
+                && y >= buttonRightArrow.getY() && y <= (buttonRightArrow.getY() + buttonRightArrow.getHeight())) {
+            resetButton();
+            if (gpos) {
+                bpos = true;
+                ppos = gpos = false;
+            } else if (ppos) {
+                gpos = true;
+                bpos = ppos = false;
+            } else if (bpos) {
+                ppos = true;
+                bpos = gpos = false;
+            }
+        }
     }
 
     private void resetButton() {
         buttonBack.setOnPressed(false);
+        buttonLeftArrow.setOnPressed(false);
+        buttonRightArrow.setOnPressed(false);
+        buttonStory.setOnPressed(false);
     }
 
     public void pointerDragged(int x, int y) {
-        throw new UnsupportedOperationException("Not supported yet.");
+//        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public void setGameMidlet(GameMidlet midelet) {
@@ -129,6 +188,6 @@ public class ChooseCharacterScene implements IGameScene {
     }
 
     public void clear(Graphics g) {
-        throw new UnsupportedOperationException("Not supported yet.");
+//        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

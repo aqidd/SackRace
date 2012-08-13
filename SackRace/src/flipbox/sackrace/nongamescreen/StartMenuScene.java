@@ -160,7 +160,7 @@ public class StartMenuScene implements IGameScene {
 
     private void buttonStart_Click() {
         try {
-            GameMidlet.gameCanvas.setGameScene(new MapScene());
+            GameMidlet.gameCanvas.setGameScene(new ChooseCharacterScene());
             //GameMidlet.gameCanvas.setGameScene(new GameKuburan());
         } catch (Exception e) {
             e.printStackTrace();

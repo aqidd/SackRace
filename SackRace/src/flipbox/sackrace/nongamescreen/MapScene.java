@@ -98,7 +98,7 @@ public class MapScene implements IGameScene {
                 && y >= buttonBack.getY() && y <= (buttonBack.getY() + buttonBack.getHeight())) {
             resetButton();
             try {
-                GameMidlet.gameCanvas.setGameScene(new StartMenuScene());
+                GameMidlet.gameCanvas.setGameScene(new ChooseCharacterScene());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

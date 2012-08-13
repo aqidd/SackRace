@@ -260,8 +260,8 @@ public class GameRumah implements IGameScene {
      */
     private void setNgesot() throws Exception {
         Image bagong = StaticData.rotateImage(Image.createImage(
-                "/resource/chars/bagong_ngesot.png"), 90);
-        player.setSprite(new AnimatedSprite(bagong, 76, bagong.getHeight() / 4, 3));
+                "/resource/chars/bagong_ngesot_old.png"), 90);
+        player.setSprite(new AnimatedSprite(bagong, 70, bagong.getHeight() / 4, 3));
         player.getSprite().setPosition(17, 150);
     }
     

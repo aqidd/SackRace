@@ -30,7 +30,7 @@ public class GameRumah implements IGameScene {
 
     private Player player;
     ImageItem backgroundImage, buttonCoin, buttonLife1, buttonLife2, buttonLife3;
-    ButtonImageItem buttonSlide;
+    ButtonImageItem buttonSlide,buttonJump;
     //AnimatedSprite sprite;
     boolean start;
     private boolean hasInit;
@@ -155,6 +155,16 @@ public class GameRumah implements IGameScene {
                 ex.printStackTrace();
             }
         }
+        if (buttonJump.isCanClick()
+                && x >= buttonJump.getX() && x <= (buttonJump.getX() + buttonJump.getWidth())
+                && y >= buttonJump.getY() && y <= (buttonJump.getY() + buttonJump.getHeight())) {
+            buttonJump.setOnPressed(true);
+            try {
+                setLompat();//GameMidlet.gameCanvas.setGameScene(new StartMenuScene());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 
     public void pointerReleased(int x, int y) {
@@ -232,6 +242,8 @@ public class GameRumah implements IGameScene {
     private void initButton() throws IOException {
         buttonSlide = new ButtonImageItem("/resource/button/slide.png",
                 "/resource/button/slide.png");
+        buttonJump = new ButtonImageItem("/resource/button/slide.png",
+                "/resource/button/jump.png");
         buttonCoin = new ImageItem("/resource/button/coin.png");
         buttonLife1 = new ImageItem("/resource/button/heart.png");
         buttonLife2 = new ImageItem("/resource/button/heart.png");
@@ -249,7 +261,17 @@ public class GameRumah implements IGameScene {
     private void setNgesot() throws Exception {
         Image bagong = StaticData.rotateImage(Image.createImage(
                 "/resource/chars/bagong_ngesot.png"), 90);
-        player.setSprite(new AnimatedSprite(bagong, 76, bagong.getHeight() / 4, 4));
+        player.setSprite(new AnimatedSprite(bagong, 76, bagong.getHeight() / 4, 3));
+        player.getSprite().setPosition(17, 150);
+    }
+    
+    /*
+     * Metode yang dipanggil ketika tombol slide ditekan
+     */
+    private void setLompat() throws Exception {
+        Image bagong = StaticData.rotateImage(Image.createImage(
+                "/resource/chars/sprite loncat bagong.png"), 90);
+        player.setSprite(new AnimatedSprite(bagong, 100, bagong.getHeight() / 7, 1));
         player.getSprite().setPosition(17, 150);
     }
 

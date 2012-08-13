@@ -6,6 +6,7 @@ package flipbox.sackrace.nongamescreen;
 
 import flipbox.sackrace.game.GameMidlet;
 import flipbox.sackrace.game.IGameScene;
+import flipbox.sackrace.staticvalue.StaticData;
 import flipbox.sackrace.ui.ButtonImageItem;
 import flipbox.sackrace.ui.ImageItem;
 import java.io.IOException;
@@ -32,7 +33,29 @@ public class ChooseCharacterScene implements IGameScene {
         buttonLeftArrow = new ButtonImageItem("/resource/nav/button_exit.png", "/resource/nav/button_exit_pressed.png");
         buttonRightArrow = new ButtonImageItem("/resource/nav/button_exit.png", "/resource/nav/button_exit_pressed.png");
         buttonBack = new ButtonImageItem("/resource/nav/back.png", "/resource/nav/back_pressed.png");
-
+        buttonStory = new ButtonImageItem("/resource/button_start.png", "/resource/button_start_pressed.png");
+        
+        gareng = new ImageItem("/resource/chars/gareng.png");
+        bagong = new ImageItem("/resource/chars/bagong.png");
+        petruk = new ImageItem("/resource/chars/petruk.png");
+        nameGareng = new ImageItem("/resource/chars/nametag_gareng.png");
+        namePetruk = new ImageItem("/resource/chars/nametag_petruk.png");
+        nameBagong = new ImageItem("/resource/chars/nametag_bagong.png");
+        
+        try {
+            backgroundImage.setImage(StaticData.rotateImage(backgroundImage.getImage(), 270));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        gareng.setX(90).setY(105);
+        gareng.setVisible(true);
+        bagong.setX(90).setY(105);
+        bagong.setVisible(false);
+        petruk.setX(90).setY(105);
+        bagong.setVisible(false);
+        
+        buttonStory.setX(40).setY(105);
         buttonLeftArrow.setX(185).setY(250);
         buttonRightArrow.setX(190).setY(10);
         buttonBack.setX(190).setY(10);
@@ -56,6 +79,18 @@ public class ChooseCharacterScene implements IGameScene {
             }
             if (buttonRightArrow.isVisible()) {
                 g.drawImage(buttonRightArrow.getImage(), buttonRightArrow.getX(), buttonRightArrow.getY(), Graphics.TOP | Graphics.LEFT);
+            }
+            if(buttonStory.isVisible()){
+                g.drawImage(buttonStory.getImage(), buttonStory.getX(), buttonStory.getY(), Graphics.TOP | Graphics.LEFT);
+            }
+            if(gareng.isVisible()){
+                g.drawImage(gareng.getImage(), gareng.getX(), gareng.getY(), Graphics.TOP | Graphics.LEFT);
+            }
+            if(petruk.isVisible()){
+                g.drawImage(petruk.getImage(), petruk.getX(), petruk.getY(), Graphics.TOP | Graphics.LEFT);
+            }
+            if(bagong.isVisible()){
+                g.drawImage(bagong.getImage(), bagong.getX(), bagong.getY(), Graphics.TOP | Graphics.LEFT);
             }
         }
     }

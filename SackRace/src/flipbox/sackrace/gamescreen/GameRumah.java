@@ -259,7 +259,7 @@ public class GameRumah implements IGameScene {
     private void setNormal() throws Exception {
         Image bagong = StaticData.rotateImage(Image.createImage(
                 "/resource/chars/bagong_lompat.png"), 90);
-        player.setSprite(new AnimatedSprite(bagong, 76, 55, 3));
+        player.setSprite(PlayerData.getBagong().getSprite());
         player.getSprite().setPosition(17, 150);
         //resetButton();
     }

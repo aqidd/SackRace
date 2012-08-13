@@ -42,7 +42,7 @@ public class PlayerData {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        bag.setSprite(new AnimatedSprite(sprite, 65, 70, 2));
+        bag.setSprite(new AnimatedSprite(sprite, 75, 280/4, 2));
         return bag;
     }
 

@@ -127,7 +127,6 @@ public class MapScene implements IGameScene {
                 && x >= buttonStage.getX() && x <= (buttonStage.getX() + buttonStage.getWidth())
                 && y >= buttonStage.getY() && y <= (buttonStage.getY() + buttonStage.getHeight())) {
             resetButton();
-          
         }
     }
 

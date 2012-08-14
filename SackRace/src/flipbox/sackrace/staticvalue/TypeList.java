@@ -25,4 +25,9 @@ public class TypeList {
     public static final int COINS=2;
     public static final int DISTANCE=3;
     public static final int BLOOD=4;
+    
+    //type of player state
+    public static final int NORMAL=0;
+    public static final int JUMP=1;
+    public static final int SLIDE=2;
 }

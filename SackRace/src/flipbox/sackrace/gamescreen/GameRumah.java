@@ -30,7 +30,7 @@ public class GameRumah implements IGameScene {
 
     private Player player;
     ImageItem backgroundImage, buttonCoin, buttonLife1, buttonLife2, buttonLife3;
-    ButtonImageItem buttonSlide,buttonJump;
+    ButtonImageItem buttonSlide, buttonJump;
     //AnimatedSprite sprite;
     boolean start;
     private boolean hasInit;
@@ -74,7 +74,7 @@ public class GameRumah implements IGameScene {
         if (start) {
             try {
                 //Generate rintangan
-                finish = LevelGenerator.run(g);
+                finish = LevelGenerator.run(g, player);
 
                 //Peletakkan gambar nyawa yang dimiliki di layar
                 renderLife(g);
@@ -139,7 +139,7 @@ public class GameRumah implements IGameScene {
         buttonCoin = null;
         buttonLife1 = buttonLife2 = buttonLife3 = null;
         buttonSlide = null;
-        
+
         start = false;
         finish = false;
         hasInit = false;
@@ -265,7 +265,7 @@ public class GameRumah implements IGameScene {
         buttonLife1 = new ImageItem("/resource/button/heart.png");
         buttonLife2 = new ImageItem("/resource/button/heart.png");
         buttonLife3 = new ImageItem("/resource/button/heart.png");
-        buttonJump.setX(50).setY(50);
+        buttonJump.setX(0).setY(250);
         buttonCoin.setX(230).setY(10 + 230);
         buttonLife1.setX(230).setY(10);
         buttonLife2.setX(230).setY(10 + buttonLife2.getWidth() + 10);
@@ -279,16 +279,18 @@ public class GameRumah implements IGameScene {
     private void setNgesot() throws Exception {
         Image bagong = StaticData.rotateImage(Image.createImage(
                 "/resource/chars/bagong_ngesot_old.png"), 90);
+        player.setState(TypeList.SLIDE);
         player.setSprite(new AnimatedSprite(bagong, 70, bagong.getHeight() / 4, 3));
         player.getSprite().setPosition(17, 150);
     }
-    
+
     /*
      * Metode yang dipanggil ketika tombol slide ditekan
      */
     private void setLompat() throws Exception {
         Image bagong = StaticData.rotateImage(Image.createImage(
                 "/resource/chars/sprite loncat bagong.png"), 90);
+        player.setState(TypeList.JUMP);
         player.setSprite(new AnimatedSprite(bagong, 100, bagong.getHeight() / 7, 2));
         player.getSprite().setPosition(17, 150);
     }
@@ -299,6 +301,7 @@ public class GameRumah implements IGameScene {
     private void setNormal() throws Exception {
 //        Image bagong = StaticData.rotateImage(Image.createImage(
 //                "/resource/chars/bagong_lompat.png"), 90);
+        player.setState(TypeList.NORMAL);
         player.setSprite(PlayerData.getBagong().getSprite());
         player.getSprite().setPosition(17, 150);
         //resetButton();
@@ -338,12 +341,18 @@ public class GameRumah implements IGameScene {
      * Metode untuk menggambar nyawa di layar
      */
     private void renderLife(Graphics g) {
-        g.drawImage(buttonLife1.getImage(), buttonLife1.getX(),
-                buttonLife1.getY(), Graphics.RIGHT | Graphics.TOP);
-        g.drawImage(buttonLife2.getImage(), buttonLife2.getX(),
-                buttonLife2.getY(), Graphics.RIGHT | Graphics.TOP);
-        g.drawImage(buttonLife3.getImage(), buttonLife3.getX(),
-                buttonLife3.getY(), Graphics.RIGHT | Graphics.TOP);
+        if (player.getBloodLevel() >= 1) {
+            g.drawImage(buttonLife1.getImage(), buttonLife1.getX(),
+                    buttonLife1.getY(), Graphics.RIGHT | Graphics.TOP);
+        }
+        if (player.getBloodLevel() >= 2) {
+            g.drawImage(buttonLife2.getImage(), buttonLife2.getX(),
+                    buttonLife2.getY(), Graphics.RIGHT | Graphics.TOP);
+        }
+        if (player.getBloodLevel() >= 3) {
+            g.drawImage(buttonLife3.getImage(), buttonLife3.getX(),
+                    buttonLife3.getY(), Graphics.RIGHT | Graphics.TOP);
+        }
     }
 
     /*
@@ -354,7 +363,7 @@ public class GameRumah implements IGameScene {
         Graphics grImage = mutableImage.getGraphics();
         grImage.drawString("00", 0, 0, Graphics.LEFT | Graphics.TOP);
         g.drawImage(StaticData.rotateImage(mutableImage, 90),
-                buttonCoin.getX() - 15, buttonCoin.getY() + 50,
+                buttonCoin.getX() - 5, buttonCoin.getY() + 30,
                 Graphics.RIGHT | Graphics.TOP);
     }
 }

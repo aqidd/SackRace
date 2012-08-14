@@ -71,7 +71,7 @@ public class GameKuburan implements IGameScene {
         if (start) {
             try {
                 //Generate rintangan
-                finish = LevelGenerator.run(g);
+                finish = LevelGenerator.run(g, player);
 
                 //Peletakkan gambar nyawa yang dimiliki di layar
                 renderLife(g);

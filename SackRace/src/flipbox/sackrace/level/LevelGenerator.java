@@ -6,6 +6,7 @@ package flipbox.sackrace.level;
 
 import flipbox.sackrace.object.Item;
 import flipbox.sackrace.object.Obstacle;
+import flipbox.sackrace.object.Player;
 import flipbox.sackrace.staticvalue.TypeList;
 import flipbox.sackrace.ui.ImageItem;
 import java.io.IOException;
@@ -30,7 +31,6 @@ public class LevelGenerator {
     static String[] obstaclesDown = {"/resource/obstacles/lubangkuburan.png",
         "/resource/obstacles/lubangjalan.png", "/resource/obstacles/obstacle_batu.png", "/resource/obstacles/obstacle_tai.png",
         "/resource/obstacles/obstacle_hidran.png"};
-    
     static int distance = 0;
 
     public static void initConstraints(int minObs, int maxObs, int minBerk, int maxBerk,
@@ -65,12 +65,14 @@ public class LevelGenerator {
             int obstaclesCount = randomValue(constraint.minObstacles, constraint.maxObstacles);
             for (int k = 0; k < obstaclesCount; k++) {
                 ImageItem image = null;
+                int rand = 0;
                 try {
                     int valUp = randomValue(0, obstaclesUp.length);
                     int valDown = randomValue(0, obstaclesDown.length);
-                    if (randomValue(0, 30) >= 15) {
+                    rand = randomValue(0, 30);
+                    if (rand >= 15) {
                         image = new ImageItem(obstaclesUp[valUp]);
-                        image.setX(50);
+                        image.setX(70);
                     } else {
                         image = new ImageItem(obstaclesDown[valDown]);
                         image.setX(10);
@@ -81,7 +83,11 @@ public class LevelGenerator {
                 }
                 Obstacle obj = new Obstacle();
                 obj.setSprite(image);
-                obj.setType(0);
+                if (rand >= 15) {
+                    obj.setType(TypeList.TREE);
+                } else {
+                    obj.setType(TypeList.ROCK);
+                }
                 obj.setDamage(1);
                 obstacleList.addElement(obj);
             }
@@ -137,7 +143,7 @@ public class LevelGenerator {
         }
     }
 
-    public static boolean run(Graphics g) {
+    public static boolean run(Graphics g, Player p) {
         for (int x = 0; x < obstacleList.size(); x++) {
             Obstacle obj = (Obstacle) obstacleList.elementAt(x);
             ImageItem img = obj.getSprite();
@@ -191,6 +197,33 @@ public class LevelGenerator {
             }
         }
 
+        //GAME OVER CONDITION
+        if(p.getBloodLevel() == 0)
+        {
+            return true;
+        }
+        
+        //CHECK FOR COLLISION?
+        int frame = p.getSprite().getFrame();
+        //kalo jump syaratnya di frame 5. kalo slide di frame 4
+        for (int x = 0; x < obstacleList.size(); x++) {
+            Obstacle obj = (Obstacle) obstacleList.elementAt(x);
+            ImageItem img = obj.getSprite();
+            if (img.getY() == p.getSprite().getY() + 10) {
+                if (obj.getType() == TypeList.TREE) {
+                    if (p.getState() == TypeList.SLIDE) {
+                    } else {
+                        p.setBloodLevel(p.getBloodLevel() - 1);
+                    }
+                } else if (obj.getType() == TypeList.ROCK) {
+                    if (p.getState() == TypeList.JUMP) {
+                    } else {
+                        p.setBloodLevel(p.getBloodLevel() - 1);
+                    }
+                }
+                System.out.println("frame " + frame + " bloodlevel : " + p.getBloodLevel());
+            }
+        }
         return false;
     }
 

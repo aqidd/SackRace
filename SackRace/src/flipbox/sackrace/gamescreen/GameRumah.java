@@ -213,7 +213,7 @@ public class GameRumah implements IGameScene {
      */
     private void initLevel() {
         LevelGenerator.initConstraints(6, 10, 0, 0, 1, 2, 30, 50);
-        LevelGenerator.initDistance(100, 300, 180, 200);
+        LevelGenerator.initDistance(40, 300, 180, 200);
         LevelGenerator.initObjective(TypeList.DISTANCE, 1000);
         LevelGenerator.generateObstacles();
         LevelGenerator.generateCoins();

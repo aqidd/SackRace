@@ -19,7 +19,7 @@ import javax.microedition.lcdui.Graphics;
  * @author QED
  */
 public class LevelGenerator {
-    
+
     static LevelConstraint constraint = new LevelConstraint();
     //baca boolean isInitialized dari constraint buat deteksi apakah constraint sudah disetting
     static Vector obstacleList = new Vector();
@@ -33,7 +33,8 @@ public class LevelGenerator {
         "/resource/obstacles/obstacle_hidran.png"};
     static int distance = 0;
     static boolean damaged = false;
-    
+    static int obstacleCounter = 0;
+
     public static void initConstraints(int minObs, int maxObs, int minBerk, int maxBerk,
             int minBlo, int maxBlo, int minCo, int maxCo) {
         constraint.minObstacles = minObs;
@@ -46,21 +47,21 @@ public class LevelGenerator {
         constraint.maxCoins = maxCo;
         constraint.isInitialized = true;
     }
-    
+
     public static void initDistance(int coinDis, int bloodDis, int obsDis, int berDis) {
         constraint.minCoinDistance = coinDis;
         constraint.minBloodDistance = bloodDis;
         constraint.minObstacleDistance = obsDis;
         constraint.minBerserkDistance = berDis;
     }
-    
+
     public static void initObjective(int type, int value) {
         LevelObjective objective = new LevelObjective();
         objective.objectiveType = type;
         objective.qualifiedValue = value;
         constraint.objective = objective;
     }
-    
+
     public static void generateObstacles() {
         if (constraint.isInitialized) {
             int obstaclesCount = randomValue(constraint.minObstacles, constraint.maxObstacles);
@@ -97,7 +98,7 @@ public class LevelGenerator {
             System.out.println("constraint not initialized");
         }
     }
-    
+
     public static void generateBloods() {
         if (constraint.isInitialized) {
             int bloodCount = randomValue(constraint.minBloods, constraint.maxBloods);
@@ -119,10 +120,10 @@ public class LevelGenerator {
             System.out.println("constraint not initialized");
         }
     }
-    
+
     public static void generateBerserks() {
     }
-    
+
     public static void generateCoins() {
         if (constraint.isInitialized) {
             int coinCount = randomValue(constraint.minCoins, constraint.maxCoins);
@@ -145,7 +146,7 @@ public class LevelGenerator {
             System.out.println("constraint not initialized");
         }
     }
-    
+
     public static boolean run(Graphics g, Player p) {
         for (int x = 0; x < obstacleList.size(); x++) {
             Obstacle obj = (Obstacle) obstacleList.elementAt(x);
@@ -153,7 +154,7 @@ public class LevelGenerator {
             if (img.getY() > -150) {
                 img.setY(img.getY() - 3);
             }
-            
+
             if (img.getY() <= 330) {
                 g.drawImage(img.getImage(), img.getX(), img.getY(), Graphics.TOP | Graphics.LEFT);
             }
@@ -166,7 +167,7 @@ public class LevelGenerator {
             if (img.getY() > -150) {
                 img.setY(img.getY() - 3);
             }
-            
+
             if (img.getY() <= 330) {
                 g.drawImage(img.getImage(), img.getX(), img.getY(), Graphics.TOP | Graphics.LEFT);
             }
@@ -179,7 +180,7 @@ public class LevelGenerator {
             if (img.getY() > -150) {
                 img.setY(img.getY() - 3);
             }
-            
+
             if (img.getY() <= 330) {
                 g.drawImage(img.getImage(), img.getX(), img.getY(), Graphics.TOP | Graphics.LEFT);
             }
@@ -206,57 +207,43 @@ public class LevelGenerator {
         }
 
         //CHECK FOR COLLISION?
-        for (int x = 0; x < obstacleList.size(); x++) {
-            Obstacle obj = (Obstacle) obstacleList.elementAt(x);
-            ImageItem img = obj.getSprite();
-            if (img.getY() == p.getSprite().getY()) {
-                if (obj.getType() == TypeList.UP) {
-                    if (p.getState() == TypeList.SLIDE) {
-                    } else {
-                        p.setBloodLevel(p.getBloodLevel() - 1);
-//                        damaged = true;
-                    }
-                } else if (obj.getType() == TypeList.DOWN) {
-                    if (p.getState() == TypeList.JUMP) {
-                    } else {
-                        p.setBloodLevel(p.getBloodLevel() - 1);
-//                        damaged = true;
-                    }
+        Obstacle obj = (Obstacle) obstacleList.elementAt(obstacleCounter);
+        ImageItem img = obj.getSprite();
+        if (img.getY() <= p.getSprite().getY() + 10 && img.getY() >= p.getSprite().getY() - 5) {
+            if (obj.getType() == TypeList.UP) {
+                if (p.getState() == TypeList.SLIDE) {
+                } else {
+                    damaged = true;
+                }
+            } else if (obj.getType() == TypeList.DOWN) {
+                if (p.getState() == TypeList.JUMP) {
+                } else {
+                    damaged = true;
                 }
             }
-            
-//            if (img.getY() == p.getSprite().getY() - 10) {
-//                if (obj.getType() == TypeList.UP) {
-//                    if (p.getState() == TypeList.SLIDE) {
-//                    } else {
-//                        damaged = true;
-//                    }
-//                } else if (obj.getType() == TypeList.DOWN) {
-//                    if (p.getState() == TypeList.JUMP) {
-//                    } else {
-//                        damaged = true;
-//                    }
-//                }
-//                if (damaged) {
-//                    p.setBloodLevel(p.getBloodLevel() - 1);
-//                    damaged = false;
-//                }
-//                System.out.println("bloodlevel : " + p.getBloodLevel());
-//            }
         }
+
+        if (img.getY() < p.getSprite().getY() - 10) {
+            if (damaged) {
+                p.setBloodLevel(p.getBloodLevel() - 1);
+            }
+            obstacleCounter++;
+        }
+        
         return false;
     }
-    
+
     public static void stop() {
         distance = 0;
         damaged = false;
+        obstacleCounter = 0;
         constraint = new LevelConstraint();
         obstacleList.removeAllElements();
         coinList.removeAllElements();
         berserkList.removeAllElements();
         bloodList.removeAllElements();
     }
-    
+
     public static int randomValue(int min, int max) {
         Random number = new Random();
         float f = number.nextFloat() * 100000;
@@ -268,7 +255,7 @@ public class LevelGenerator {
         if (val > max) {
             val -= ((val - max) + 1);
         }
-        
+
         return val;
     }
 }

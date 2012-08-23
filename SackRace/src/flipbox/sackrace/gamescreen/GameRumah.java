@@ -4,6 +4,7 @@
  */
 package flipbox.sackrace.gamescreen;
 
+import flipbox.sackrace.data.HighScoreHelper;
 import flipbox.sackrace.game.GameMidlet;
 import flipbox.sackrace.game.IGameScene;
 import flipbox.sackrace.level.LevelGenerator;
@@ -123,6 +124,9 @@ public class GameRumah implements IGameScene {
         }
 
         if (finish) {
+            if (HighScoreHelper.getHighScore(HighScoreHelper.BALAP_KARUNG_RUMAH) < player.getCoinCount()) {
+                HighScoreHelper.writeHighScore(HighScoreHelper.BALAP_KARUNG_RUMAH, player.getCoinCount());
+            }
             releaseMemory();
             try {
                 GameMidlet.gameCanvas.setGameScene(new MapScene());
@@ -316,9 +320,9 @@ public class GameRumah implements IGameScene {
     }
 
     /*
-     * Metode untuk merender background sesuai dengan kecepatan penamlilan
+     * Metode untuk merender background sesuai dengan kecepatan penampilan
      *
-     * @param fpr kecepatan penamlilan @param g grafik yang akan digambar
+     * @param fpr kecepatan penampilan @param g grafik yang akan digambar
      */
     private void renderBackground(int fpr, Graphics g) {
         clear(g);
@@ -359,9 +363,18 @@ public class GameRumah implements IGameScene {
      * Metode untuk menggambar Score di layar
      */
     private void renderScore(Graphics g) throws Exception {
+        //gambar highscore sebelumnya
+        Image mutableImageHigh = Image.createImage(20, 20);
+        Graphics grImageHigh = mutableImageHigh.getGraphics();
+        grImageHigh.drawString(HighScoreHelper.getHighScore(HighScoreHelper.BALAP_KARUNG_RUMAH) + "", 0, 0, Graphics.LEFT | Graphics.TOP);
+        g.drawImage(StaticData.rotateImage(mutableImageHigh, 90),
+                buttonCoin.getX() - 5, buttonCoin.getY() - 30,
+                Graphics.RIGHT | Graphics.TOP);
+
+        //gambar score
         Image mutableImage = Image.createImage(20, 20);
         Graphics grImage = mutableImage.getGraphics();
-        grImage.drawString("00", 0, 0, Graphics.LEFT | Graphics.TOP);
+        grImage.drawString(player.getCoinCount() + "", 0, 0, Graphics.LEFT | Graphics.TOP);
         g.drawImage(StaticData.rotateImage(mutableImage, 90),
                 buttonCoin.getX() - 5, buttonCoin.getY() + 30,
                 Graphics.RIGHT | Graphics.TOP);

@@ -4,6 +4,7 @@
  */
 package flipbox.sackrace.gamescreen;
 
+import flipbox.sackrace.data.HighScoreHelper;
 import flipbox.sackrace.game.GameMidlet;
 import flipbox.sackrace.game.IGameScene;
 import flipbox.sackrace.level.LevelGenerator;
@@ -116,6 +117,9 @@ public class GameKuburan implements IGameScene {
         }
 
         if (finish) {
+            if (HighScoreHelper.getHighScore(HighScoreHelper.BALAP_KARUNG_KUBURAN) < player.getCoinCount()) {
+                HighScoreHelper.writeHighScore(HighScoreHelper.BALAP_KARUNG_KUBURAN, player.getCoinCount());
+            }
             releaseMemory();
             try {
                 GameMidlet.gameCanvas.setGameScene(new MapScene());
@@ -303,9 +307,18 @@ public class GameKuburan implements IGameScene {
      * Metode untuk menggambar Score di layar
      */
     private void renderScore(Graphics g) throws Exception {
+        //tulis highscore
+        Image mutableImageHigh = Image.createImage(20, 20);
+        Graphics grImageHigh = mutableImageHigh.getGraphics();
+        grImageHigh.drawString(HighScoreHelper.getHighScore(HighScoreHelper.BALAP_KARUNG_KUBURAN) + "", 0, 0, Graphics.LEFT | Graphics.TOP);
+        g.drawImage(StaticData.rotateImage(mutableImageHigh, 90),
+                buttonCoin.getX() - 5, buttonCoin.getY() - 30,
+                Graphics.RIGHT | Graphics.TOP);
+
+        //tulis skor sekarang
         Image mutableImage = Image.createImage(20, 20);
         Graphics grImage = mutableImage.getGraphics();
-        grImage.drawString("00", 0, 0, Graphics.LEFT | Graphics.TOP);
+        grImage.drawString(player.getCoinCount()+"", 0, 0, Graphics.LEFT | Graphics.TOP);
         g.drawImage(StaticData.rotateImage(mutableImage, 90),
                 buttonCoin.getX() - 15, buttonCoin.getY() + 50,
                 Graphics.RIGHT | Graphics.TOP);

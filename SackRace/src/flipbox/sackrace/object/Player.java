@@ -11,8 +11,9 @@ import flipbox.sackrace.ui.AnimatedSprite;
  * @author QED
  */
 public class Player {
-    int jumpHeight;
-    int bloodLevel;
+    private int jumpHeight;
+    private int bloodLevel;
+    private int coinCount;
     String name;
     AnimatedSprite sprite;
     int state;
@@ -23,6 +24,14 @@ public class Player {
 
     public void setState(int state) {
         this.state = state;
+    }
+    
+    public int getCoinCount() {
+        return coinCount;
+    }
+
+    public void setCoinCount(int coinCount) {
+        this.coinCount = coinCount;
     }
     
     public int getBloodLevel() {

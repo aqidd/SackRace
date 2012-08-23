@@ -17,6 +17,8 @@ public class HighScoreHelper {
 //    public static final String MINI_GAME_MANCING = "Mancing";
     public static final int MINI_GAME_PANJAT_PINANG = 0;
     public static final int MINI_GAME_MANCING = 1;
+    public static final int BALAP_KARUNG_RUMAH = 2;
+    public static final int BALAP_KARUNG_KUBURAN = 3;
     
     public static final String RECORD_STORE_NAME = "flipboxdolanan";
     private static final int MAX_RECORD = 20;

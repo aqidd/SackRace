@@ -36,6 +36,7 @@ public class PlayerData {
         bag.setName("Bagong");
         bag.setBloodLevel(3);
         bag.setJumpHeight(10);
+        bag.setCoinCount(0);
         Image sprite = null;
         try {
             sprite = StaticData.rotateImage(Image.createImage("/resource/chars/bagong_lompat.png"), 90);

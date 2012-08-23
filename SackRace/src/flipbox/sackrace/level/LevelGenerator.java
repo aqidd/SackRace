@@ -198,11 +198,10 @@ public class LevelGenerator {
         }
 
         //GAME OVER CONDITION
-        if(p.getBloodLevel() == 0)
-        {
+        if (p.getBloodLevel() == 0) {
             return true;
         }
-        
+
         //CHECK FOR COLLISION?
         int frame = p.getSprite().getFrame();
         //kalo jump syaratnya di frame 5. kalo slide di frame 4
@@ -222,6 +221,16 @@ public class LevelGenerator {
                     }
                 }
                 System.out.println("frame " + frame + " bloodlevel : " + p.getBloodLevel());
+            }
+        }
+
+        for (int x = 0; x < coinList.size(); x++) {
+            Item obj = (Item) coinList.elementAt(x);
+            ImageItem img = obj.getSprite();
+            if (img.getY() == p.getSprite().getY()) {
+                if (p.getState() != TypeList.SLIDE) {
+                    p.setCoinCount(p.getCoinCount()+1);
+                }
             }
         }
         return false;

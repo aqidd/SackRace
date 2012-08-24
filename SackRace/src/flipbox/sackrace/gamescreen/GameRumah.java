@@ -30,7 +30,7 @@ import javax.microedition.lcdui.game.Sprite;
 public class GameRumah implements IGameScene {
 
     private Player player;
-    ImageItem backgroundImage, buttonCoin, buttonLife1, buttonLife2, buttonLife3;
+    ImageItem backgroundImage, awan, buttonCoin, buttonLife1, buttonLife2, buttonLife3;
     ButtonImageItem buttonSlide, buttonJump;
     //AnimatedSprite sprite;
     boolean start;
@@ -43,6 +43,9 @@ public class GameRumah implements IGameScene {
     private static int BACKGROUND_POSA;
     private static int BACKGROUND_POSB;
     private static int BACKGROUND_POSC;
+    private static int BACKGROUND_POSAWAN_A;
+    private static int BACKGROUND_POSAWAN_B;
+    private static int BACKGROUND_POSAWAN_C;
 
     public void setGameMidlet(GameMidlet midelet) {
         midlet = midelet;
@@ -68,6 +71,7 @@ public class GameRumah implements IGameScene {
         //Merender background jika belum dilakukan pada perenderan sekarang
         if (!hasRenderBackground) {
             renderBackground(3, g);
+            renderAwan(1, g);
             g.drawImage(buttonCoin.getImage(), buttonCoin.getX(),
                     buttonCoin.getY(), Graphics.RIGHT | Graphics.TOP);
         }
@@ -75,7 +79,7 @@ public class GameRumah implements IGameScene {
         if (start) {
             try {
                 //Generate rintangan
-                finish = LevelGenerator.run(g, player);
+                finish = false;//LevelGenerator.run(g, player);
 
                 //Peletakkan gambar nyawa yang dimiliki di layar
                 renderLife(g);
@@ -243,7 +247,9 @@ public class GameRumah implements IGameScene {
      */
     private void initBackground() throws IOException {
         backgroundImage = new ImageItem("/resource/rumah/Sack Runner-01.jpg");
+        awan = new ImageItem("/resource/items/awan_1.png");
         resetBackgroundPos();
+        resetAwanPos();
         System.out.println("selesai init bg");
     }
 
@@ -255,6 +261,12 @@ public class GameRumah implements IGameScene {
         BACKGROUND_POSA = 0;
         BACKGROUND_POSB = backgroundImage.getWidth() - 40;
         BACKGROUND_POSC = 2 * BACKGROUND_POSB;
+    }
+    
+    private void resetAwanPos(){
+        BACKGROUND_POSAWAN_A = 0;
+        BACKGROUND_POSAWAN_B = backgroundImage.getWidth() - 40;
+        BACKGROUND_POSAWAN_C = 2 * BACKGROUND_POSAWAN_B;
     }
 
     /*
@@ -333,6 +345,7 @@ public class GameRumah implements IGameScene {
 
         //Algoritma enyesuaian letak background di layar
         if (BACKGROUND_POSB <= 0) {
+            System.out.println("Abiezzzz berooh");
             resetBackgroundPos();
         }
         BACKGROUND_POSA -= fpr;
@@ -378,5 +391,30 @@ public class GameRumah implements IGameScene {
         g.drawImage(StaticData.rotateImage(mutableImage, 90),
                 buttonCoin.getX() - 5, buttonCoin.getY() + 30,
                 Graphics.RIGHT | Graphics.TOP);
+    }
+
+    private void renderAwan(int fpr, Graphics g) {
+        
+        /*
+         * Angka-angka yang ada di sini merupakan angka custom. Silahkan diubah
+         * sekenanya
+         */
+        g.drawImage(awan.getImage(), 175, BACKGROUND_POSAWAN_A, Graphics.LEFT | Graphics.TOP);
+        g.drawImage(awan.getImage(), 175, BACKGROUND_POSAWAN_B, Graphics.LEFT | Graphics.TOP);
+        g.drawImage(awan.getImage(), 175, BACKGROUND_POSAWAN_C, Graphics.LEFT | Graphics.TOP);
+        g.drawImage(awan.getImage(), 175, BACKGROUND_POSAWAN_A + 89, Graphics.LEFT | Graphics.TOP);
+        g.drawImage(awan.getImage(), 175, BACKGROUND_POSAWAN_B + 89, Graphics.LEFT | Graphics.TOP);
+        g.drawImage(awan.getImage(), 175, BACKGROUND_POSAWAN_C + 89, Graphics.LEFT | Graphics.TOP);
+        //System.out.println(BACKGROUND_POSA+" hahaha");
+
+        //Algoritma enyesuaian letak background di layar
+        if (BACKGROUND_POSAWAN_B<= 0) {
+            //System.out.println("abeeeeesss");
+            resetAwanPos();
+        }
+        BACKGROUND_POSAWAN_A -= fpr;
+        BACKGROUND_POSAWAN_B -= fpr;
+        BACKGROUND_POSAWAN_C -= fpr;
+        //hasRenderBackground = true;
     }
 }

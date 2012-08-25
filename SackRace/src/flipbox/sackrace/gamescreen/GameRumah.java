@@ -307,7 +307,7 @@ public class GameRumah implements IGameScene {
         Image bagong = StaticData.rotateImage(Image.createImage(
                 "/resource/chars/sprite loncat bagong.png"), 90);
         player.setState(TypeList.JUMP);
-        player.setSprite(new AnimatedSprite(bagong, 100, bagong.getHeight() / 7, 2));
+        player.setSprite(new AnimatedSprite(bagong, 100, bagong.getHeight() / 7, 3));
         player.getSprite().setPosition(17, 150);
     }
 

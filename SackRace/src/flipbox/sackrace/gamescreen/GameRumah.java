@@ -233,7 +233,14 @@ public class GameRumah implements IGameScene {
      */
     private void initPlayer() {
         try {
-            player = PlayerData.getBagong();
+        System.out.println("nilai player : " + GameDataHelper.getHighScore(GameDataHelper.PILIHAN_PLAYER));    
+            if (GameDataHelper.getHighScore(GameDataHelper.PILIHAN_PLAYER) == TypeList.GARENG) {
+                player = PlayerData.getGareng();
+            } else if (GameDataHelper.getHighScore(GameDataHelper.PILIHAN_PLAYER) == TypeList.PETRUK) {
+                player = PlayerData.getPetruk();
+            } else if (GameDataHelper.getHighScore(GameDataHelper.PILIHAN_PLAYER) == TypeList.BAGONG) {
+                player = PlayerData.getBagong();
+            }
             player.getSprite().setPosition(17, 150);
             player.getSprite().play();
         } catch (Exception ex) {
@@ -262,8 +269,8 @@ public class GameRumah implements IGameScene {
         BACKGROUND_POSB = backgroundImage.getWidth() - 40;
         BACKGROUND_POSC = 2 * BACKGROUND_POSB;
     }
-    
-    private void resetAwanPos(){
+
+    private void resetAwanPos() {
         BACKGROUND_POSAWAN_A = 0;
         BACKGROUND_POSAWAN_B = backgroundImage.getWidth() - 40;
         BACKGROUND_POSAWAN_C = 2 * BACKGROUND_POSAWAN_B;
@@ -388,7 +395,7 @@ public class GameRumah implements IGameScene {
     }
 
     private void renderAwan(int fpr, Graphics g) {
-        
+
         /*
          * Angka-angka yang ada di sini merupakan angka custom. Silahkan diubah
          * sekenanya
@@ -402,7 +409,7 @@ public class GameRumah implements IGameScene {
         //System.out.println(BACKGROUND_POSA+" hahaha");
 
         //Algoritma enyesuaian letak background di layar
-        if (BACKGROUND_POSAWAN_B<= 0) {
+        if (BACKGROUND_POSAWAN_B <= 0) {
             //System.out.println("abeeeeesss");
             resetAwanPos();
         }

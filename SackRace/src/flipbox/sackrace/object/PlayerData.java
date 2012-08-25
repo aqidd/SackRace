@@ -20,72 +20,72 @@ public class PlayerData {
 
     public static Player getGareng() {
         Player gar = new Player();
-        gar.setName("Bagong");
+        gar.setName("Gareng");
         gar.setBloodLevel(3);
         gar.setJumpHeight(10);
         gar.setCoinCount(0);
         Image sprite = null;
         try {
-            sprite = StaticData.rotateImage(Image.createImage("/resource/chars/bagong_lompat.png"), 90);
+            sprite = StaticData.rotateImage(Image.createImage("/resource/chars/sprite jalan gareng.png"), 90);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        gar.setSprite(new AnimatedSprite(sprite, 75, 280/4, 2));
-        gar.setNormalSprite(new AnimatedSprite(sprite, 75, 280/4, 2));
-        Image bagong_slide = null;
+        gar.setSprite(new AnimatedSprite(sprite, 75, 280 / 4, 2));
+        gar.setNormalSprite(new AnimatedSprite(sprite, 75, 280 / 4, 2));
+        Image gareng_slide = null;
         try {
-            bagong_slide = StaticData.rotateImage(Image.createImage(
-              "/resource/chars/bagong_ngesot.png"), 90);
+            gareng_slide = StaticData.rotateImage(Image.createImage(
+                    "/resource/chars/sprite ngesot gareng.png"), 90);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        gar.setSlideSprite(new AnimatedSprite(bagong_slide, 70, bagong_slide.getHeight() / 4, 3));
-        
-        Image bagong_jump=null;
+        gar.setSlideSprite(new AnimatedSprite(gareng_slide, 70, gareng_slide.getHeight() / 4, 3));
+
+        Image gareng_jump = null;
         try {
-            bagong_jump = StaticData.rotateImage(Image.createImage(
-              "/resource/chars/sprite loncat bagong.png"), 90);
+            gareng_jump = StaticData.rotateImage(Image.createImage(
+                    "/resource/chars/sprite loncat gareng.png"), 90);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        
-        gar.setJumpSprite(new AnimatedSprite(bagong_jump, 100, bagong_jump.getHeight() / 7, 2));
+
+        gar.setJumpSprite(new AnimatedSprite(gareng_jump, 100, gareng_jump.getHeight() / 7, 2));
 
         return gar;
     }
 
     public static Player getPetruk() {
         Player pet = new Player();
-        pet.setName("Bagong");
+        pet.setName("Petruk");
         pet.setBloodLevel(3);
         pet.setJumpHeight(10);
         pet.setCoinCount(0);
         Image sprite = null;
         try {
-            sprite = StaticData.rotateImage(Image.createImage("/resource/chars/bagong_lompat.png"), 90);
+            sprite = StaticData.rotateImage(Image.createImage("/resource/chars/sprite jalan petruk.png"), 90);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        pet.setSprite(new AnimatedSprite(sprite, 75, 280/4, 2));
-        pet.setNormalSprite(new AnimatedSprite(sprite, 75, 280/4, 2));
+        pet.setSprite(new AnimatedSprite(sprite, 99, 280 / 4, 2));
+        pet.setNormalSprite(new AnimatedSprite(sprite, 99, 280 / 4, 2));
         Image bagong_slide = null;
         try {
             bagong_slide = StaticData.rotateImage(Image.createImage(
-              "/resource/chars/bagong_ngesot.png"), 90);
+                    "/resource/chars/sprite ngesot petruk.png"), 90);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        pet.setSlideSprite(new AnimatedSprite(bagong_slide, 70, bagong_slide.getHeight() / 4, 3));
-        
-        Image bagong_jump=null;
+        pet.setSlideSprite(new AnimatedSprite(bagong_slide, 77, bagong_slide.getHeight() / 4, 3));
+
+        Image bagong_jump = null;
         try {
             bagong_jump = StaticData.rotateImage(Image.createImage(
-              "/resource/chars/sprite loncat bagong.png"), 90);
+                    "/resource/chars/sprite loncat petruk.png"), 90);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        
-        pet.setJumpSprite(new AnimatedSprite(bagong_jump, 100, bagong_jump.getHeight() / 7, 2));
+
+        pet.setJumpSprite(new AnimatedSprite(bagong_jump, 118, bagong_jump.getHeight() / 7, 2));
 
         return pet;
     }
@@ -102,25 +102,25 @@ public class PlayerData {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        bag.setSprite(new AnimatedSprite(sprite, 75, 280/4, 2));
-        bag.setNormalSprite(new AnimatedSprite(sprite, 75, 280/4, 2));
+        bag.setSprite(new AnimatedSprite(sprite, 75, 280 / 4, 2));
+        bag.setNormalSprite(new AnimatedSprite(sprite, 75, 280 / 4, 2));
         Image bagong_slide = null;
         try {
             bagong_slide = StaticData.rotateImage(Image.createImage(
-              "/resource/chars/bagong_ngesot.png"), 90);
+                    "/resource/chars/bagong_ngesot.png"), 90);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         bag.setSlideSprite(new AnimatedSprite(bagong_slide, 70, bagong_slide.getHeight() / 4, 3));
-        
-        Image bagong_jump=null;
+
+        Image bagong_jump = null;
         try {
             bagong_jump = StaticData.rotateImage(Image.createImage(
-              "/resource/chars/sprite loncat bagong.png"), 90);
+                    "/resource/chars/sprite loncat bagong.png"), 90);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        
+
         bag.setJumpSprite(new AnimatedSprite(bagong_jump, 100, bagong_jump.getHeight() / 7, 2));
 
         return bag;

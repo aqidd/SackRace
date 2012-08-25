@@ -121,7 +121,7 @@ public class PlayerData {
             ex.printStackTrace();
         }
         
-        bag.setJumpSprite(new AnimatedSprite(bagong_jump, 100, bagong_jump.getHeight() / 7, 2));
+        bag.setJumpSprite(new AnimatedSprite(bagong_jump, 100, bagong_jump.getHeight() / 7, 3));
 
         return bag;
     }

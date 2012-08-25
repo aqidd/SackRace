@@ -4,7 +4,7 @@
  */
 package flipbox.sackrace.gamescreen;
 
-import flipbox.sackrace.data.HighScoreHelper;
+import flipbox.sackrace.data.GameDataHelper;
 import flipbox.sackrace.game.GameMidlet;
 import flipbox.sackrace.game.IGameScene;
 import flipbox.sackrace.level.LevelGenerator;
@@ -128,8 +128,8 @@ public class GameRumah implements IGameScene {
         }
 
         if (finish) {
-            if (HighScoreHelper.getHighScore(HighScoreHelper.BALAP_KARUNG_RUMAH) < player.getCoinCount()) {
-                HighScoreHelper.writeHighScore(HighScoreHelper.BALAP_KARUNG_RUMAH, player.getCoinCount());
+            if (GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_RUMAH) < player.getCoinCount()) {
+                GameDataHelper.writeHighScore(GameDataHelper.BALAP_KARUNG_RUMAH, player.getCoinCount());
             }
             releaseMemory();
             try {
@@ -293,10 +293,8 @@ public class GameRumah implements IGameScene {
      * Metode yang dipanggil ketika tombol slide ditekan
      */
     private void setNgesot() throws Exception {
-        Image bagong = StaticData.rotateImage(Image.createImage(
-                "/resource/chars/bagong_ngesot.png"), 90);
         player.setState(TypeList.SLIDE);
-        player.setSprite(new AnimatedSprite(bagong, 70, bagong.getHeight() / 4, 3));
+        player.setSprite(player.getSlideSprite());
         player.getSprite().setPosition(17, 150);
     }
 
@@ -304,10 +302,8 @@ public class GameRumah implements IGameScene {
      * Metode yang dipanggil ketika tombol slide ditekan
      */
     private void setLompat() throws Exception {
-        Image bagong = StaticData.rotateImage(Image.createImage(
-                "/resource/chars/sprite loncat bagong.png"), 90);
         player.setState(TypeList.JUMP);
-        player.setSprite(new AnimatedSprite(bagong, 100, bagong.getHeight() / 7, 3));
+        player.setSprite(player.getJumpSprite());
         player.getSprite().setPosition(17, 150);
     }
 
@@ -315,10 +311,8 @@ public class GameRumah implements IGameScene {
      * Metode untuk menormalisasi tampilan karakter
      */
     private void setNormal() throws Exception {
-//        Image bagong = StaticData.rotateImage(Image.createImage(
-//                "/resource/chars/bagong_lompat.png"), 90);
         player.setState(TypeList.NORMAL);
-        player.setSprite(PlayerData.getBagong().getSprite());
+        player.setSprite(player.getNormalSprite());
         player.getSprite().setPosition(17, 150);
         //resetButton();
     }
@@ -379,7 +373,7 @@ public class GameRumah implements IGameScene {
         //gambar highscore sebelumnya
         Image mutableImageHigh = Image.createImage(20, 20);
         Graphics grImageHigh = mutableImageHigh.getGraphics();
-        grImageHigh.drawString(HighScoreHelper.getHighScore(HighScoreHelper.BALAP_KARUNG_RUMAH) + "", 0, 0, Graphics.LEFT | Graphics.TOP);
+        grImageHigh.drawString(GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_RUMAH) + "", 0, 0, Graphics.LEFT | Graphics.TOP);
         g.drawImage(StaticData.rotateImage(mutableImageHigh, 90),
                 buttonCoin.getX() - 5, buttonCoin.getY() - 30,
                 Graphics.RIGHT | Graphics.TOP);

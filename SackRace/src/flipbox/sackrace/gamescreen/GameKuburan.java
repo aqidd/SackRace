@@ -4,7 +4,7 @@
  */
 package flipbox.sackrace.gamescreen;
 
-import flipbox.sackrace.data.HighScoreHelper;
+import flipbox.sackrace.data.GameDataHelper;
 import flipbox.sackrace.game.GameMidlet;
 import flipbox.sackrace.game.IGameScene;
 import flipbox.sackrace.level.LevelGenerator;
@@ -30,32 +30,38 @@ import javax.microedition.lcdui.game.Sprite;
 public class GameKuburan implements IGameScene {
 
     private Player player;
-    ImageItem backgroundImage, buttonCoin, buttonLife1, buttonLife2, buttonLife3;
-    ButtonImageItem buttonSlide;
+    ImageItem backgroundImage, awan, buttonCoin, buttonLife1, buttonLife2, buttonLife3;
+    ButtonImageItem buttonSlide, buttonJump;
     //AnimatedSprite sprite;
     boolean start;
     private boolean hasInit;
     boolean soundOn;
+    boolean finish;
     private GameMidlet midlet;
     private static long timeLapsed = 0;
     private boolean hasRenderBackground;
     private static int BACKGROUND_POSA;
     private static int BACKGROUND_POSB;
     private static int BACKGROUND_POSC;
+    private static int BACKGROUND_POSAWAN_A;
+    private static int BACKGROUND_POSAWAN_B;
+    private static int BACKGROUND_POSAWAN_C;
 
     public void setGameMidlet(GameMidlet midelet) {
         midlet = midelet;
+        System.out.println("selesai set game midlet");
     }
 
     public void initResource() throws IOException {
+        System.out.println("masuk init resource");
         initPlayer();
         initBackground();
         initButton();
         initLevel();
         hasInit = true;
         start = true;
+        System.out.println("selesai init resource");
     }
-    boolean finish;
 
     public void render(Graphics g) {
         //Tidak bisa dipanggil langsung apabila belum diinisialisasi
@@ -65,6 +71,7 @@ public class GameKuburan implements IGameScene {
         //Merender background jika belum dilakukan pada perenderan sekarang
         if (!hasRenderBackground) {
             renderBackground(3, g);
+            renderAwan(1, g);
             g.drawImage(buttonCoin.getImage(), buttonCoin.getX(),
                     buttonCoin.getY(), Graphics.RIGHT | Graphics.TOP);
         }
@@ -108,6 +115,10 @@ public class GameKuburan implements IGameScene {
                     g.drawImage(buttonSlide.getImage(), buttonSlide.getX(),
                             buttonSlide.getY(), Graphics.TOP | Graphics.LEFT);
                 }
+                if (buttonJump.isVisible()) {
+                    g.drawImage(buttonJump.getImage(), buttonJump.getX(),
+                            buttonJump.getY(), Graphics.TOP | Graphics.LEFT);
+                }
                 //Akhir dari peletakan item di layar, flag penggambaran background 
                 //selanjutnya diset false lagi
                 hasRenderBackground = false;
@@ -117,8 +128,8 @@ public class GameKuburan implements IGameScene {
         }
 
         if (finish) {
-            if (HighScoreHelper.getHighScore(HighScoreHelper.BALAP_KARUNG_KUBURAN) < player.getCoinCount()) {
-                HighScoreHelper.writeHighScore(HighScoreHelper.BALAP_KARUNG_KUBURAN, player.getCoinCount());
+            if (GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_KUBURAN) < player.getCoinCount()) {
+                GameDataHelper.writeHighScore(GameDataHelper.BALAP_KARUNG_KUBURAN, player.getCoinCount());
             }
             releaseMemory();
             try {
@@ -126,7 +137,6 @@ public class GameKuburan implements IGameScene {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-
         }
     }
 
@@ -157,6 +167,16 @@ public class GameKuburan implements IGameScene {
                 ex.printStackTrace();
             }
         }
+        if (buttonJump.isCanClick()
+                && x >= buttonJump.getX() && x <= (buttonJump.getX() + buttonJump.getWidth())
+                && y >= buttonJump.getY() && y <= (buttonJump.getY() + buttonJump.getHeight())) {
+            buttonJump.setOnPressed(true);
+            try {
+                setLompat();//GameMidlet.gameCanvas.setGameScene(new StartMenuScene());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 
     public void pointerReleased(int x, int y) {
@@ -166,7 +186,20 @@ public class GameKuburan implements IGameScene {
             //resetButton();
             try {
                 setNormal();
-                buttonSlide.setOnPressed(false);
+                //buttonSlide.setOnPressed(false);
+                resetButton();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        if (buttonJump.isOnPressed()
+                && x >= buttonJump.getX() && x <= (buttonJump.getX() + buttonJump.getWidth())
+                && y >= buttonJump.getY() && y <= (buttonJump.getY() + buttonJump.getHeight())) {
+            //resetButton();
+            try {
+                setNormal();
+                //buttonSlide.setOnPressed(false);
+                resetButton();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -187,11 +220,12 @@ public class GameKuburan implements IGameScene {
      * Metode untuk menginisialisasi rintangan sesuai levelnya
      */
     private void initLevel() {
-        LevelGenerator.initConstraints(6, 10, 0, 0, 1, 2, 30, 50);
-        LevelGenerator.initDistance(100, 300, 180, 200);
-        LevelGenerator.initObjective(TypeList.DISTANCE, 1000);
+        LevelGenerator.initConstraints(14, 20, 0, 0, 1, 2, 50, 90);
+        LevelGenerator.initDistance(50, 300, 180, 200);
+        LevelGenerator.initObjective(TypeList.DISTANCE, 2000);
         LevelGenerator.generateObstacles();
         LevelGenerator.generateCoins();
+        System.out.println("selesai init level");
     }
 
     /*
@@ -205,6 +239,7 @@ public class GameKuburan implements IGameScene {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        System.out.println("selesai init player");
     }
 
     /*
@@ -212,7 +247,10 @@ public class GameKuburan implements IGameScene {
      */
     private void initBackground() throws IOException {
         backgroundImage = new ImageItem("/resource/grave/Sack Runner-03.jpg");
+        awan = new ImageItem("/resource/items/awan_1.png");
         resetBackgroundPos();
+        resetAwanPos();
+        System.out.println("selesai init bg");
     }
 
     /*
@@ -224,6 +262,12 @@ public class GameKuburan implements IGameScene {
         BACKGROUND_POSB = backgroundImage.getWidth() - 40;
         BACKGROUND_POSC = 2 * BACKGROUND_POSB;
     }
+    
+    private void resetAwanPos(){
+        BACKGROUND_POSAWAN_A = 0;
+        BACKGROUND_POSAWAN_B = backgroundImage.getWidth() - 40;
+        BACKGROUND_POSAWAN_C = 2 * BACKGROUND_POSAWAN_B;
+    }
 
     /*
      * Metode untuk menginisialisasi tombol
@@ -231,14 +275,18 @@ public class GameKuburan implements IGameScene {
     private void initButton() throws IOException {
         buttonSlide = new ButtonImageItem("/resource/button/slide.png",
                 "/resource/button/slide_pressed.png");
+        buttonJump = new ButtonImageItem("/resource/button/jump.png",
+                "/resource/button/jump_pressed.png");
         buttonCoin = new ImageItem("/resource/button/coin.png");
         buttonLife1 = new ImageItem("/resource/button/heart.png");
         buttonLife2 = new ImageItem("/resource/button/heart.png");
         buttonLife3 = new ImageItem("/resource/button/heart.png");
+        buttonJump.setX(0).setY(250);
         buttonCoin.setX(230).setY(10 + 230);
         buttonLife1.setX(230).setY(10);
         buttonLife2.setX(230).setY(10 + buttonLife2.getWidth() + 10);
         buttonLife3.setX(230).setY(10 + 2 * buttonLife3.getWidth() + 2 * 10);
+        System.out.println("selesai init button");
     }
 
     /*
@@ -247,7 +295,19 @@ public class GameKuburan implements IGameScene {
     private void setNgesot() throws Exception {
         Image bagong = StaticData.rotateImage(Image.createImage(
                 "/resource/chars/bagong_ngesot.png"), 90);
-        player.setSprite(new AnimatedSprite(bagong, 76, bagong.getHeight() / 4, 4));
+        player.setState(TypeList.SLIDE);
+        player.setSprite(new AnimatedSprite(bagong, 70, bagong.getHeight() / 4, 3));
+        player.getSprite().setPosition(17, 150);
+    }
+
+    /*
+     * Metode yang dipanggil ketika tombol slide ditekan
+     */
+    private void setLompat() throws Exception {
+        Image bagong = StaticData.rotateImage(Image.createImage(
+                "/resource/chars/sprite loncat bagong.png"), 90);
+        player.setState(TypeList.JUMP);
+        player.setSprite(new AnimatedSprite(bagong, 100, bagong.getHeight() / 7, 2));
         player.getSprite().setPosition(17, 150);
     }
 
@@ -255,9 +315,10 @@ public class GameKuburan implements IGameScene {
      * Metode untuk menormalisasi tampilan karakter
      */
     private void setNormal() throws Exception {
-        Image bagong = StaticData.rotateImage(Image.createImage(
-                "/resource/chars/bagong_lompat.png"), 90);
-        player.setSprite(new AnimatedSprite(bagong, 76, 55, 3));
+//        Image bagong = StaticData.rotateImage(Image.createImage(
+//                "/resource/chars/bagong_lompat.png"), 90);
+        player.setState(TypeList.NORMAL);
+        player.setSprite(PlayerData.getBagong().getSprite());
         player.getSprite().setPosition(17, 150);
         //resetButton();
     }
@@ -267,12 +328,13 @@ public class GameKuburan implements IGameScene {
      */
     private void resetButton() {
         buttonSlide.setOnPressed(false);
+        buttonJump.setOnPressed(false);
     }
 
     /*
-     * Metode untuk merender background sesuai dengan kecepatan penamlilan
+     * Metode untuk merender background sesuai dengan kecepatan penampilan
      *
-     * @param fpr kecepatan penamlilan @param g grafik yang akan digambar
+     * @param fpr kecepatan penampilan @param g grafik yang akan digambar
      */
     private void renderBackground(int fpr, Graphics g) {
         clear(g);
@@ -283,6 +345,7 @@ public class GameKuburan implements IGameScene {
 
         //Algoritma enyesuaian letak background di layar
         if (BACKGROUND_POSB <= 0) {
+            System.out.println("Abiezzzz berooh");
             resetBackgroundPos();
         }
         BACKGROUND_POSA -= fpr;
@@ -295,32 +358,63 @@ public class GameKuburan implements IGameScene {
      * Metode untuk menggambar nyawa di layar
      */
     private void renderLife(Graphics g) {
-        g.drawImage(buttonLife1.getImage(), buttonLife1.getX(),
-                buttonLife1.getY(), Graphics.RIGHT | Graphics.TOP);
-        g.drawImage(buttonLife2.getImage(), buttonLife2.getX(),
-                buttonLife2.getY(), Graphics.RIGHT | Graphics.TOP);
-        g.drawImage(buttonLife3.getImage(), buttonLife3.getX(),
-                buttonLife3.getY(), Graphics.RIGHT | Graphics.TOP);
+        if (player.getBloodLevel() >= 1) {
+            g.drawImage(buttonLife1.getImage(), buttonLife1.getX(),
+                    buttonLife1.getY(), Graphics.RIGHT | Graphics.TOP);
+        }
+        if (player.getBloodLevel() >= 2) {
+            g.drawImage(buttonLife2.getImage(), buttonLife2.getX(),
+                    buttonLife2.getY(), Graphics.RIGHT | Graphics.TOP);
+        }
+        if (player.getBloodLevel() >= 3) {
+            g.drawImage(buttonLife3.getImage(), buttonLife3.getX(),
+                    buttonLife3.getY(), Graphics.RIGHT | Graphics.TOP);
+        }
     }
 
     /*
      * Metode untuk menggambar Score di layar
      */
     private void renderScore(Graphics g) throws Exception {
-        //tulis highscore
+        //gambar highscore sebelumnya
         Image mutableImageHigh = Image.createImage(20, 20);
         Graphics grImageHigh = mutableImageHigh.getGraphics();
-        grImageHigh.drawString(HighScoreHelper.getHighScore(HighScoreHelper.BALAP_KARUNG_KUBURAN) + "", 0, 0, Graphics.LEFT | Graphics.TOP);
+        grImageHigh.drawString(GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_KUBURAN) + "", 0, 0, Graphics.LEFT | Graphics.TOP);
         g.drawImage(StaticData.rotateImage(mutableImageHigh, 90),
                 buttonCoin.getX() - 5, buttonCoin.getY() - 30,
                 Graphics.RIGHT | Graphics.TOP);
 
-        //tulis skor sekarang
+        //gambar score
         Image mutableImage = Image.createImage(20, 20);
         Graphics grImage = mutableImage.getGraphics();
-        grImage.drawString(player.getCoinCount()+"", 0, 0, Graphics.LEFT | Graphics.TOP);
+        grImage.drawString(player.getCoinCount() + "", 0, 0, Graphics.LEFT | Graphics.TOP);
         g.drawImage(StaticData.rotateImage(mutableImage, 90),
-                buttonCoin.getX() - 15, buttonCoin.getY() + 50,
+                buttonCoin.getX() - 5, buttonCoin.getY() + 30,
                 Graphics.RIGHT | Graphics.TOP);
+    }
+
+    private void renderAwan(int fpr, Graphics g) {
+        
+        /*
+         * Angka-angka yang ada di sini merupakan angka custom. Silahkan diubah
+         * sekenanya
+         */
+        g.drawImage(awan.getImage(), 175, BACKGROUND_POSAWAN_A, Graphics.LEFT | Graphics.TOP);
+        g.drawImage(awan.getImage(), 175, BACKGROUND_POSAWAN_B, Graphics.LEFT | Graphics.TOP);
+        g.drawImage(awan.getImage(), 175, BACKGROUND_POSAWAN_C, Graphics.LEFT | Graphics.TOP);
+        g.drawImage(awan.getImage(), 175, BACKGROUND_POSAWAN_A + 89, Graphics.LEFT | Graphics.TOP);
+        g.drawImage(awan.getImage(), 175, BACKGROUND_POSAWAN_B + 89, Graphics.LEFT | Graphics.TOP);
+        g.drawImage(awan.getImage(), 175, BACKGROUND_POSAWAN_C + 89, Graphics.LEFT | Graphics.TOP);
+        //System.out.println(BACKGROUND_POSA+" hahaha");
+
+        //Algoritma enyesuaian letak background di layar
+        if (BACKGROUND_POSAWAN_B<= 0) {
+            //System.out.println("abeeeeesss");
+            resetAwanPos();
+        }
+        BACKGROUND_POSAWAN_A -= fpr;
+        BACKGROUND_POSAWAN_B -= fpr;
+        BACKGROUND_POSAWAN_C -= fpr;
+        //hasRenderBackground = true;
     }
 }

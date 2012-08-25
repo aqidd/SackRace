@@ -5,7 +5,7 @@
 package flipbox.sackrace.data;
 
 /**
- * gangerti banget ini isinya apa. help :))
+ * see HighScoreHelper - sesuai ga? kalo iya langsung aja direname
  * @author QED
  */
 public class GameDataManager {

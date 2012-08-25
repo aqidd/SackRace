@@ -159,11 +159,10 @@ public class LevelGenerator {
                 img.setY(img.getY() - 3);
             }
 
-            if(img.getY()>330 && constraint.objective.qualifiedValue - distance < 330)
-            {
+            if (img.getY() > 330 && constraint.objective.qualifiedValue - distance < 330) {
                 img.setVisible(false);
             }
-            
+
             if (img.getY() <= 330) {
                 if (img.isVisible()) {
                     g.drawImage(img.getImage(), img.getX(), img.getY(), Graphics.TOP | Graphics.LEFT);
@@ -179,11 +178,10 @@ public class LevelGenerator {
                 img.setY(img.getY() - 3);
             }
 
-            if(img.getY()>330 && constraint.objective.qualifiedValue - distance < 330)
-            {
+            if (img.getY() > 330 && constraint.objective.qualifiedValue - distance < 330) {
                 img.setVisible(false);
             }
-            
+
             if (img.getY() <= 330) {
                 if (img.isVisible()) {
                     g.drawImage(img.getImage(), img.getX(), img.getY(), Graphics.TOP | Graphics.LEFT);
@@ -247,7 +245,10 @@ public class LevelGenerator {
             if (damaged && img.isVisible()) {
                 p.setBloodLevel(p.getBloodLevel() - 1);
             }
-            obstacleCounter++;
+            if (obstacleCounter < obstacleList.size()) {
+                obstacleCounter++;
+            }
+            
             damaged = false;
         }
 
@@ -257,7 +258,9 @@ public class LevelGenerator {
         if (coin_img.getY() <= p.getSprite().getY() + 3 && coin_img.getY() >= p.getSprite().getY() - 3) {
             coin_img.setVisible(false);
             p.setCoinCount(p.getCoinCount() + 1);
-            coinCounter++;
+            if (coinCounter < coinList.size()) {
+                coinCounter++;
+            }
         }
 //            if (coin_img.getY() == p.getSprite().getY()) {
 //                if (p.getState() != TypeList.SLIDE) {

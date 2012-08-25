@@ -136,6 +136,7 @@ public class ChooseCharacterScene implements IGameScene {
             resetButton();
             try {
                 GameMidlet.gameCanvas.setGameScene(new MapScene());
+                
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

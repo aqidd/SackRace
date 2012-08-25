@@ -11,7 +11,7 @@ import java.util.Vector;
  *
  * @author agung
  */
-public class HighScoreHelper {
+public class GameDataHelper {
     
 //    public static final String MINI_GAME_PANJAT_PINANG = "PanjatPinang";
 //    public static final String MINI_GAME_MANCING = "Mancing";
@@ -19,6 +19,7 @@ public class HighScoreHelper {
     public static final int MINI_GAME_MANCING = 1;
     public static final int BALAP_KARUNG_RUMAH = 2;
     public static final int BALAP_KARUNG_KUBURAN = 3;
+    public static final int PILIHAN_PLAYER = 4;
     
     public static final String RECORD_STORE_NAME = "flipboxdolanan";
     private static final int MAX_RECORD = 20;
@@ -106,7 +107,7 @@ public class HighScoreHelper {
     
 //    public static long getHighScore(String keyName){
 //        try{
-//           String value = HighScoreHelper.getValue(keyName);
+//           String value = GameDataHelper.getValue(keyName);
 //           if(value!=null)
 //               return Long.parseLong(value);
 //           else
@@ -119,7 +120,7 @@ public class HighScoreHelper {
 //    
 //    public static boolean writeHighScore(String keyName, long score){
 //        try{
-//            String value = HighScoreHelper.getValue(keyName);
+//            String value = GameDataHelper.getValue(keyName);
 //            if(value == null){
 //                
 //            }else{

@@ -79,7 +79,7 @@ public class GameRumah implements IGameScene {
         if (start) {
             try {
                 //Generate rintangan
-                finish = false;//LevelGenerator.run(g, player);
+                finish = LevelGenerator.run(g, player);
 
                 //Peletakkan gambar nyawa yang dimiliki di layar
                 renderLife(g);
@@ -221,7 +221,7 @@ public class GameRumah implements IGameScene {
      */
     private void initLevel() {
         LevelGenerator.initConstraints(6, 10, 0, 0, 1, 2, 30, 50);
-        LevelGenerator.initDistance(100, 300, 180, 200);
+        LevelGenerator.initDistance(50, 300, 180, 200);
         LevelGenerator.initObjective(TypeList.DISTANCE, 1000);
         LevelGenerator.generateObstacles();
         LevelGenerator.generateCoins();
@@ -294,7 +294,7 @@ public class GameRumah implements IGameScene {
      */
     private void setNgesot() throws Exception {
         Image bagong = StaticData.rotateImage(Image.createImage(
-                "/resource/chars/bagong_ngesot_old.png"), 90);
+                "/resource/chars/bagong_ngesot.png"), 90);
         player.setState(TypeList.SLIDE);
         player.setSprite(new AnimatedSprite(bagong, 70, bagong.getHeight() / 4, 3));
         player.getSprite().setPosition(17, 150);

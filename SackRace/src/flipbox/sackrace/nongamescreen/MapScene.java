@@ -142,6 +142,6 @@ public class MapScene implements IGameScene {
     }
 
     public void clear(Graphics g) {
-        throw new UnsupportedOperationException("Not supported yet.");
+//        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

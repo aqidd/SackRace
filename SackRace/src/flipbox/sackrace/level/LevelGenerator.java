@@ -28,10 +28,14 @@ public class LevelGenerator {
     static Vector bloodList = new Vector();
     static String[] obstaclesUp = {"/resource/obstacles/obstacle_bat.png", "/resource/obstacles/obstacle_bird.png",
         "/resource/obstacles/obstacle_balon.png", "/resource/obstacles/obstacle_awan.png"};
-    static String[] obstaclesDown = {"/resource/obstacles/lubangkuburan.png",
-        "/resource/obstacles/lubangjalan.png", "/resource/obstacles/obstacle_batu.png", "/resource/obstacles/obstacle_tai.png",
+//    static String[] obstaclesDown = {"/resource/obstacles/lubangkuburan.png",
+//        "/resource/obstacles/lubangjalan.png", "/resource/obstacles/obstacle_batu.png", "/resource/obstacles/obstacle_tai.png",
+//        "/resource/obstacles/obstacle_hidran.png"};
+    static String[] obstaclesDown = {"/resource/obstacles/obstacle_batu.png", "/resource/obstacles/obstacle_tai.png",
         "/resource/obstacles/obstacle_hidran.png"};
     static int distance = 0;
+    static boolean damaged = false;
+    static int obstacleCounter, coinCounter = 0;
 
     public static void initConstraints(int minObs, int maxObs, int minBerk, int maxBerk,
             int minBlo, int maxBlo, int minCo, int maxCo) {
@@ -77,16 +81,17 @@ public class LevelGenerator {
                         image = new ImageItem(obstaclesDown[valDown]);
                         image.setX(10);
                     }
-                    image.setY(400 + (k * constraint.minObstacleDistance));
+                    image.setY(400 + (k * randomValue(constraint.minObstacleDistance,
+                            constraint.minObstacleDistance * 2)));
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
                 Obstacle obj = new Obstacle();
                 obj.setSprite(image);
                 if (rand >= 15) {
-                    obj.setType(TypeList.TREE);
+                    obj.setType(TypeList.UP);
                 } else {
-                    obj.setType(TypeList.ROCK);
+                    obj.setType(TypeList.DOWN);
                 }
                 obj.setDamage(1);
                 obstacleList.addElement(obj);
@@ -128,8 +133,11 @@ public class LevelGenerator {
                 ImageItem image = null;
                 try {
                     image = new ImageItem("/resource/items/coin.png");
-                    image.setX(50);
-                    image.setY(300 + (k * constraint.minCoinDistance));
+//                    image.setX(40 + randomValue(7, 20));
+                    image.setX(40);
+                    image.setY(300 + k * constraint.minCoinDistance);
+//                    image.setY(300 + (k * randomValue(constraint.minCoinDistance,
+//                            constraint.minCoinDistance * 2)));
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -151,8 +159,15 @@ public class LevelGenerator {
                 img.setY(img.getY() - 3);
             }
 
+            if(img.getY()>330 && constraint.objective.qualifiedValue - distance < 330)
+            {
+                img.setVisible(false);
+            }
+            
             if (img.getY() <= 330) {
-                g.drawImage(img.getImage(), img.getX(), img.getY(), Graphics.TOP | Graphics.LEFT);
+                if (img.isVisible()) {
+                    g.drawImage(img.getImage(), img.getX(), img.getY(), Graphics.TOP | Graphics.LEFT);
+                }
             }
             obj.setSprite(img);
             obstacleList.setElementAt(obj, x);
@@ -164,8 +179,15 @@ public class LevelGenerator {
                 img.setY(img.getY() - 3);
             }
 
+            if(img.getY()>330 && constraint.objective.qualifiedValue - distance < 330)
+            {
+                img.setVisible(false);
+            }
+            
             if (img.getY() <= 330) {
-                g.drawImage(img.getImage(), img.getX(), img.getY(), Graphics.TOP | Graphics.LEFT);
+                if (img.isVisible()) {
+                    g.drawImage(img.getImage(), img.getX(), img.getY(), Graphics.TOP | Graphics.LEFT);
+                }
             }
             obj.setSprite(img);
             coinList.setElementAt(obj, x);
@@ -173,12 +195,14 @@ public class LevelGenerator {
         for (int x = 0; x < bloodList.size(); x++) {
             Item obj = (Item) bloodList.elementAt(x);
             ImageItem img = obj.getSprite();
-            if (img.getY() > -150) {
+            if (img.getY() > -150 && constraint.objective.qualifiedValue - distance > 200) {
                 img.setY(img.getY() - 3);
             }
 
-            if (img.getY() <= 330) {
-                g.drawImage(img.getImage(), img.getX(), img.getY(), Graphics.TOP | Graphics.LEFT);
+            if (img.getY() <= 330 && constraint.objective.qualifiedValue - distance > 200) {
+                if (img.isVisible()) {
+                    g.drawImage(img.getImage(), img.getX(), img.getY(), Graphics.TOP | Graphics.LEFT);
+                }
             }
             obj.setSprite(img);
             bloodList.setElementAt(obj, x);
@@ -203,41 +227,52 @@ public class LevelGenerator {
         }
 
         //CHECK FOR COLLISION?
-        int frame = p.getSprite().getFrame();
-        //kalo jump syaratnya di frame 5. kalo slide di frame 4
-        for (int x = 0; x < obstacleList.size(); x++) {
-            Obstacle obj = (Obstacle) obstacleList.elementAt(x);
-            ImageItem img = obj.getSprite();
-            if (img.getY() == p.getSprite().getY() + 10) {
-                if (obj.getType() == TypeList.TREE) {
-                    if (p.getState() == TypeList.SLIDE) {
-                    } else {
-                        p.setBloodLevel(p.getBloodLevel() - 1);
-                    }
-                } else if (obj.getType() == TypeList.ROCK) {
-                    if (p.getState() == TypeList.JUMP) {
-                    } else {
-                        p.setBloodLevel(p.getBloodLevel() - 1);
-                    }
+        Obstacle obj = (Obstacle) obstacleList.elementAt(obstacleCounter);
+        ImageItem img = obj.getSprite();
+        if (img.getY() <= p.getSprite().getY() + 10 && img.getY() >= p.getSprite().getY() - 5) {
+            if (obj.getType() == TypeList.UP) {
+                if (p.getState() == TypeList.SLIDE) {
+                } else {
+                    damaged = true;
                 }
-                System.out.println("frame " + frame + " bloodlevel : " + p.getBloodLevel());
+            } else if (obj.getType() == TypeList.DOWN) {
+                if (p.getState() == TypeList.JUMP) {
+                } else {
+                    damaged = true;
+                }
             }
         }
 
-        for (int x = 0; x < coinList.size(); x++) {
-            Item obj = (Item) coinList.elementAt(x);
-            ImageItem img = obj.getSprite();
-            if (img.getY() == p.getSprite().getY()) {
-                if (p.getState() != TypeList.SLIDE) {
-                    p.setCoinCount(p.getCoinCount()+1);
-                }
+        if (img.getY() < p.getSprite().getY() - 10) {
+            if (damaged && img.isVisible()) {
+                p.setBloodLevel(p.getBloodLevel() - 1);
             }
+            obstacleCounter++;
+            damaged = false;
         }
+
+
+        Item coin_obj = (Item) coinList.elementAt(coinCounter);
+        ImageItem coin_img = coin_obj.getSprite();
+        if (coin_img.getY() <= p.getSprite().getY() + 3 && coin_img.getY() >= p.getSprite().getY() - 3) {
+            coin_img.setVisible(false);
+            p.setCoinCount(p.getCoinCount() + 1);
+            coinCounter++;
+        }
+//            if (coin_img.getY() == p.getSprite().getY()) {
+//                if (p.getState() != TypeList.SLIDE) {
+//                    p.setCoinCount(p.getCoinCount()+1);
+//                }
+//            }
+
         return false;
     }
 
     public static void stop() {
         distance = 0;
+        damaged = false;
+        obstacleCounter = 0;
+        coinCounter = 0;
         constraint = new LevelConstraint();
         obstacleList.removeAllElements();
         coinList.removeAllElements();

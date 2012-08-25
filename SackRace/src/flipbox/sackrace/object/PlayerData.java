@@ -49,7 +49,7 @@ public class PlayerData {
             ex.printStackTrace();
         }
 
-        gar.setJumpSprite(new AnimatedSprite(gareng_jump, 100, gareng_jump.getHeight() / 7, 2));
+        gar.setJumpSprite(new AnimatedSprite(gareng_jump, 100, gareng_jump.getHeight() / 7, 3));
 
         return gar;
     }
@@ -85,7 +85,7 @@ public class PlayerData {
             ex.printStackTrace();
         }
 
-        pet.setJumpSprite(new AnimatedSprite(bagong_jump, 118, bagong_jump.getHeight() / 7, 2));
+        pet.setJumpSprite(new AnimatedSprite(bagong_jump, 118, bagong_jump.getHeight() / 7, 3));
 
         return pet;
     }

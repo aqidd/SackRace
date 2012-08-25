@@ -10,11 +10,15 @@ package flipbox.sackrace.staticvalue;
  * @author QED
  */
 public class TypeList {
+    //kind of players
+    public static final int GARENG = 1;
+    public static final int PETRUK = 2;
+    public static final int BAGONG = 3;
     //kind of obstacles
     public static final int BAT = 1;
     public static final int BIRD = 1;
-    public static final int BALLOON =1;
-    public static final int CLOUND =1;
+    public static final int BALLOON = 1;
+    public static final int CLOUND = 1;
     public static final int HYDRANT = 2;
     public static final int ROCK = 2;
     public static final int POOP = 2;

@@ -4,9 +4,11 @@
  */
 package flipbox.sackrace.nongamescreen;
 
+import flipbox.sackrace.data.GameDataHelper;
 import flipbox.sackrace.game.GameMidlet;
 import flipbox.sackrace.game.IGameScene;
 import flipbox.sackrace.staticvalue.StaticData;
+import flipbox.sackrace.staticvalue.TypeList;
 import flipbox.sackrace.ui.ButtonImageItem;
 import flipbox.sackrace.ui.ImageItem;
 import java.io.IOException;
@@ -135,8 +137,15 @@ public class ChooseCharacterScene implements IGameScene {
                 && y >= buttonStory.getY() && y <= (buttonStory.getY() + buttonStory.getHeight())) {
             resetButton();
             try {
-                GameMidlet.gameCanvas.setGameScene(new MapScene());
+                if (gpos) {
+                    GameDataHelper.writeHighScore(GameDataHelper.PILIHAN_PLAYER, TypeList.GARENG);
+                } else if (ppos) {
+                    GameDataHelper.writeHighScore(GameDataHelper.PILIHAN_PLAYER, TypeList.PETRUK);
+                } else if (bpos) {
+                    GameDataHelper.writeHighScore(GameDataHelper.PILIHAN_PLAYER, TypeList.BAGONG);
+                }
                 
+                GameMidlet.gameCanvas.setGameScene(new MapScene());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

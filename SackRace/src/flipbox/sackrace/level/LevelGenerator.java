@@ -36,6 +36,7 @@ public class LevelGenerator {
     static int distance = 0;
     static boolean damaged = false;
     static int obstacleCounter, coinCounter = 0;
+    static boolean paused = false;
 
     public static void initConstraints(int minObs, int maxObs, int minBerk, int maxBerk,
             int minBlo, int maxBlo, int minCo, int maxCo) {
@@ -156,7 +157,10 @@ public class LevelGenerator {
             Obstacle obj = (Obstacle) obstacleList.elementAt(x);
             ImageItem img = obj.getSprite();
             if (img.getY() > -150) {
-                img.setY(img.getY() - 3);
+                if (paused) {
+                } else {
+                    img.setY(img.getY() - 3);
+                }
             }
 
             if (img.getY() > 330 && constraint.objective.qualifiedValue - distance < 330) {
@@ -175,7 +179,10 @@ public class LevelGenerator {
             Item obj = (Item) coinList.elementAt(x);
             ImageItem img = obj.getSprite();
             if (img.getY() > -150) {
-                img.setY(img.getY() - 3);
+                if (paused) {
+                } else {
+                    img.setY(img.getY() - 3);
+                }
             }
 
             if (img.getY() > 330 && constraint.objective.qualifiedValue - distance < 330) {
@@ -194,7 +201,10 @@ public class LevelGenerator {
             Item obj = (Item) bloodList.elementAt(x);
             ImageItem img = obj.getSprite();
             if (img.getY() > -150 && constraint.objective.qualifiedValue - distance > 200) {
-                img.setY(img.getY() - 3);
+                if (paused) {
+                } else {
+                    img.setY(img.getY() - 3);
+                }
             }
 
             if (img.getY() <= 330 && constraint.objective.qualifiedValue - distance > 200) {
@@ -205,8 +215,10 @@ public class LevelGenerator {
             obj.setSprite(img);
             bloodList.setElementAt(obj, x);
         }
-        distance += 3;
-
+        if (paused) {
+        } else {
+            distance += 3;
+        } 
         //CURRENTLY AVAILABLE OBJECTIVE : DISTANCE
         if (constraint.objective.objectiveType == TypeList.DISTANCE) {
             if (constraint.objective.qualifiedValue - distance < 200) {
@@ -248,7 +260,7 @@ public class LevelGenerator {
             if (obstacleCounter < obstacleList.size()) {
                 obstacleCounter++;
             }
-            
+
             damaged = false;
         }
 

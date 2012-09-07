@@ -301,8 +301,10 @@ public class GameRumah implements IGameScene {
      */
     private void setNgesot() throws Exception {
         player.setState(TypeList.SLIDE);
+        player.getSprite().stop();
         player.setSprite(player.getSlideSprite());
         player.getSprite().setPosition(17, 150);
+        player.getSprite().play();
     }
 
     /*
@@ -310,8 +312,10 @@ public class GameRumah implements IGameScene {
      */
     private void setLompat() throws Exception {
         player.setState(TypeList.JUMP);
+        player.getSprite().stop();
         player.setSprite(player.getJumpSprite());
         player.getSprite().setPosition(17, 150);
+        player.getSprite().play();
     }
 
     /*
@@ -319,8 +323,10 @@ public class GameRumah implements IGameScene {
      */
     private void setNormal() throws Exception {
         player.setState(TypeList.NORMAL);
+        player.getSprite().stop();
         player.setSprite(player.getNormalSprite());
         player.getSprite().setPosition(17, 150);
+        player.getSprite().play();
         //resetButton();
     }
 

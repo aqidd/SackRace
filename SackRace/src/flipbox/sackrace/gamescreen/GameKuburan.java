@@ -220,9 +220,9 @@ public class GameKuburan implements IGameScene {
      * Metode untuk menginisialisasi rintangan sesuai levelnya
      */
     private void initLevel() {
-        LevelGenerator.initConstraints(14, 20, 0, 0, 1, 2, 50, 90);
+        LevelGenerator.initConstraints(6, 10, 0, 0, 1, 2, 30, 50);
         LevelGenerator.initDistance(50, 300, 180, 200);
-        LevelGenerator.initObjective(TypeList.DISTANCE, 2000);
+        LevelGenerator.initObjective(TypeList.DISTANCE, 1000);
         LevelGenerator.generateObstacles();
         LevelGenerator.generateCoins();
         System.out.println("selesai init level");
@@ -233,7 +233,14 @@ public class GameKuburan implements IGameScene {
      */
     private void initPlayer() {
         try {
-            player = PlayerData.getBagong();
+        System.out.println("nilai player : " + GameDataHelper.getHighScore(GameDataHelper.PILIHAN_PLAYER));    
+            if (GameDataHelper.getHighScore(GameDataHelper.PILIHAN_PLAYER) == TypeList.GARENG) {
+                player = PlayerData.getGareng();
+            } else if (GameDataHelper.getHighScore(GameDataHelper.PILIHAN_PLAYER) == TypeList.PETRUK) {
+                player = PlayerData.getPetruk();
+            } else if (GameDataHelper.getHighScore(GameDataHelper.PILIHAN_PLAYER) == TypeList.BAGONG) {
+                player = PlayerData.getBagong();
+            }
             player.getSprite().setPosition(17, 150);
             player.getSprite().play();
         } catch (Exception ex) {
@@ -262,8 +269,8 @@ public class GameKuburan implements IGameScene {
         BACKGROUND_POSB = backgroundImage.getWidth() - 40;
         BACKGROUND_POSC = 2 * BACKGROUND_POSB;
     }
-    
-    private void resetAwanPos(){
+
+    private void resetAwanPos() {
         BACKGROUND_POSAWAN_A = 0;
         BACKGROUND_POSAWAN_B = backgroundImage.getWidth() - 40;
         BACKGROUND_POSAWAN_C = 2 * BACKGROUND_POSAWAN_B;
@@ -293,10 +300,8 @@ public class GameKuburan implements IGameScene {
      * Metode yang dipanggil ketika tombol slide ditekan
      */
     private void setNgesot() throws Exception {
-        Image bagong = StaticData.rotateImage(Image.createImage(
-                "/resource/chars/bagong_ngesot.png"), 90);
         player.setState(TypeList.SLIDE);
-        player.setSprite(new AnimatedSprite(bagong, 70, bagong.getHeight() / 4, 3));
+        player.setSprite(player.getSlideSprite());
         player.getSprite().setPosition(17, 150);
     }
 
@@ -304,10 +309,8 @@ public class GameKuburan implements IGameScene {
      * Metode yang dipanggil ketika tombol slide ditekan
      */
     private void setLompat() throws Exception {
-        Image bagong = StaticData.rotateImage(Image.createImage(
-                "/resource/chars/sprite loncat bagong.png"), 90);
         player.setState(TypeList.JUMP);
-        player.setSprite(new AnimatedSprite(bagong, 100, bagong.getHeight() / 7, 2));
+        player.setSprite(player.getJumpSprite());
         player.getSprite().setPosition(17, 150);
     }
 
@@ -315,10 +318,8 @@ public class GameKuburan implements IGameScene {
      * Metode untuk menormalisasi tampilan karakter
      */
     private void setNormal() throws Exception {
-//        Image bagong = StaticData.rotateImage(Image.createImage(
-//                "/resource/chars/bagong_lompat.png"), 90);
         player.setState(TypeList.NORMAL);
-        player.setSprite(PlayerData.getBagong().getSprite());
+        player.setSprite(player.getNormalSprite());
         player.getSprite().setPosition(17, 150);
         //resetButton();
     }
@@ -394,7 +395,7 @@ public class GameKuburan implements IGameScene {
     }
 
     private void renderAwan(int fpr, Graphics g) {
-        
+
         /*
          * Angka-angka yang ada di sini merupakan angka custom. Silahkan diubah
          * sekenanya
@@ -408,7 +409,7 @@ public class GameKuburan implements IGameScene {
         //System.out.println(BACKGROUND_POSA+" hahaha");
 
         //Algoritma enyesuaian letak background di layar
-        if (BACKGROUND_POSAWAN_B<= 0) {
+        if (BACKGROUND_POSAWAN_B <= 0) {
             //System.out.println("abeeeeesss");
             resetAwanPos();
         }

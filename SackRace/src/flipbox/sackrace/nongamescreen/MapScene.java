@@ -7,6 +7,7 @@ package flipbox.sackrace.nongamescreen;
 import flipbox.sackrace.game.GameMidlet;
 import flipbox.sackrace.game.IGameScene;
 import flipbox.sackrace.gamescreen.GameKuburan;
+import flipbox.sackrace.gamescreen.GameLomba;
 import flipbox.sackrace.gamescreen.GameRumah;
 import flipbox.sackrace.ui.ButtonImageItem;
 import flipbox.sackrace.ui.ImageItem;
@@ -127,6 +128,11 @@ public class MapScene implements IGameScene {
                 && x >= buttonStage.getX() && x <= (buttonStage.getX() + buttonStage.getWidth())
                 && y >= buttonStage.getY() && y <= (buttonStage.getY() + buttonStage.getHeight())) {
             resetButton();
+               try {
+                GameMidlet.gameCanvas.setGameScene(new GameLomba());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 

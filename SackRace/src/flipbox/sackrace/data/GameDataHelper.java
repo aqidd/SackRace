@@ -19,6 +19,8 @@ public class GameDataHelper {
     public static final int MINI_GAME_MANCING = 1;
     public static final int BALAP_KARUNG_RUMAH = 2;
     public static final int BALAP_KARUNG_KUBURAN = 3;
+    public static final int BALAP_KARUNG_LOMBA = 5;
+    public static final int TOTAL_COIN = 6;
     public static final int PILIHAN_PLAYER = 4;
     
     public static final String RECORD_STORE_NAME = "flipboxdolanan";

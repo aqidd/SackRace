@@ -30,7 +30,7 @@ import javax.microedition.lcdui.game.Sprite;
 public class GameLomba implements IGameScene {
 
     private Player player;
-    ImageItem backgroundImage,backgroundImage2, awan, buttonCoin, buttonLife1, buttonLife2, buttonLife3;
+    ImageItem backgroundImage, backgroundImage2, awan, buttonCoin, buttonLife1, buttonLife2, buttonLife3;
     ButtonImageItem buttonSlide, buttonJump;
     //AnimatedSprite sprite;
     boolean start;
@@ -128,9 +128,11 @@ public class GameLomba implements IGameScene {
         }
 
         if (finish) {
-            if (GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_KUBURAN) < player.getCoinCount()) {
-                GameDataHelper.writeHighScore(GameDataHelper.BALAP_KARUNG_KUBURAN, player.getCoinCount());
+            if (GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_LOMBA) < player.getCoinCount()) {
+                GameDataHelper.writeHighScore(GameDataHelper.BALAP_KARUNG_LOMBA, player.getCoinCount());
             }
+            GameDataHelper.writeHighScore(GameDataHelper.TOTAL_COIN, 
+                    GameDataHelper.getHighScore(GameDataHelper.TOTAL_COIN)+player.getCoinCount());
             releaseMemory();
             try {
                 GameMidlet.gameCanvas.setGameScene(new MapScene());
@@ -233,7 +235,7 @@ public class GameLomba implements IGameScene {
      */
     private void initPlayer() {
         try {
-        System.out.println("nilai player : " + GameDataHelper.getHighScore(GameDataHelper.PILIHAN_PLAYER));    
+            System.out.println("nilai player : " + GameDataHelper.getHighScore(GameDataHelper.PILIHAN_PLAYER));
             if (GameDataHelper.getHighScore(GameDataHelper.PILIHAN_PLAYER) == TypeList.GARENG) {
                 player = PlayerData.getGareng();
             } else if (GameDataHelper.getHighScore(GameDataHelper.PILIHAN_PLAYER) == TypeList.PETRUK) {
@@ -290,7 +292,7 @@ public class GameLomba implements IGameScene {
         buttonLife2 = new ImageItem("/resource/button/heart.png");
         buttonLife3 = new ImageItem("/resource/button/heart.png");
         buttonJump.setX(0).setY(250);
-        buttonCoin.setX(230).setY(10 + 230);
+        buttonCoin.setX(200).setY(20 + 245);
         buttonLife1.setX(230).setY(10);
         buttonLife2.setX(230).setY(10 + buttonLife2.getWidth() + 10);
         buttonLife3.setX(230).setY(10 + 2 * buttonLife3.getWidth() + 2 * 10);
@@ -381,24 +383,41 @@ public class GameLomba implements IGameScene {
         }
     }
 
+    private Image clearBackground(Image image) {
+        // convert image pixels data to int array
+	int[] rgb = new int [image.getWidth() * image.getHeight()];
+	image.getRGB(rgb, 0, image.getWidth(), 0, 0, image.getWidth(), image.getHeight());
+ 
+	// drop alpha component (make it transparent) on pixels that are still at default color
+	for(int i = 0; i < rgb.length; ++i) {
+		if(rgb[i] == 0xffffffff) {
+			rgb[i] &= 0x00ffffff;
+		}
+	}
+        // create a new image with the pixel data and set process alpha flag to true
+	return Image.createRGBImage(rgb, image.getWidth(), image.getHeight(), true);
+    }
+    
     /*
      * Metode untuk menggambar Score di layar
      */
     private void renderScore(Graphics g) throws Exception {
-        //gambar highscore sebelumnya
-        Image mutableImageHigh = Image.createImage(20, 20);
+        
+        Image mutableImageHigh = Image.createImage(130, 20);
         Graphics grImageHigh = mutableImageHigh.getGraphics();
-        grImageHigh.drawString(GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_KUBURAN) + "", 0, 0, Graphics.LEFT | Graphics.TOP);
-        g.drawImage(StaticData.rotateImage(mutableImageHigh, 90),
-                buttonCoin.getX() - 5, buttonCoin.getY() - 30,
+        //Graphics grImageHigh = transparentImage.getGraphics();
+        
+        grImageHigh.drawString("HIGHSCORE :"+GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_LOMBA), 0, 0, Graphics.LEFT | Graphics.TOP);
+        g.drawImage(StaticData.rotateImage(clearBackground(mutableImageHigh), 90),
+                buttonCoin.getX() +25, buttonCoin.getY() - 75,
                 Graphics.RIGHT | Graphics.TOP);
 
         //gambar score
         Image mutableImage = Image.createImage(20, 20);
         Graphics grImage = mutableImage.getGraphics();
         grImage.drawString(player.getCoinCount() + "", 0, 0, Graphics.LEFT | Graphics.TOP);
-        g.drawImage(StaticData.rotateImage(mutableImage, 90),
-                buttonCoin.getX() - 5, buttonCoin.getY() + 30,
+        g.drawImage(StaticData.rotateImage(clearBackground(mutableImage), 90),
+                buttonCoin.getX(), buttonCoin.getY() + 30,
                 Graphics.RIGHT | Graphics.TOP);
     }
 

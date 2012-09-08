@@ -4,15 +4,18 @@
  */
 package flipbox.sackrace.nongamescreen;
 
+import flipbox.sackrace.data.GameDataHelper;
 import flipbox.sackrace.game.GameMidlet;
 import flipbox.sackrace.game.IGameScene;
 import flipbox.sackrace.gamescreen.GameKuburan;
 import flipbox.sackrace.gamescreen.GameLomba;
 import flipbox.sackrace.gamescreen.GameRumah;
+import flipbox.sackrace.staticvalue.StaticData;
 import flipbox.sackrace.ui.ButtonImageItem;
 import flipbox.sackrace.ui.ImageItem;
 import java.io.IOException;
 import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.Image;
 
 /**
  *
@@ -21,7 +24,7 @@ import javax.microedition.lcdui.Graphics;
 public class MapScene implements IGameScene {
 
     ButtonImageItem buttonHome, buttonGrave, buttonStage, buttonBack;
-    ImageItem backgroundImage;
+    ImageItem backgroundImage, buttonCoin;
     boolean start;
     boolean hasInit;
     boolean soundOn;
@@ -36,6 +39,8 @@ public class MapScene implements IGameScene {
         buttonStage = new ButtonImageItem("/resource/map/stage.png", "/resource/map/stage.png");
         buttonBack = new ButtonImageItem("/resource/nav/back.png", "/resource/nav/back_pressed.png");
 
+        buttonCoin = new ImageItem("/resource/button/coin.png");
+        buttonCoin.setX(200).setY(245-20);
         buttonHome.setX(160).setY(60);
         buttonGrave.setX(100).setY(130);
         buttonStage.setX(70).setY(230);
@@ -51,6 +56,13 @@ public class MapScene implements IGameScene {
         if (start) {
             //drawing background
             g.drawImage(backgroundImage.getImage(), 0, 0, Graphics.LEFT | Graphics.TOP);
+            try {
+                renderScore(g);
+                g.drawImage(buttonCoin.getImage(), buttonCoin.getX(),
+                    buttonCoin.getY(), Graphics.RIGHT | Graphics.TOP);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             if (buttonBack.isVisible()) {
                 g.drawImage(buttonBack.getImage(), buttonBack.getX(), buttonBack.getY(), Graphics.TOP | Graphics.LEFT);
             }
@@ -136,6 +148,44 @@ public class MapScene implements IGameScene {
         }
     }
 
+    private Image clearBackground(Image image) {
+        // convert image pixels data to int array
+	int[] rgb = new int [image.getWidth() * image.getHeight()];
+	image.getRGB(rgb, 0, image.getWidth(), 0, 0, image.getWidth(), image.getHeight());
+ 
+	// drop alpha component (make it transparent) on pixels that are still at default color
+	for(int i = 0; i < rgb.length; ++i) {
+		if(rgb[i] == 0xffffffff) {
+			rgb[i] &= 0x00ffffff;
+		}
+	}
+        // create a new image with the pixel data and set process alpha flag to true
+	return Image.createRGBImage(rgb, image.getWidth(), image.getHeight(), true);
+    }
+    
+    private void renderScore(Graphics g) throws Exception {
+        //gambar highscore sebelumnya
+        
+        Image mutableImageHigh = Image.createImage(150, 20);
+        Graphics grImageHigh = mutableImageHigh.getGraphics();
+        //Graphics grImageHigh = transparentImage.getGraphics();
+        
+        grImageHigh.drawString("TOTAL COIN", 0, 0, Graphics.LEFT | Graphics.TOP);
+        g.drawImage(StaticData.rotateImage(clearBackground(mutableImageHigh), 90),
+                200 +25, 245 - 50,
+                Graphics.RIGHT | Graphics.TOP);
+
+        Image mutableImageLow = Image.createImage(150, 20);
+        Graphics grImageLow = mutableImageLow.getGraphics();
+        //Graphics grImageHigh = transparentImage.getGraphics();
+        
+        grImageLow.drawString(""+GameDataHelper.getHighScore(GameDataHelper.TOTAL_COIN), 0, 0, Graphics.LEFT | Graphics.TOP);
+        g.drawImage(StaticData.rotateImage(clearBackground(mutableImageLow), 90),
+                200, 245 +10,
+                Graphics.RIGHT | Graphics.TOP);
+
+    }
+    
     private void resetButton() {
         buttonHome.setOnPressed(false);
         buttonGrave.setOnPressed(false);

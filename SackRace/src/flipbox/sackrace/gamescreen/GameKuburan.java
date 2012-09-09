@@ -46,7 +46,7 @@ public class GameKuburan implements IGameScene {
     private static int BACKGROUND_POSAWAN_A;
     private static int BACKGROUND_POSAWAN_B;
     private static int BACKGROUND_POSAWAN_C;
-
+    int speed = 5;
     public void setGameMidlet(GameMidlet midelet) {
         midlet = midelet;
         System.out.println("selesai set game midlet");
@@ -70,7 +70,7 @@ public class GameKuburan implements IGameScene {
         }
         //Merender background jika belum dilakukan pada perenderan sekarang
         if (!hasRenderBackground) {
-            renderBackground(3, g);
+            renderBackground(speed, g);
             renderAwan(1, g);
             g.drawImage(buttonCoin.getImage(), buttonCoin.getX(),
                     buttonCoin.getY(), Graphics.RIGHT | Graphics.TOP);
@@ -222,7 +222,7 @@ public class GameKuburan implements IGameScene {
      * Metode untuk menginisialisasi rintangan sesuai levelnya
      */
     private void initLevel() {
-        LevelGenerator.initConstraints(6, 10, 0, 0, 1, 2, 30, 50);
+        LevelGenerator.initConstraints(6, 10, 0, 0, 1, 2, 30, 50, speed);
         LevelGenerator.initDistance(50, 300, 180, 200);
         LevelGenerator.initObjective(TypeList.DISTANCE, 1000);
         LevelGenerator.generateObstacles();

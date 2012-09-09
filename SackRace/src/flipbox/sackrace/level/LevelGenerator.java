@@ -37,9 +37,9 @@ public class LevelGenerator {
     static boolean damaged = false;
     static int obstacleCounter, coinCounter = 0;
     static boolean paused = false;
-
+    
     public static void initConstraints(int minObs, int maxObs, int minBerk, int maxBerk,
-            int minBlo, int maxBlo, int minCo, int maxCo) {
+            int minBlo, int maxBlo, int minCo, int maxCo, int speed) {
         constraint.minObstacles = minObs;
         constraint.maxObstacles = maxObs;
         constraint.minBerserks = minBerk;
@@ -49,6 +49,7 @@ public class LevelGenerator {
         constraint.minCoins = minCo;
         constraint.maxCoins = maxCo;
         constraint.isInitialized = true;
+        constraint.speed = speed;
     }
 
     public static void initDistance(int coinDis, int bloodDis, int obsDis, int berDis) {
@@ -159,7 +160,7 @@ public class LevelGenerator {
             if (img.getY() > -150) {
                 if (paused) {
                 } else {
-                    img.setY(img.getY() - 3);
+                    img.setY(img.getY() - constraint.speed);
                 }
             }
 
@@ -181,7 +182,7 @@ public class LevelGenerator {
             if (img.getY() > -150) {
                 if (paused) {
                 } else {
-                    img.setY(img.getY() - 3);
+                    img.setY(img.getY() - constraint.speed);
                 }
             }
 
@@ -203,7 +204,7 @@ public class LevelGenerator {
             if (img.getY() > -150 && constraint.objective.qualifiedValue - distance > 200) {
                 if (paused) {
                 } else {
-                    img.setY(img.getY() - 3);
+                    img.setY(img.getY() - constraint.speed);
                 }
             }
 
@@ -217,7 +218,7 @@ public class LevelGenerator {
         }
         if (paused) {
         } else {
-            distance += 3;
+            distance += constraint.speed;
         } 
         //CURRENTLY AVAILABLE OBJECTIVE : DISTANCE
         if (constraint.objective.objectiveType == TypeList.DISTANCE) {
@@ -267,7 +268,7 @@ public class LevelGenerator {
 
         Item coin_obj = (Item) coinList.elementAt(coinCounter);
         ImageItem coin_img = coin_obj.getSprite();
-        if (coin_img.getY() <= p.getSprite().getY() + 3 && coin_img.getY() >= p.getSprite().getY() - 3) {
+        if (coin_img.getY() <= p.getSprite().getY() + 4 && coin_img.getY() >= p.getSprite().getY() - 4) {
             coin_img.setVisible(false);
             p.setCoinCount(p.getCoinCount() + 1);
             if (coinCounter < coinList.size()) {

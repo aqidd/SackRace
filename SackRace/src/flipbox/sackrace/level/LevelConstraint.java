@@ -36,6 +36,9 @@ public class LevelConstraint {
     //untuk menentukan jarak minimum obstacle (makin tinggi level makin besar jaraknya)
     int minBerserkDistance;
     
+    //untuk menentukan kecepatan level
+    int speed;
+    
     LevelObjective objective;
   
 }

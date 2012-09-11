@@ -31,12 +31,13 @@ public class GameLomba implements IGameScene {
 
     private Player player;
     ImageItem backgroundImage, backgroundImage2, awan, buttonCoin, buttonLife1, buttonLife2, buttonLife3;
+    ImageItem successDialog, gameOverDialog;
     ButtonImageItem buttonSlide, buttonJump;
     //AnimatedSprite sprite;
     boolean start;
     private boolean hasInit;
     boolean soundOn;
-    boolean finish;
+    int finish;
     private GameMidlet midlet;
     private static long timeLapsed = 0;
     private boolean hasRenderBackground;
@@ -47,7 +48,7 @@ public class GameLomba implements IGameScene {
     private static int BACKGROUND_POSAWAN_B;
     private static int BACKGROUND_POSAWAN_C;
     int speed = 7;
-    
+
     public void setGameMidlet(GameMidlet midelet) {
         midlet = midelet;
         System.out.println("selesai set game midlet");
@@ -55,6 +56,8 @@ public class GameLomba implements IGameScene {
 
     public void initResource() throws IOException {
         System.out.println("masuk init resource");
+        successDialog = new ImageItem("/resource/tambahan/success.png").setX(30).setY(10).setVisible(true);
+        gameOverDialog = new ImageItem("/resource/tambahan/gameover.png").setX(30).setY(10).setVisible(true);
         initPlayer();
         initBackground();
         initButton();
@@ -120,6 +123,18 @@ public class GameLomba implements IGameScene {
                     g.drawImage(buttonJump.getImage(), buttonJump.getX(),
                             buttonJump.getY(), Graphics.TOP | Graphics.LEFT);
                 }
+
+                //jika berhasil
+                if (finish == TypeList.SUCCESS) {
+                    LevelGenerator.pause();
+                    g.drawImage(successDialog.getImage(), successDialog.getX(), successDialog.getY(), Graphics.TOP | Graphics.LEFT);
+                }
+                //jika gagal
+                if (finish == TypeList.GAMEOVER) {
+                    LevelGenerator.pause();
+                    g.drawImage(gameOverDialog.getImage(), gameOverDialog.getX(), gameOverDialog.getY(), Graphics.TOP | Graphics.LEFT);
+                }
+
                 //Akhir dari peletakan item di layar, flag penggambaran background 
                 //selanjutnya diset false lagi
                 hasRenderBackground = false;
@@ -128,19 +143,6 @@ public class GameLomba implements IGameScene {
             }
         }
 
-        if (finish) {
-            if (GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_LOMBA) < player.getCoinCount()) {
-                GameDataHelper.writeHighScore(GameDataHelper.BALAP_KARUNG_LOMBA, player.getCoinCount());
-            }
-            GameDataHelper.writeHighScore(GameDataHelper.TOTAL_COIN, 
-                    GameDataHelper.getHighScore(GameDataHelper.TOTAL_COIN)+player.getCoinCount());
-            releaseMemory();
-            try {
-                GameMidlet.gameCanvas.setGameScene(new MapScene());
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
     }
 
     public void releaseMemory() {
@@ -152,7 +154,7 @@ public class GameLomba implements IGameScene {
         buttonSlide = null;
 
         start = false;
-        finish = false;
+        finish = TypeList.PLAYING;
         hasInit = false;
         GameMidlet midlet = null;
         timeLapsed = 0;
@@ -160,6 +162,7 @@ public class GameLomba implements IGameScene {
     }
 
     public void pointerPressed(int x, int y) {
+
         if (buttonSlide.isCanClick()
                 && x >= buttonSlide.getX() && x <= (buttonSlide.getX() + buttonSlide.getWidth())
                 && y >= buttonSlide.getY() && y <= (buttonSlide.getY() + buttonSlide.getHeight())) {
@@ -183,6 +186,11 @@ public class GameLomba implements IGameScene {
     }
 
     public void pointerReleased(int x, int y) {
+
+        if (LevelGenerator.isPaused()) {
+            LevelGenerator.resume();
+        }
+
         if (buttonSlide.isOnPressed()
                 && x >= buttonSlide.getX() && x <= (buttonSlide.getX() + buttonSlide.getWidth())
                 && y >= buttonSlide.getY() && y <= (buttonSlide.getY() + buttonSlide.getHeight())) {
@@ -204,6 +212,23 @@ public class GameLomba implements IGameScene {
                 //buttonSlide.setOnPressed(false);
                 resetButton();
             } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        //jika game telah selesai
+        if (finish != TypeList.PLAYING) {
+            try {
+                if (finish == TypeList.SUCCESS) {
+                    if (GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_RUMAH) < player.getCoinCount()) {
+                        GameDataHelper.writeHighScore(GameDataHelper.BALAP_KARUNG_RUMAH, player.getCoinCount());
+                    }
+                    GameDataHelper.writeHighScore(GameDataHelper.TOTAL_COIN,
+                            GameDataHelper.getHighScore(GameDataHelper.TOTAL_COIN) + player.getCoinCount());
+                }
+                releaseMemory();
+                GameMidlet.gameCanvas.setGameScene(new MapScene());
+            } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }
@@ -386,31 +411,31 @@ public class GameLomba implements IGameScene {
 
     private Image clearBackground(Image image) {
         // convert image pixels data to int array
-	int[] rgb = new int [image.getWidth() * image.getHeight()];
-	image.getRGB(rgb, 0, image.getWidth(), 0, 0, image.getWidth(), image.getHeight());
- 
-	// drop alpha component (make it transparent) on pixels that are still at default color
-	for(int i = 0; i < rgb.length; ++i) {
-		if(rgb[i] == 0xffffffff) {
-			rgb[i] &= 0x00ffffff;
-		}
-	}
+        int[] rgb = new int[image.getWidth() * image.getHeight()];
+        image.getRGB(rgb, 0, image.getWidth(), 0, 0, image.getWidth(), image.getHeight());
+
+        // drop alpha component (make it transparent) on pixels that are still at default color
+        for (int i = 0; i < rgb.length; ++i) {
+            if (rgb[i] == 0xffffffff) {
+                rgb[i] &= 0x00ffffff;
+            }
+        }
         // create a new image with the pixel data and set process alpha flag to true
-	return Image.createRGBImage(rgb, image.getWidth(), image.getHeight(), true);
+        return Image.createRGBImage(rgb, image.getWidth(), image.getHeight(), true);
     }
-    
+
     /*
      * Metode untuk menggambar Score di layar
      */
     private void renderScore(Graphics g) throws Exception {
-        
+
         Image mutableImageHigh = Image.createImage(130, 20);
         Graphics grImageHigh = mutableImageHigh.getGraphics();
         //Graphics grImageHigh = transparentImage.getGraphics();
-        
-        grImageHigh.drawString("HIGHSCORE :"+GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_LOMBA), 0, 0, Graphics.LEFT | Graphics.TOP);
+
+        grImageHigh.drawString("HIGHSCORE :" + GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_LOMBA), 0, 0, Graphics.LEFT | Graphics.TOP);
         g.drawImage(StaticData.rotateImage(clearBackground(mutableImageHigh), 90),
-                buttonCoin.getX() +25, buttonCoin.getY() - 75,
+                buttonCoin.getX() + 25, buttonCoin.getY() - 75,
                 Graphics.RIGHT | Graphics.TOP);
 
         //gambar score

@@ -16,6 +16,7 @@ public class Player {
     private int coinCount;
     String name;
     AnimatedSprite sprite, jumpSprite, slideSprite, normalSprite;
+    AnimatedSprite crashedUpSprite, crashedDownSprite;
     int state;
 
     public int getState() {
@@ -88,6 +89,21 @@ public class Player {
     public void setNormalSprite(AnimatedSprite normalSprite) {
         this.normalSprite = normalSprite;
     }
-    
+
+    public AnimatedSprite getCrashedDownSprite() {
+        return crashedDownSprite;
+    }
+
+    public void setCrashedDownSprite(AnimatedSprite crashedDownSprite) {
+        this.crashedDownSprite = crashedDownSprite;
+    }
+
+    public AnimatedSprite getCrashedUpSprite() {
+        return crashedUpSprite;
+    }
+
+    public void setCrashedUpSprite(AnimatedSprite crashedUpSprite) {
+        this.crashedUpSprite = crashedUpSprite;
+    }
     
 }

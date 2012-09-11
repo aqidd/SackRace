@@ -65,7 +65,7 @@ public class LevelGenerator {
         objective.qualifiedValue = value;
         constraint.objective = objective;
     }
-
+        
     public static void generateObstacles() {
         if (constraint.isInitialized) {
             int obstaclesCount = randomValue(constraint.minObstacles, constraint.maxObstacles);
@@ -153,7 +153,7 @@ public class LevelGenerator {
         }
     }
 
-    public static boolean run(Graphics g, Player p) {
+    public static int run(Graphics g, Player p) {
         for (int x = 0; x < obstacleList.size(); x++) {
             Obstacle obj = (Obstacle) obstacleList.elementAt(x);
             ImageItem img = obj.getSprite();
@@ -227,14 +227,14 @@ public class LevelGenerator {
                 g.drawChars(finish, 0, 6, 20, 100 + (constraint.objective.qualifiedValue - distance), Graphics.TOP | Graphics.LEFT);
                 if (constraint.objective.qualifiedValue - distance <= 0) {
                     //true artinya udah selesai
-                    return true;
+                    return TypeList.SUCCESS;
                 }
             }
         }
 
         //GAME OVER CONDITION
         if (p.getBloodLevel() == 0) {
-            return true;
+            return TypeList.GAMEOVER;
         }
 
         //CHECK FOR COLLISION?
@@ -281,7 +281,7 @@ public class LevelGenerator {
 //                }
 //            }
 
-        return false;
+        return 0;
     }
 
     public static void stop() {
@@ -289,6 +289,7 @@ public class LevelGenerator {
         damaged = false;
         obstacleCounter = 0;
         coinCounter = 0;
+        paused = false;
         constraint = new LevelConstraint();
         obstacleList.removeAllElements();
         coinList.removeAllElements();
@@ -296,6 +297,19 @@ public class LevelGenerator {
         bloodList.removeAllElements();
     }
 
+    public static void pause()
+    {
+        paused = true;
+    }
+    public static void resume()
+    {
+        paused = false;
+    }
+    public static boolean isPaused()
+    {
+        return paused;
+    }
+    
     public static int randomValue(int min, int max) {
         Random number = new Random();
         float f = number.nextFloat() * 100000;

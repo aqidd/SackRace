@@ -39,4 +39,8 @@ public class TypeList {
     public static final int NORMAL = 0;
     public static final int JUMP = 1;
     public static final int SLIDE = 2;
+    //type of end game
+    public static final int PLAYING = 0;
+    public static final int SUCCESS = 1;
+    public static final int GAMEOVER = 2;
 }

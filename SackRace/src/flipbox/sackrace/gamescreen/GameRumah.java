@@ -31,8 +31,8 @@ public class GameRumah implements IGameScene {
 
     private Player player;
     ImageItem backgroundImage, awan, buttonCoin, buttonLife1, buttonLife2, buttonLife3;
-    ImageItem tutorDialog, successDialog, gameOverDialog;
-    ButtonImageItem buttonSlide, buttonJump;
+    ImageItem tutorDialog, successDialog, gameOverDialog, pauseDialog;
+    ButtonImageItem buttonSlide, buttonJump, buttonPause;
     //AnimatedSprite sprite;
     boolean start, tut;
     int finish;
@@ -57,6 +57,7 @@ public class GameRumah implements IGameScene {
     public void initResource() throws IOException {
         System.out.println("masuk init resource");
         tutorDialog = new ImageItem("/resource/tambahan/tut.png").setX(30).setY(10).setVisible(true);
+        pauseDialog = new ImageItem("/resource/tambahan/paused.png").setX(30).setY(10).setVisible(true);
         successDialog = new ImageItem("/resource/tambahan/success.png").setX(30).setY(10).setVisible(true);
         gameOverDialog = new ImageItem("/resource/tambahan/gameover.png").setX(30).setY(10).setVisible(true);
         initPlayer();
@@ -82,6 +83,7 @@ public class GameRumah implements IGameScene {
             g.drawImage(buttonCoin.getImage(), buttonCoin.getX(),
                     buttonCoin.getY(), Graphics.RIGHT | Graphics.TOP);
         }
+        
         //Mulai menjalankan algoritma permainan
         if (start) {
             try {
@@ -128,9 +130,20 @@ public class GameRumah implements IGameScene {
                             buttonJump.getY(), Graphics.TOP | Graphics.LEFT);
                 }
 
+                if(buttonPause.isVisible()){
+                    g.drawImage(buttonPause.getImage(), buttonPause.getX(),
+                            buttonPause.getY(), Graphics.TOP | Graphics.LEFT);
+                }
+                
                 if (tut) {
                     LevelGenerator.pause();
                     g.drawImage(tutorDialog.getImage(), tutorDialog.getX(), tutorDialog.getY(), Graphics.TOP | Graphics.LEFT);
+                }
+                
+                if(!tut && finish == TypeList.PLAYING && LevelGenerator.isPaused())
+                {
+                    //render pause image
+                    g.drawImage(pauseDialog.getImage(), pauseDialog.getX(), pauseDialog.getY(), Graphics.TOP | Graphics.LEFT);
                 }
 
                 //jika berhasil
@@ -162,7 +175,7 @@ public class GameRumah implements IGameScene {
         buttonCoin = null;
         buttonLife1 = buttonLife2 = buttonLife3 = null;
         buttonSlide = null;
-
+        buttonPause = null;
         start = false;
         finish = TypeList.PLAYING;
         hasInit = false;
@@ -172,6 +185,12 @@ public class GameRumah implements IGameScene {
     }
 
     public void pointerPressed(int x, int y) {
+
+        if (buttonPause.isCanClick()
+                && x >= buttonPause.getX() && x <= (buttonPause.getX() + buttonPause.getWidth())
+                && y >= buttonPause.getY() && y <= (buttonPause.getY() + buttonPause.getHeight())) {
+            buttonPause.setOnPressed(true);
+        }
 
         if (buttonSlide.isCanClick()
                 && x >= buttonSlide.getX() && x <= (buttonSlide.getX() + buttonSlide.getWidth())
@@ -196,14 +215,22 @@ public class GameRumah implements IGameScene {
     }
 
     public void pointerReleased(int x, int y) {
-        
+
         if (LevelGenerator.isPaused()) {
             LevelGenerator.resume();
+            resetButton();
             if (tut) {
                 tut = false;
             }
         }
-        
+
+        if (buttonPause.isOnPressed()
+                && x >= buttonPause.getX() && x <= (buttonPause.getX() + buttonPause.getWidth())
+                && y >= buttonPause.getY() && y <= (buttonPause.getY() + buttonPause.getHeight())) {
+            LevelGenerator.pause();
+            resetButton();
+        }
+
         if (buttonSlide.isOnPressed()
                 && x >= buttonSlide.getX() && x <= (buttonSlide.getX() + buttonSlide.getWidth())
                 && y >= buttonSlide.getY() && y <= (buttonSlide.getY() + buttonSlide.getHeight())) {
@@ -228,7 +255,7 @@ public class GameRumah implements IGameScene {
                 ex.printStackTrace();
             }
         }
-        
+
         //jika game telah selesai
         if (finish != TypeList.PLAYING) {
             try {
@@ -326,10 +353,13 @@ public class GameRumah implements IGameScene {
                 "/resource/button/slide_pressed.png");
         buttonJump = new ButtonImageItem("/resource/button/jump.png",
                 "/resource/button/jump_pressed.png");
+        buttonPause = new ButtonImageItem("/resource/button/button_pause.png",
+                "/resource/button/button_pause_pressed.png");
         buttonCoin = new ImageItem("/resource/button/coin.png");
         buttonLife1 = new ImageItem("/resource/button/heart.png");
         buttonLife2 = new ImageItem("/resource/button/heart.png");
         buttonLife3 = new ImageItem("/resource/button/heart.png");
+        buttonPause.setX(70).setY(0);
         buttonJump.setX(0).setY(250);
         buttonCoin.setX(200).setY(20 + 245);
         buttonLife1.setX(230).setY(10);
@@ -376,6 +406,7 @@ public class GameRumah implements IGameScene {
      * Metode untuk mengembalikan semua tombol ke mode tidak ditekan
      */
     private void resetButton() {
+        buttonPause.setOnPressed(false);
         buttonSlide.setOnPressed(false);
         buttonJump.setOnPressed(false);
     }

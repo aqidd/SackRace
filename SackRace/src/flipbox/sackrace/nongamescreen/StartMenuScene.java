@@ -20,7 +20,7 @@ import javax.microedition.lcdui.Image;
 public class StartMenuScene implements IGameScene {
 
     ButtonImageItem buttonStart, buttonAbout, buttonHelp, buttonSound, buttonExit;
-    ImageItem backgroundImage;
+    ImageItem backgroundImage, header;
     boolean start;
     boolean hasInit;
     boolean soundOn;
@@ -30,6 +30,7 @@ public class StartMenuScene implements IGameScene {
 
         soundOn = GameMidlet.isSoundOn();
 
+        header = new ImageItem("/resource/header.png");
         backgroundImage = new ImageItem("/resource/background_menu.jpg");
         buttonStart = new ButtonImageItem("/resource/button_start.png", "/resource/button_start_pressed.png");
         buttonAbout = new ButtonImageItem("/resource/button_about.png", "/resource/button_about_pressed.png");
@@ -42,6 +43,7 @@ public class StartMenuScene implements IGameScene {
             buttonSound = new ButtonImageItem("/resource/button_sound_off.png", null);
         }
 
+        header.setX(110).setY(65);
         buttonStart.setX(90).setY(105);
         buttonAbout.setX(55).setY(105);
         buttonHelp.setX(10).setY(270);
@@ -58,7 +60,8 @@ public class StartMenuScene implements IGameScene {
         if (start) {
             //drawing background
             g.drawImage(backgroundImage.getImage(), 0, 0, Graphics.LEFT | Graphics.TOP);
-
+            g.drawImage(header.getImage(), header.getX(), header.getY(), Graphics.LEFT | Graphics.TOP);
+            
             if (buttonStart.isVisible()) {
                 g.drawImage(buttonStart.getImage(), buttonStart.getX(), buttonStart.getY(), Graphics.TOP | Graphics.LEFT);
             }

@@ -21,7 +21,7 @@ import javax.microedition.lcdui.Graphics;
 public class ChooseCharacterScene implements IGameScene {
 
     ButtonImageItem buttonLeftArrow, buttonRightArrow, buttonBack, buttonStory, buttonInfinite;
-    ImageItem backgroundImage, gareng, petruk, bagong, nameGareng, namePetruk, nameBagong;
+    ImageItem backgroundImage, gareng, petruk, bagong, nameGareng, namePetruk, nameBagong, header;
     boolean gpos, bpos, ppos;
     boolean start;
     boolean hasInit;
@@ -36,8 +36,10 @@ public class ChooseCharacterScene implements IGameScene {
         buttonLeftArrow = new ButtonImageItem("/resource/chars/arrow_right.png", "/resource/chars/arrow_right.png");
         buttonRightArrow = new ButtonImageItem("/resource/chars/arrow_left.png", "/resource/chars/arrow_left.png");
         buttonBack = new ButtonImageItem("/resource/nav/back.png", "/resource/nav/back_pressed.png");
-        buttonStory = new ButtonImageItem("/resource/button_start.png", "/resource/button_start_pressed.png");
+        buttonStory = new ButtonImageItem("/resource/button_story.png", "/resource/button_story_pressed.png");
+        buttonInfinite = new ButtonImageItem("/resource/button_endless.png", "/resource/button_endless_pressed.png");
 
+        header = new ImageItem("/resource/chars/header.png");
         gareng = new ImageItem("/resource/chars/gareng.png");
         bagong = new ImageItem("/resource/chars/bagong.png");
         petruk = new ImageItem("/resource/chars/petruk.png");
@@ -51,15 +53,19 @@ public class ChooseCharacterScene implements IGameScene {
             ex.printStackTrace();
         }
 
-        gareng.setX(95).setY(115);
         gpos = true;
         bpos = ppos = false;
-        bagong.setX(95).setY(115);
-        petruk.setX(95).setY(115);
-
-        buttonStory.setX(30).setY(105);
-        buttonLeftArrow.setX(90).setY(220);
-        buttonRightArrow.setX(90).setY(60);
+        gareng.setX(110).setY(115);
+        bagong.setX(110).setY(115);
+        petruk.setX(110).setY(115);
+        nameBagong.setX(60).setY(140);
+        namePetruk.setX(60).setY(140);
+        nameGareng.setX(60).setY(140);
+        header.setX(110).setY(65);
+        buttonStory.setX(20).setY(35);
+        buttonInfinite.setX(20).setY(175);
+        buttonLeftArrow.setX(120).setY(230);
+        buttonRightArrow.setX(120).setY(60);
         buttonBack.setX(190).setY(10);
         hasInit = true;
         start = true;
@@ -73,6 +79,7 @@ public class ChooseCharacterScene implements IGameScene {
 //            System.out.println(" g : " + gareng.isVisible() + " b : " + bagong.isVisible() + " p : " + petruk.isVisible());
             //drawing background
             g.drawImage(backgroundImage.getImage(), 0, 0, Graphics.LEFT | Graphics.TOP);
+//            g.drawImage(header.getImage(), header.getX(), header.getY(), Graphics.LEFT | Graphics.TOP);
 
             if (buttonBack.isVisible()) {
                 g.drawImage(buttonBack.getImage(), buttonBack.getX(), buttonBack.getY(), Graphics.TOP | Graphics.LEFT);
@@ -86,14 +93,20 @@ public class ChooseCharacterScene implements IGameScene {
             if (buttonStory.isVisible()) {
                 g.drawImage(buttonStory.getImage(), buttonStory.getX(), buttonStory.getY(), Graphics.TOP | Graphics.LEFT);
             }
+            if (buttonInfinite.isVisible()) {
+                g.drawImage(buttonInfinite.getImage(), buttonInfinite.getX(), buttonInfinite.getY(), Graphics.TOP | Graphics.LEFT);
+            }
             if (gareng.isVisible() && gpos) {
                 g.drawImage(gareng.getImage(), gareng.getX(), gareng.getY(), Graphics.TOP | Graphics.LEFT);
+                g.drawImage(nameGareng.getImage(), nameGareng.getX(), nameGareng.getY(), Graphics.TOP | Graphics.LEFT);
             }
             if (petruk.isVisible() && ppos) {
                 g.drawImage(petruk.getImage(), petruk.getX(), petruk.getY(), Graphics.TOP | Graphics.LEFT);
+                g.drawImage(namePetruk.getImage(), namePetruk.getX(), namePetruk.getY(), Graphics.TOP | Graphics.LEFT);
             }
             if (bagong.isVisible() && bpos) {
                 g.drawImage(bagong.getImage(), bagong.getX(), bagong.getY(), Graphics.TOP | Graphics.LEFT);
+                g.drawImage(nameBagong.getImage(), nameBagong.getX(), nameBagong.getY(), Graphics.TOP | Graphics.LEFT);
             }
         }
     }
@@ -144,7 +157,7 @@ public class ChooseCharacterScene implements IGameScene {
                 } else if (bpos) {
                     GameDataHelper.writeHighScore(GameDataHelper.PILIHAN_PLAYER, TypeList.BAGONG);
                 }
-                
+
                 GameMidlet.gameCanvas.setGameScene(new MapScene());
             } catch (IOException ex) {
                 ex.printStackTrace();

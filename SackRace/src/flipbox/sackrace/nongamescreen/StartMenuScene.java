@@ -1,4 +1,4 @@
-/*
+    /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -47,7 +47,7 @@ public class StartMenuScene implements IGameScene {
         buttonStart.setX(90).setY(105);
         buttonAbout.setX(55).setY(105);
         buttonHelp.setX(10).setY(270);
-        buttonSound.setX(185).setY(250);
+        buttonSound.setX(195).setY(265);
         buttonExit.setX(190).setY(10);
         hasInit = true;
         start = true;

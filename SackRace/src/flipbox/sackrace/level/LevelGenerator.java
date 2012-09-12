@@ -38,6 +38,8 @@ public class LevelGenerator {
     static int obstacleCounter, coinCounter = 0;
     static boolean paused = false;
     
+    static boolean infinite = false;
+    
     public static void initConstraints(int minObs, int maxObs, int minBerk, int maxBerk,
             int minBlo, int maxBlo, int minCo, int maxCo, int speed) {
         constraint.minObstacles = minObs;
@@ -66,6 +68,11 @@ public class LevelGenerator {
         constraint.objective = objective;
     }
         
+    public static void initInfinite()
+    {
+        infinite = true;
+    }
+    
     public static void generateObstacles() {
         if (constraint.isInitialized) {
             int obstaclesCount = randomValue(constraint.minObstacles, constraint.maxObstacles);
@@ -295,6 +302,7 @@ public class LevelGenerator {
         coinList.removeAllElements();
         berserkList.removeAllElements();
         bloodList.removeAllElements();
+        infinite = false;
     }
 
     public static void pause()

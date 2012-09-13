@@ -34,12 +34,12 @@ public class LevelGenerator {
     static String[] obstaclesDown = {"/resource/obstacles/obstacle_batu.png", "/resource/obstacles/obstacle_tai.png",
         "/resource/obstacles/obstacle_hidran.png"};
     static int distance = 0;
+    static int infiniteDistance = 0;
     static boolean damaged = false;
     static int obstacleCounter, coinCounter = 0;
     static boolean paused = false;
-    
     static boolean infinite = false;
-    
+
     public static void initConstraints(int minObs, int maxObs, int minBerk, int maxBerk,
             int minBlo, int maxBlo, int minCo, int maxCo, int speed) {
         constraint.minObstacles = minObs;
@@ -67,12 +67,11 @@ public class LevelGenerator {
         objective.qualifiedValue = value;
         constraint.objective = objective;
     }
-        
-    public static void initInfinite()
-    {
+
+    public static void initInfinite() {
         infinite = true;
     }
-    
+
     public static void generateObstacles() {
         if (constraint.isInitialized) {
             int obstaclesCount = randomValue(constraint.minObstacles, constraint.maxObstacles);
@@ -172,7 +171,9 @@ public class LevelGenerator {
             }
 
             if (img.getY() > 330 && constraint.objective.qualifiedValue - distance < 330) {
-                img.setVisible(false);
+//                if (!infinite) {
+                    img.setVisible(false);
+//                }
             }
 
             if (img.getY() <= 330) {
@@ -194,7 +195,9 @@ public class LevelGenerator {
             }
 
             if (img.getY() > 330 && constraint.objective.qualifiedValue - distance < 330) {
-                img.setVisible(false);
+//                if (!infinite) {
+                    img.setVisible(false);
+//                }
             }
 
             if (img.getY() <= 330) {
@@ -226,15 +229,20 @@ public class LevelGenerator {
         if (paused) {
         } else {
             distance += constraint.speed;
-        } 
+        }
         //CURRENTLY AVAILABLE OBJECTIVE : DISTANCE
         if (constraint.objective.objectiveType == TypeList.DISTANCE) {
-            if (constraint.objective.qualifiedValue - distance < 200) {
-                char[] finish = {'f', 'i', 'n', 'i', 's', 'h'};
-                g.drawChars(finish, 0, 6, 20, 100 + (constraint.objective.qualifiedValue - distance), Graphics.TOP | Graphics.LEFT);
-                if (constraint.objective.qualifiedValue - distance <= 0) {
-                    //true artinya udah selesai
-                    return TypeList.SUCCESS;
+            if (infinite) {
+                if(constraint.objective.qualifiedValue <= distance)
+                    reload();
+            } else {
+                if (constraint.objective.qualifiedValue - distance < 200) {
+                    char[] finish = {'f', 'i', 'n', 'i', 's', 'h'};
+                    g.drawChars(finish, 0, 6, 20, 100 + (constraint.objective.qualifiedValue - distance), Graphics.TOP | Graphics.LEFT);
+                    if (constraint.objective.qualifiedValue - distance <= 0) {
+                        //true artinya udah selesai
+                        return TypeList.SUCCESS;
+                    }
                 }
             }
         }
@@ -268,11 +276,10 @@ public class LevelGenerator {
             if (obstacleCounter < obstacleList.size()) {
                 obstacleCounter++;
             }
-
             damaged = false;
         }
 
-
+        //disini buat menghilangkan koin setelah collision
         Item coin_obj = (Item) coinList.elementAt(coinCounter);
         ImageItem coin_img = coin_obj.getSprite();
         if (coin_img.getY() <= p.getSprite().getY() + 4 && coin_img.getY() >= p.getSprite().getY() - 4) {
@@ -282,17 +289,30 @@ public class LevelGenerator {
                 coinCounter++;
             }
         }
-//            if (coin_img.getY() == p.getSprite().getY()) {
-//                if (p.getState() != TypeList.SLIDE) {
-//                    p.setCoinCount(p.getCoinCount()+1);
-//                }
-//            }
-
         return 0;
+    }
+
+    //untuk infinite mode. nambah kecepatan
+    private static void reload() {
+        System.out.println("remove all element");
+        System.out.println("remove all element");
+        obstacleList.removeAllElements();
+        coinList.removeAllElements();
+        berserkList.removeAllElements();
+        bloodList.removeAllElements();
+        generateCoins();
+        generateObstacles();
+        constraint.speed = constraint.speed + 2;
+        //sebelum distance direset, diitung dulu total distance
+        infiniteDistance += distance;
+        distance = 0;
+        obstacleCounter = 0;
+        coinCounter = 0;
     }
 
     public static void stop() {
         distance = 0;
+        infiniteDistance = 0;
         damaged = false;
         obstacleCounter = 0;
         coinCounter = 0;
@@ -305,19 +325,18 @@ public class LevelGenerator {
         infinite = false;
     }
 
-    public static void pause()
-    {
+    public static void pause() {
         paused = true;
     }
-    public static void resume()
-    {
+
+    public static void resume() {
         paused = false;
     }
-    public static boolean isPaused()
-    {
+
+    public static boolean isPaused() {
         return paused;
     }
-    
+
     public static int randomValue(int min, int max) {
         Random number = new Random();
         float f = number.nextFloat() * 100000;

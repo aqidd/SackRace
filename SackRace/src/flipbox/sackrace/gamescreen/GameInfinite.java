@@ -8,7 +8,7 @@ import flipbox.sackrace.data.GameDataHelper;
 import flipbox.sackrace.game.GameMidlet;
 import flipbox.sackrace.game.IGameScene;
 import flipbox.sackrace.level.LevelGenerator;
-import flipbox.sackrace.nongamescreen.MapScene;
+import flipbox.sackrace.nongamescreen.ChooseCharacterScene;
 import flipbox.sackrace.nongamescreen.StartMenuScene;
 import flipbox.sackrace.object.Player;
 import flipbox.sackrace.object.PlayerData;
@@ -83,7 +83,7 @@ public class GameInfinite implements IGameScene {
             g.drawImage(buttonCoin.getImage(), buttonCoin.getX(),
                     buttonCoin.getY(), Graphics.RIGHT | Graphics.TOP);
         }
-        
+
         //Mulai menjalankan algoritma permainan
         if (start) {
             try {
@@ -130,18 +130,17 @@ public class GameInfinite implements IGameScene {
                             buttonJump.getY(), Graphics.TOP | Graphics.LEFT);
                 }
 
-                if(buttonPause.isVisible()){
+                if (buttonPause.isVisible()) {
                     g.drawImage(buttonPause.getImage(), buttonPause.getX(),
                             buttonPause.getY(), Graphics.TOP | Graphics.LEFT);
                 }
-                
+
                 if (tut) {
                     LevelGenerator.pause();
                     g.drawImage(tutorDialog.getImage(), tutorDialog.getX(), tutorDialog.getY(), Graphics.TOP | Graphics.LEFT);
                 }
-                
-                if(!tut && finish == TypeList.PLAYING && LevelGenerator.isPaused())
-                {
+
+                if (!tut && finish == TypeList.PLAYING && LevelGenerator.isPaused()) {
                     //render pause image
                     g.drawImage(pauseDialog.getImage(), pauseDialog.getX(), pauseDialog.getY(), Graphics.TOP | Graphics.LEFT);
                 }
@@ -259,15 +258,17 @@ public class GameInfinite implements IGameScene {
         //jika game telah selesai
         if (finish != TypeList.PLAYING) {
             try {
-                if (finish == TypeList.SUCCESS) {
-                    if (GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_RUMAH) < player.getCoinCount()) {
-                        GameDataHelper.writeHighScore(GameDataHelper.BALAP_KARUNG_RUMAH, player.getCoinCount());
-                    }
-                    GameDataHelper.writeHighScore(GameDataHelper.TOTAL_COIN,
-                            GameDataHelper.getHighScore(GameDataHelper.TOTAL_COIN) + player.getCoinCount());
+                if (GameDataHelper.getHighScore(GameDataHelper.ENDLESS) < player.getCoinCount()) {
+                    GameDataHelper.writeHighScore(GameDataHelper.ENDLESS, player.getCoinCount());
+                    finish=TypeList.SUCCESS;
                 }
+                else{
+                    finish = TypeList.GAMEOVER;
+                }
+                GameDataHelper.writeHighScore(GameDataHelper.TOTAL_COIN,
+                        GameDataHelper.getHighScore(GameDataHelper.TOTAL_COIN) + player.getCoinCount());
                 releaseMemory();
-                GameMidlet.gameCanvas.setGameScene(new MapScene());
+                GameMidlet.gameCanvas.setGameScene(new ChooseCharacterScene());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -290,7 +291,8 @@ public class GameInfinite implements IGameScene {
     private void initLevel() {
         LevelGenerator.initConstraints(6, 10, 0, 0, 1, 2, 30, 50, speed);
         LevelGenerator.initDistance(50, 300, 180, 200);
-        LevelGenerator.initObjective(TypeList.DISTANCE, 1000);
+        LevelGenerator.initObjective(TypeList.DISTANCE, 1300);
+        LevelGenerator.initInfinite();
         LevelGenerator.generateObstacles();
         LevelGenerator.generateCoins();
         LevelGenerator.pause();
@@ -477,7 +479,7 @@ public class GameInfinite implements IGameScene {
         Graphics grImageHigh = mutableImageHigh.getGraphics();
         //Graphics grImageHigh = transparentImage.getGraphics();
 
-        grImageHigh.drawString("HIGHSCORE :" + GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_RUMAH), 0, 0, Graphics.LEFT | Graphics.TOP);
+        grImageHigh.drawString("HIGHSCORE :" + GameDataHelper.getHighScore(GameDataHelper.ENDLESS), 0, 0, Graphics.LEFT | Graphics.TOP);
         g.drawImage(StaticData.rotateImage(clearBackground(mutableImageHigh), 90),
                 buttonCoin.getX() + 25, buttonCoin.getY() - 75,
                 Graphics.RIGHT | Graphics.TOP);

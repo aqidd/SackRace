@@ -7,6 +7,7 @@ package flipbox.sackrace.nongamescreen;
 import flipbox.sackrace.data.GameDataHelper;
 import flipbox.sackrace.game.GameMidlet;
 import flipbox.sackrace.game.IGameScene;
+import flipbox.sackrace.gamescreen.GameInfinite;
 import flipbox.sackrace.staticvalue.StaticData;
 import flipbox.sackrace.staticvalue.TypeList;
 import flipbox.sackrace.ui.ButtonImageItem;
@@ -132,6 +133,12 @@ public class ChooseCharacterScene implements IGameScene {
                 && y >= buttonStory.getY() && y <= (buttonStory.getY() + buttonStory.getHeight())) {
             buttonStory.setOnPressed(true);
         }
+        if (buttonInfinite.isCanClick()
+                && x >= buttonInfinite.getX() && x <= (buttonInfinite.getX() + buttonInfinite.getWidth())
+                && y >= buttonInfinite.getY() && y <= (buttonInfinite.getY() + buttonInfinite.getHeight())) {
+            buttonInfinite.setOnPressed(true);
+        }
+        
     }
 
     public void pointerReleased(int x, int y) {
@@ -163,6 +170,26 @@ public class ChooseCharacterScene implements IGameScene {
                 ex.printStackTrace();
             }
         }
+        
+        if (buttonInfinite.isOnPressed()
+                && x >= buttonInfinite.getX() && x <= (buttonInfinite.getX() + buttonInfinite.getWidth())
+                && y >= buttonInfinite.getY() && y <= (buttonInfinite.getY() + buttonInfinite.getHeight())) {
+            resetButton();
+            try {
+                if (gpos) {
+                    GameDataHelper.writeHighScore(GameDataHelper.PILIHAN_PLAYER, TypeList.GARENG);
+                } else if (ppos) {
+                    GameDataHelper.writeHighScore(GameDataHelper.PILIHAN_PLAYER, TypeList.PETRUK);
+                } else if (bpos) {
+                    GameDataHelper.writeHighScore(GameDataHelper.PILIHAN_PLAYER, TypeList.BAGONG);
+                }
+
+                GameMidlet.gameCanvas.setGameScene(new GameInfinite());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        
         if (buttonLeftArrow.isOnPressed()
                 && x >= buttonLeftArrow.getX() && x <= (buttonLeftArrow.getX() + buttonLeftArrow.getWidth())
                 && y >= buttonLeftArrow.getY() && y <= (buttonLeftArrow.getY() + buttonLeftArrow.getHeight())) {

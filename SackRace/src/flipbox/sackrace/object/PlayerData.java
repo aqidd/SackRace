@@ -49,8 +49,18 @@ public class PlayerData {
             ex.printStackTrace();
         }
 
-        gar.setJumpSprite(new AnimatedSprite(gareng_jump, 100, gareng_jump.getHeight() / 7, 3));
+        gar.setJumpSprite(new AnimatedSprite(gareng_jump, 103, gareng_jump.getHeight() / 10, 2));
 
+        Image gareng_crashUp=null;
+        try {
+            gareng_crashUp = StaticData.rotateImage(Image.createImage(
+                    "/resource/chars/Sprite Obstacle Gareng.png"), 90);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        gar.setCrashedUpSprite(new AnimatedSprite(gareng_crashUp, 78, gareng_crashUp.getHeight() / 4, 2));
+        
         return gar;
     }
 
@@ -85,8 +95,18 @@ public class PlayerData {
             ex.printStackTrace();
         }
 
-        pet.setJumpSprite(new AnimatedSprite(bagong_jump, 118, bagong_jump.getHeight() / 7, 3));
+        pet.setJumpSprite(new AnimatedSprite(bagong_jump, 126, bagong_jump.getHeight() / 10, 2));
 
+        Image petruk_crashUp=null;
+        try {
+            petruk_crashUp = StaticData.rotateImage(Image.createImage(
+                    "/resource/chars/Sprite Obstacle Petruk.png"), 90);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        pet.setCrashedUpSprite(new AnimatedSprite(petruk_crashUp, 78, petruk_crashUp.getHeight() / 4, 2));
+        
         return pet;
     }
 
@@ -121,8 +141,17 @@ public class PlayerData {
             ex.printStackTrace();
         }
         
-        bag.setJumpSprite(new AnimatedSprite(bagong_jump, 100, bagong_jump.getHeight() / 7, 3));
-
+        bag.setJumpSprite(new AnimatedSprite(bagong_jump, 100, bagong_jump.getHeight() / 10, 2));
+        
+        Image bagong_crashUp=null;
+        try {
+            bagong_crashUp = StaticData.rotateImage(Image.createImage(
+                    "/resource/chars/Sprite Obstacle Bagong.png"), 90);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        bag.setCrashedUpSprite(new AnimatedSprite(bagong_crashUp, 74, bagong_crashUp.getHeight() / 4, 2));
         return bag;
     }
 

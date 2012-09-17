@@ -31,13 +31,14 @@ public class GameLomba implements IGameScene {
 
     private Player player;
     ImageItem backgroundImage, backgroundImage2, awan, buttonCoin, buttonLife1, buttonLife2, buttonLife3;
-    ImageItem successDialog, gameOverDialog, pauseDialog;
+    ImageItem successDialog, gameOverDialog, pauseDialog, storyDialog;
     ButtonImageItem buttonSlide, buttonJump, buttonPause;
     //AnimatedSprite sprite;
     boolean start;
     private boolean hasInit;
     boolean soundOn;
     int finish;
+    boolean story;
     private GameMidlet midlet;
     private static long timeLapsed = 0;
     private boolean hasRenderBackground;
@@ -47,7 +48,7 @@ public class GameLomba implements IGameScene {
     private static int BACKGROUND_POSAWAN_A;
     private static int BACKGROUND_POSAWAN_B;
     private static int BACKGROUND_POSAWAN_C;
-    int speed = 7;
+    int speed = 9;
 
     public void setGameMidlet(GameMidlet midelet) {
         midlet = midelet;
@@ -56,6 +57,7 @@ public class GameLomba implements IGameScene {
 
     public void initResource() throws IOException {
         System.out.println("masuk init resource");
+        storyDialog = new ImageItem("/resource/tambahan/Dialog 3_2.png").setX(0).setY(0).setVisible(true);
         pauseDialog = new ImageItem("/resource/tambahan/paused.png").setX(30).setY(10).setVisible(true);
         successDialog = new ImageItem("/resource/tambahan/success.png").setX(30).setY(10).setVisible(true);
         gameOverDialog = new ImageItem("/resource/tambahan/gameover.png").setX(30).setY(10).setVisible(true);
@@ -65,6 +67,7 @@ public class GameLomba implements IGameScene {
         initLevel();
         hasInit = true;
         start = true;
+        story = true;
         System.out.println("selesai init resource");
     }
 
@@ -125,17 +128,21 @@ public class GameLomba implements IGameScene {
                             buttonJump.getY(), Graphics.TOP | Graphics.LEFT);
                 }
 
-                if(buttonPause.isVisible()){
+                if (buttonPause.isVisible()) {
                     g.drawImage(buttonPause.getImage(), buttonPause.getX(),
                             buttonPause.getY(), Graphics.TOP | Graphics.LEFT);
                 }
-                
-                if(finish == TypeList.PLAYING && LevelGenerator.isPaused())
-                {
+
+                if (story) {
+                    LevelGenerator.pause();
+                    g.drawImage(storyDialog.getImage(), storyDialog.getX(), storyDialog.getY(), Graphics.TOP | Graphics.LEFT);
+                }
+
+                if (!story && finish == TypeList.PLAYING && LevelGenerator.isPaused()) {
                     //render pause image
                     g.drawImage(pauseDialog.getImage(), pauseDialog.getX(), pauseDialog.getY(), Graphics.TOP | Graphics.LEFT);
                 }
-                
+
                 //jika berhasil
                 if (finish == TypeList.SUCCESS) {
                     LevelGenerator.pause();
@@ -175,12 +182,12 @@ public class GameLomba implements IGameScene {
 
     public void pointerPressed(int x, int y) {
 
-          if (buttonPause.isCanClick()
+        if (buttonPause.isCanClick()
                 && x >= buttonPause.getX() && x <= (buttonPause.getX() + buttonPause.getWidth())
                 && y >= buttonPause.getY() && y <= (buttonPause.getY() + buttonPause.getHeight())) {
             buttonPause.setOnPressed(true);
         }
-        
+
         if (buttonSlide.isCanClick()
                 && x >= buttonSlide.getX() && x <= (buttonSlide.getX() + buttonSlide.getWidth())
                 && y >= buttonSlide.getY() && y <= (buttonSlide.getY() + buttonSlide.getHeight())) {
@@ -207,6 +214,9 @@ public class GameLomba implements IGameScene {
 
         if (LevelGenerator.isPaused()) {
             LevelGenerator.resume();
+            if (story) {
+                story = false;
+            }
         }
 
         if (buttonPause.isOnPressed()
@@ -215,7 +225,7 @@ public class GameLomba implements IGameScene {
             LevelGenerator.pause();
             resetButton();
         }
-        
+
         if (buttonSlide.isOnPressed()
                 && x >= buttonSlide.getX() && x <= (buttonSlide.getX() + buttonSlide.getWidth())
                 && y >= buttonSlide.getY() && y <= (buttonSlide.getY() + buttonSlide.getHeight())) {
@@ -245,14 +255,25 @@ public class GameLomba implements IGameScene {
         if (finish != TypeList.PLAYING) {
             try {
                 if (finish == TypeList.SUCCESS) {
-                    if (GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_RUMAH) < player.getCoinCount()) {
-                        GameDataHelper.writeHighScore(GameDataHelper.BALAP_KARUNG_RUMAH, player.getCoinCount());
+                    if (GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_LOMBA) < player.getCoinCount()) {
+                        GameDataHelper.writeHighScore(GameDataHelper.BALAP_KARUNG_LOMBA, player.getCoinCount());
                     }
                     GameDataHelper.writeHighScore(GameDataHelper.TOTAL_COIN,
                             GameDataHelper.getHighScore(GameDataHelper.TOTAL_COIN) + player.getCoinCount());
+
+                    releaseMemory();
+                    GameMidlet.gameCanvas.setGameScene(new GameLomba_1());
+                } else if (finish == TypeList.GAMEOVER) {
+
+                    if (GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_LOMBA) < player.getCoinCount()) {
+                        GameDataHelper.writeHighScore(GameDataHelper.BALAP_KARUNG_LOMBA, player.getCoinCount());
+                    }
+                    GameDataHelper.writeHighScore(GameDataHelper.TOTAL_COIN,
+                            GameDataHelper.getHighScore(GameDataHelper.TOTAL_COIN) + player.getCoinCount());
+
+                    releaseMemory();
+                    GameMidlet.gameCanvas.setGameScene(new MapScene());
                 }
-                releaseMemory();
-                GameMidlet.gameCanvas.setGameScene(new MapScene());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -273,9 +294,9 @@ public class GameLomba implements IGameScene {
      * Metode untuk menginisialisasi rintangan sesuai levelnya
      */
     private void initLevel() {
-        LevelGenerator.initConstraints(6, 10, 0, 0, 1, 2, 30, 50, speed);
-        LevelGenerator.initDistance(50, 300, 180, 200);
-        LevelGenerator.initObjective(TypeList.DISTANCE, 1000);
+        LevelGenerator.initConstraints(13, 15, 3, 4, 2, 3, 50, 65, speed);
+        LevelGenerator.initDistance(50, 300, 100, 200);
+        LevelGenerator.initObjective(TypeList.DISTANCE, 2500);
         LevelGenerator.generateObstacles();
         LevelGenerator.generateCoins();
         System.out.println("selesai init level");

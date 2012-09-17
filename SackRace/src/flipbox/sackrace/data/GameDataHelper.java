@@ -18,8 +18,14 @@ public class GameDataHelper {
     public static final int MINI_GAME_PANJAT_PINANG = 0;
     public static final int MINI_GAME_MANCING = 1;
     public static final int BALAP_KARUNG_RUMAH = 2;
+    public static final int BALAP_KARUNG_RUMAH_1 = 7;
+    public static final int BALAP_KARUNG_RUMAH_2 = 8;
     public static final int BALAP_KARUNG_KUBURAN = 3;
+    public static final int BALAP_KARUNG_KUBURAN_1 = 9;
+    public static final int BALAP_KARUNG_KUBURAN_2 = 10;
     public static final int BALAP_KARUNG_LOMBA = 5;
+    public static final int BALAP_KARUNG_LOMBA_1 = 11;
+    public static final int BALAP_KARUNG_LOMBA_2 = 12;
     public static final int ENDLESS = 20;
     public static final int TOTAL_COIN = 6;
     public static final int PILIHAN_PLAYER = 4;

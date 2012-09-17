@@ -27,7 +27,7 @@ import javax.microedition.lcdui.game.Sprite;
  *
  * @author Yulistiyan Wardhana
  */
-public class GameKuburan implements IGameScene {
+public class GameKuburan_1 implements IGameScene {
 
     private Player player;
     ImageItem backgroundImage, awan, buttonCoin, buttonLife1, buttonLife2, buttonLife3;
@@ -48,7 +48,7 @@ public class GameKuburan implements IGameScene {
     private static int BACKGROUND_POSAWAN_A;
     private static int BACKGROUND_POSAWAN_B;
     private static int BACKGROUND_POSAWAN_C;
-    int speed = 6;
+    int speed = 7;
 
     public void setGameMidlet(GameMidlet midelet) {
         midlet = midelet;
@@ -255,17 +255,17 @@ public class GameKuburan implements IGameScene {
         if (finish != TypeList.PLAYING) {
             try {
                 if (finish == TypeList.SUCCESS) {
-                    if (GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_KUBURAN) < player.getCoinCount()) {
-                        GameDataHelper.writeHighScore(GameDataHelper.BALAP_KARUNG_KUBURAN, player.getCoinCount());
+                    if (GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_KUBURAN_1) < player.getCoinCount()) {
+                        GameDataHelper.writeHighScore(GameDataHelper.BALAP_KARUNG_KUBURAN_1, player.getCoinCount());
                     }
                     GameDataHelper.writeHighScore(GameDataHelper.TOTAL_COIN,
                             GameDataHelper.getHighScore(GameDataHelper.TOTAL_COIN) + player.getCoinCount());
 
                     releaseMemory();
-                    GameMidlet.gameCanvas.setGameScene(new GameKuburan_1());
+                    GameMidlet.gameCanvas.setGameScene(new GameKuburan_2());
                 } else if (finish == TypeList.GAMEOVER) {
-                    if (GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_KUBURAN) < player.getCoinCount()) {
-                        GameDataHelper.writeHighScore(GameDataHelper.BALAP_KARUNG_KUBURAN, player.getCoinCount());
+                    if (GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_KUBURAN_1) < player.getCoinCount()) {
+                        GameDataHelper.writeHighScore(GameDataHelper.BALAP_KARUNG_KUBURAN_1, player.getCoinCount());
                     }
                     GameDataHelper.writeHighScore(GameDataHelper.TOTAL_COIN,
                             GameDataHelper.getHighScore(GameDataHelper.TOTAL_COIN) + player.getCoinCount());
@@ -293,9 +293,9 @@ public class GameKuburan implements IGameScene {
      * Metode untuk menginisialisasi rintangan sesuai levelnya
      */
     private void initLevel() {
-        LevelGenerator.initConstraints(9, 12, 3, 2, 3, 2, 40, 55, speed);
-        LevelGenerator.initDistance(50, 300, 175, 200);
-        LevelGenerator.initObjective(TypeList.DISTANCE, 1750);
+        LevelGenerator.initConstraints(9, 14, 3, 4, 2, 3, 45, 60, speed);
+        LevelGenerator.initDistance(50, 300, 130, 200);
+        LevelGenerator.initObjective(TypeList.DISTANCE, 2000);
         LevelGenerator.generateObstacles();
         LevelGenerator.generateCoins();
         System.out.println("selesai init level");
@@ -479,7 +479,7 @@ public class GameKuburan implements IGameScene {
         Graphics grImageHigh = mutableImageHigh.getGraphics();
         //Graphics grImageHigh = transparentImage.getGraphics();
         grImageHigh.setColor(0xEEFF2E);
-        grImageHigh.drawString("HIGHSCORE :" + GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_KUBURAN), 0, 0, Graphics.LEFT | Graphics.TOP);
+        grImageHigh.drawString("HIGHSCORE :" + GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_KUBURAN_1), 0, 0, Graphics.LEFT | Graphics.TOP);
 
         g.drawImage(StaticData.rotateImage(clearBackground(mutableImageHigh), 90),
                 buttonCoin.getX() + 25, buttonCoin.getY() - 75,

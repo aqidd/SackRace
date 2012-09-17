@@ -31,10 +31,10 @@ public class GameRumah implements IGameScene {
 
     private Player player;
     ImageItem backgroundImage, awan, buttonCoin, buttonLife1, buttonLife2, buttonLife3;
-    ImageItem tutorDialog, successDialog, gameOverDialog, pauseDialog;
+    ImageItem tutorDialog, successDialog, gameOverDialog, pauseDialog, storyDialog;
     ButtonImageItem buttonSlide, buttonJump, buttonPause;
     //AnimatedSprite sprite;
-    boolean start, tut;
+    boolean start, tut, story;
     int finish;
     private boolean hasInit;
     boolean soundOn;
@@ -57,6 +57,7 @@ public class GameRumah implements IGameScene {
     public void initResource() throws IOException {
         System.out.println("masuk init resource");
         tutorDialog = new ImageItem("/resource/tambahan/tut.png").setX(30).setY(10).setVisible(true);
+        storyDialog = new ImageItem("/resource/tambahan/Dialog 1_2.png").setX(0).setY(0).setVisible(true);
         pauseDialog = new ImageItem("/resource/tambahan/paused.png").setX(30).setY(10).setVisible(true);
         successDialog = new ImageItem("/resource/tambahan/success.png").setX(30).setY(10).setVisible(true);
         gameOverDialog = new ImageItem("/resource/tambahan/gameover.png").setX(30).setY(10).setVisible(true);
@@ -66,7 +67,8 @@ public class GameRumah implements IGameScene {
         initLevel();
         hasInit = true;
         start = true;
-        tut = true;
+        story = true;
+        tut = false;
         System.out.println("selesai init resource");
     }
 
@@ -83,7 +85,7 @@ public class GameRumah implements IGameScene {
             g.drawImage(buttonCoin.getImage(), buttonCoin.getX(),
                     buttonCoin.getY(), Graphics.RIGHT | Graphics.TOP);
         }
-        
+
         //Mulai menjalankan algoritma permainan
         if (start) {
             try {
@@ -130,18 +132,22 @@ public class GameRumah implements IGameScene {
                             buttonJump.getY(), Graphics.TOP | Graphics.LEFT);
                 }
 
-                if(buttonPause.isVisible()){
+                if (buttonPause.isVisible()) {
                     g.drawImage(buttonPause.getImage(), buttonPause.getX(),
                             buttonPause.getY(), Graphics.TOP | Graphics.LEFT);
                 }
-                
+
                 if (tut) {
                     LevelGenerator.pause();
                     g.drawImage(tutorDialog.getImage(), tutorDialog.getX(), tutorDialog.getY(), Graphics.TOP | Graphics.LEFT);
                 }
-                
-                if(!tut && finish == TypeList.PLAYING && LevelGenerator.isPaused())
-                {
+
+                if (story) {
+                    LevelGenerator.pause();
+                    g.drawImage(storyDialog.getImage(), storyDialog.getX(), storyDialog.getY(), Graphics.TOP | Graphics.LEFT);
+                }
+
+                if (!tut && !story && finish == TypeList.PLAYING && LevelGenerator.isPaused()) {
                     //render pause image
                     g.drawImage(pauseDialog.getImage(), pauseDialog.getX(), pauseDialog.getY(), Graphics.TOP | Graphics.LEFT);
                 }
@@ -222,6 +228,10 @@ public class GameRumah implements IGameScene {
             if (tut) {
                 tut = false;
             }
+            if (story) {
+                story = false;
+                tut = true;
+            }
         }
 
         if (buttonPause.isOnPressed()
@@ -265,9 +275,19 @@ public class GameRumah implements IGameScene {
                     }
                     GameDataHelper.writeHighScore(GameDataHelper.TOTAL_COIN,
                             GameDataHelper.getHighScore(GameDataHelper.TOTAL_COIN) + player.getCoinCount());
+
+                    releaseMemory();
+                    GameMidlet.gameCanvas.setGameScene(new GameRumah_1());
+                } else if (finish == TypeList.GAMEOVER) {
+                                        if (GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_RUMAH) < player.getCoinCount()) {
+                        GameDataHelper.writeHighScore(GameDataHelper.BALAP_KARUNG_RUMAH, player.getCoinCount());
+                    }
+                    GameDataHelper.writeHighScore(GameDataHelper.TOTAL_COIN,
+                            GameDataHelper.getHighScore(GameDataHelper.TOTAL_COIN) + player.getCoinCount());
+
+                    releaseMemory();
+                    GameMidlet.gameCanvas.setGameScene(new MapScene());
                 }
-                releaseMemory();
-                GameMidlet.gameCanvas.setGameScene(new MapScene());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

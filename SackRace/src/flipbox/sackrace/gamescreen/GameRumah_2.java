@@ -27,18 +27,17 @@ import javax.microedition.lcdui.game.Sprite;
  *
  * @author Yulistiyan Wardhana
  */
-public class GameKuburan implements IGameScene {
+public class GameRumah_2 implements IGameScene {
 
     private Player player;
     ImageItem backgroundImage, awan, buttonCoin, buttonLife1, buttonLife2, buttonLife3;
-    ImageItem successDialog, gameOverDialog, pauseDialog, storyDialog;
+    ImageItem tutorDialog, successDialog, gameOverDialog, pauseDialog, storyDialog;
     ButtonImageItem buttonSlide, buttonJump, buttonPause;
     //AnimatedSprite sprite;
-    boolean start;
+    boolean start, tut, story;
+    int finish;
     private boolean hasInit;
     boolean soundOn;
-    boolean story;
-    int finish;
     private GameMidlet midlet;
     private static long timeLapsed = 0;
     private boolean hasRenderBackground;
@@ -48,7 +47,7 @@ public class GameKuburan implements IGameScene {
     private static int BACKGROUND_POSAWAN_A;
     private static int BACKGROUND_POSAWAN_B;
     private static int BACKGROUND_POSAWAN_C;
-    int speed = 6;
+    int speed = 5;
 
     public void setGameMidlet(GameMidlet midelet) {
         midlet = midelet;
@@ -57,7 +56,8 @@ public class GameKuburan implements IGameScene {
 
     public void initResource() throws IOException {
         System.out.println("masuk init resource");
-        storyDialog = new ImageItem("/resource/tambahan/Dialog 2_2.png").setX(0).setY(0).setVisible(true);
+        tutorDialog = new ImageItem("/resource/tambahan/tut.png").setX(30).setY(10).setVisible(true);
+        storyDialog = new ImageItem("/resource/tambahan/Dialog 1_2.png").setX(0).setY(0).setVisible(true);
         pauseDialog = new ImageItem("/resource/tambahan/paused.png").setX(30).setY(10).setVisible(true);
         successDialog = new ImageItem("/resource/tambahan/success.png").setX(30).setY(10).setVisible(true);
         gameOverDialog = new ImageItem("/resource/tambahan/gameover.png").setX(30).setY(10).setVisible(true);
@@ -68,6 +68,7 @@ public class GameKuburan implements IGameScene {
         hasInit = true;
         start = true;
         story = true;
+        tut = false;
         System.out.println("selesai init resource");
     }
 
@@ -76,6 +77,7 @@ public class GameKuburan implements IGameScene {
         if (!hasInit) {
             return;
         }
+
         //Merender background jika belum dilakukan pada perenderan sekarang
         if (!hasRenderBackground) {
             renderBackground(speed, g);
@@ -83,9 +85,11 @@ public class GameKuburan implements IGameScene {
             g.drawImage(buttonCoin.getImage(), buttonCoin.getX(),
                     buttonCoin.getY(), Graphics.RIGHT | Graphics.TOP);
         }
+        
         //Mulai menjalankan algoritma permainan
         if (start) {
             try {
+
                 //Generate rintangan
                 finish = LevelGenerator.run(g, player);
 
@@ -128,17 +132,23 @@ public class GameKuburan implements IGameScene {
                             buttonJump.getY(), Graphics.TOP | Graphics.LEFT);
                 }
 
-                if (buttonPause.isVisible()) {
+                if(buttonPause.isVisible()){
                     g.drawImage(buttonPause.getImage(), buttonPause.getX(),
                             buttonPause.getY(), Graphics.TOP | Graphics.LEFT);
                 }
-
+                
+                if (tut) {
+                    LevelGenerator.pause();
+                    g.drawImage(tutorDialog.getImage(), tutorDialog.getX(), tutorDialog.getY(), Graphics.TOP | Graphics.LEFT);
+                }
+                
                 if (story) {
                     LevelGenerator.pause();
                     g.drawImage(storyDialog.getImage(), storyDialog.getX(), storyDialog.getY(), Graphics.TOP | Graphics.LEFT);
                 }
-
-                if (!story && finish == TypeList.PLAYING && LevelGenerator.isPaused()) {
+                
+                if(!tut && !story && finish == TypeList.PLAYING && LevelGenerator.isPaused())
+                {
                     //render pause image
                     g.drawImage(pauseDialog.getImage(), pauseDialog.getX(), pauseDialog.getY(), Graphics.TOP | Graphics.LEFT);
                 }
@@ -161,6 +171,7 @@ public class GameKuburan implements IGameScene {
                 ex.printStackTrace();
             }
         }
+
 
     }
 
@@ -214,8 +225,13 @@ public class GameKuburan implements IGameScene {
 
         if (LevelGenerator.isPaused()) {
             LevelGenerator.resume();
+            resetButton();
+            if (tut) {
+                tut = false;
+            }
             if (story) {
                 story = false;
+                tut = true;
             }
         }
 
@@ -255,24 +271,14 @@ public class GameKuburan implements IGameScene {
         if (finish != TypeList.PLAYING) {
             try {
                 if (finish == TypeList.SUCCESS) {
-                    if (GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_KUBURAN) < player.getCoinCount()) {
-                        GameDataHelper.writeHighScore(GameDataHelper.BALAP_KARUNG_KUBURAN, player.getCoinCount());
+                    if (GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_RUMAH_2) < player.getCoinCount()) {
+                        GameDataHelper.writeHighScore(GameDataHelper.BALAP_KARUNG_RUMAH_2, player.getCoinCount());
                     }
                     GameDataHelper.writeHighScore(GameDataHelper.TOTAL_COIN,
                             GameDataHelper.getHighScore(GameDataHelper.TOTAL_COIN) + player.getCoinCount());
-
-                    releaseMemory();
-                    GameMidlet.gameCanvas.setGameScene(new GameKuburan_1());
-                } else if (finish == TypeList.GAMEOVER) {
-                    if (GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_KUBURAN) < player.getCoinCount()) {
-                        GameDataHelper.writeHighScore(GameDataHelper.BALAP_KARUNG_KUBURAN, player.getCoinCount());
-                    }
-                    GameDataHelper.writeHighScore(GameDataHelper.TOTAL_COIN,
-                            GameDataHelper.getHighScore(GameDataHelper.TOTAL_COIN) + player.getCoinCount());
-
-                    releaseMemory();
-                    GameMidlet.gameCanvas.setGameScene(new MapScene());
                 }
+                releaseMemory();
+                GameMidlet.gameCanvas.setGameScene(new MapScene());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -293,11 +299,12 @@ public class GameKuburan implements IGameScene {
      * Metode untuk menginisialisasi rintangan sesuai levelnya
      */
     private void initLevel() {
-        LevelGenerator.initConstraints(9, 12, 3, 2, 3, 2, 40, 55, speed);
-        LevelGenerator.initDistance(50, 300, 175, 200);
-        LevelGenerator.initObjective(TypeList.DISTANCE, 1750);
+        LevelGenerator.initConstraints(8, 12, 1, 2, 1, 2, 35, 50, speed);
+        LevelGenerator.initDistance(50, 300, 150, 200);
+        LevelGenerator.initObjective(TypeList.DISTANCE, 1500);
         LevelGenerator.generateObstacles();
         LevelGenerator.generateCoins();
+        LevelGenerator.pause();
         System.out.println("selesai init level");
     }
 
@@ -326,7 +333,7 @@ public class GameKuburan implements IGameScene {
      * Metode untuk menginisialisasi background
      */
     private void initBackground() throws IOException {
-        backgroundImage = new ImageItem("/resource/grave/Sack Runner-03.jpg");
+        backgroundImage = new ImageItem("/resource/rumah/Sack Runner-01.jpg");
         awan = new ImageItem("/resource/items/awan_1.png");
         resetBackgroundPos();
         resetAwanPos();
@@ -415,21 +422,6 @@ public class GameKuburan implements IGameScene {
         buttonJump.setOnPressed(false);
     }
 
-    private Image clearBackground(Image image) {
-        // convert image pixels data to int array
-        int[] rgb = new int[image.getWidth() * image.getHeight()];
-        image.getRGB(rgb, 0, image.getWidth(), 0, 0, image.getWidth(), image.getHeight());
-
-        // drop alpha component (make it transparent) on pixels that are still at default color
-        for (int i = 0; i < rgb.length; ++i) {
-            if (rgb[i] == 0xffffffff) {
-                rgb[i] &= 0x00ffffff;
-            }
-        }
-        // create a new image with the pixel data and set process alpha flag to true
-        return Image.createRGBImage(rgb, image.getWidth(), image.getHeight(), true);
-    }
-
     /*
      * Metode untuk merender background sesuai dengan kecepatan penampilan
      *
@@ -471,16 +463,32 @@ public class GameKuburan implements IGameScene {
         }
     }
 
+    private Image clearBackground(Image image) {
+        // convert image pixels data to int array
+        int[] rgb = new int[image.getWidth() * image.getHeight()];
+        image.getRGB(rgb, 0, image.getWidth(), 0, 0, image.getWidth(), image.getHeight());
+
+        // drop alpha component (make it transparent) on pixels that are still at default color
+        for (int i = 0; i < rgb.length; ++i) {
+            if (rgb[i] == 0xffffffff) {
+                rgb[i] &= 0x00ffffff;
+            }
+        }
+        // create a new image with the pixel data and set process alpha flag to true
+        return Image.createRGBImage(rgb, image.getWidth(), image.getHeight(), true);
+    }
+
     /*
      * Metode untuk menggambar Score di layar
      */
     private void renderScore(Graphics g) throws Exception {
+        //gambar highscore sebelumnya
+
         Image mutableImageHigh = Image.createImage(130, 20);
         Graphics grImageHigh = mutableImageHigh.getGraphics();
         //Graphics grImageHigh = transparentImage.getGraphics();
-        grImageHigh.setColor(0xEEFF2E);
-        grImageHigh.drawString("HIGHSCORE :" + GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_KUBURAN), 0, 0, Graphics.LEFT | Graphics.TOP);
 
+        grImageHigh.drawString("HIGHSCORE :" + GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_RUMAH_2), 0, 0, Graphics.LEFT | Graphics.TOP);
         g.drawImage(StaticData.rotateImage(clearBackground(mutableImageHigh), 90),
                 buttonCoin.getX() + 25, buttonCoin.getY() - 75,
                 Graphics.RIGHT | Graphics.TOP);
@@ -488,9 +496,7 @@ public class GameKuburan implements IGameScene {
         //gambar score
         Image mutableImage = Image.createImage(20, 20);
         Graphics grImage = mutableImage.getGraphics();
-        grImage.setColor(0xEEFF2E);
         grImage.drawString(player.getCoinCount() + "", 0, 0, Graphics.LEFT | Graphics.TOP);
-
         g.drawImage(StaticData.rotateImage(clearBackground(mutableImage), 90),
                 buttonCoin.getX(), buttonCoin.getY() + 30,
                 Graphics.RIGHT | Graphics.TOP);

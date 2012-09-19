@@ -57,7 +57,7 @@ public class GameRumah implements IGameScene {
     public void initResource() throws IOException {
         System.out.println("masuk init resource");
         tutorDialog = new ImageItem("/resource/tambahan/tut.png").setX(30).setY(10).setVisible(true);
-        storyDialog = new ImageItem("/resource/tambahan/Dialog 1_2.png").setX(0).setY(0).setVisible(true);
+        storyDialog = new ImageItem("/resource/tambahan/Dialog 1_2.jpg").setX(0).setY(0).setVisible(true);
         pauseDialog = new ImageItem("/resource/tambahan/paused.png").setX(30).setY(10).setVisible(true);
         successDialog = new ImageItem("/resource/tambahan/success.png").setX(30).setY(10).setVisible(true);
         gameOverDialog = new ImageItem("/resource/tambahan/gameover.png").setX(30).setY(10).setVisible(true);

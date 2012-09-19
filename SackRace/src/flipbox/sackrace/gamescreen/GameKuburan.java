@@ -31,13 +31,13 @@ public class GameKuburan implements IGameScene {
 
     private Player player;
     ImageItem backgroundImage, awan, buttonCoin, buttonLife1, buttonLife2, buttonLife3;
-    ImageItem successDialog, gameOverDialog, pauseDialog, storyDialog;
+    ImageItem successDialog, gameOverDialog, pauseDialog, storyDialog, storyDialog2;
     ButtonImageItem buttonSlide, buttonJump, buttonPause;
     //AnimatedSprite sprite;
     boolean start;
     private boolean hasInit;
     boolean soundOn;
-    boolean story;
+    boolean story, story2;
     int finish;
     private GameMidlet midlet;
     private static long timeLapsed = 0;
@@ -57,7 +57,8 @@ public class GameKuburan implements IGameScene {
 
     public void initResource() throws IOException {
         System.out.println("masuk init resource");
-        storyDialog = new ImageItem("/resource/tambahan/Dialog 2_2.jpg").setX(0).setY(0).setVisible(true);
+        storyDialog = new ImageItem("/resource/tambahan/Dialog 2_1.jpg").setX(0).setY(0).setVisible(true);
+        storyDialog2 = new ImageItem("/resource/tambahan/Dialog 2_2.jpg").setX(0).setY(0).setVisible(true);
         pauseDialog = new ImageItem("/resource/tambahan/paused.png").setX(30).setY(10).setVisible(true);
         successDialog = new ImageItem("/resource/tambahan/success.png").setX(30).setY(10).setVisible(true);
         gameOverDialog = new ImageItem("/resource/tambahan/gameover.png").setX(30).setY(10).setVisible(true);
@@ -68,6 +69,7 @@ public class GameKuburan implements IGameScene {
         hasInit = true;
         start = true;
         story = true;
+        story2 = false;
         System.out.println("selesai init resource");
     }
 
@@ -137,8 +139,14 @@ public class GameKuburan implements IGameScene {
                     LevelGenerator.pause();
                     g.drawImage(storyDialog.getImage(), storyDialog.getX(), storyDialog.getY(), Graphics.TOP | Graphics.LEFT);
                 }
+                
+                if(story2)
+                {
+                    LevelGenerator.pause();
+                    g.drawImage(storyDialog2.getImage(), storyDialog2.getX(), storyDialog2.getY(), Graphics.TOP | Graphics.LEFT);
+                }
 
-                if (!story && finish == TypeList.PLAYING && LevelGenerator.isPaused()) {
+                if (!story && !story2 && finish == TypeList.PLAYING && LevelGenerator.isPaused()) {
                     //render pause image
                     g.drawImage(pauseDialog.getImage(), pauseDialog.getX(), pauseDialog.getY(), Graphics.TOP | Graphics.LEFT);
                 }
@@ -175,6 +183,7 @@ public class GameKuburan implements IGameScene {
         start = false;
         finish = TypeList.PLAYING;
         hasInit = false;
+        story = story2 = false;
         GameMidlet midlet = null;
         timeLapsed = 0;
         hasRenderBackground = false;
@@ -214,8 +223,13 @@ public class GameKuburan implements IGameScene {
 
         if (LevelGenerator.isPaused()) {
             LevelGenerator.resume();
+            if(story2)
+            {
+                story = story2 = false;
+            }
             if (story) {
                 story = false;
+                story2 = true;
             }
         }
 
@@ -271,7 +285,7 @@ public class GameKuburan implements IGameScene {
                             GameDataHelper.getHighScore(GameDataHelper.TOTAL_COIN) + player.getCoinCount());
 
                     releaseMemory();
-                    GameMidlet.gameCanvas.setGameScene(new MapScene());
+                    GameMidlet.gameCanvas.setGameScene(new MapScene(false));
                 }
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -314,7 +328,7 @@ public class GameKuburan implements IGameScene {
             } else if (GameDataHelper.getHighScore(GameDataHelper.PILIHAN_PLAYER) == TypeList.BAGONG) {
                 player = PlayerData.getBagong();
             }
-            player.getSprite().setPosition(17, 150);
+            player.getSprite().setPosition(17, 100);
             player.getSprite().play();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -379,7 +393,7 @@ public class GameKuburan implements IGameScene {
         player.setState(TypeList.SLIDE);
         player.getSprite().stop();
         player.setSprite(player.getSlideSprite());
-        player.getSprite().setPosition(17, 150);
+        player.getSprite().setPosition(17, 100);
         player.getSprite().play();
     }
 
@@ -390,7 +404,7 @@ public class GameKuburan implements IGameScene {
         player.setState(TypeList.JUMP);
         player.getSprite().stop();
         player.setSprite(player.getJumpSprite());
-        player.getSprite().setPosition(17, 150);
+        player.getSprite().setPosition(17, 100);
         player.getSprite().play();
     }
 
@@ -401,7 +415,7 @@ public class GameKuburan implements IGameScene {
         player.setState(TypeList.NORMAL);
         player.getSprite().stop();
         player.setSprite(player.getNormalSprite());
-        player.getSprite().setPosition(17, 150);
+        player.getSprite().setPosition(17, 100);
         player.getSprite().play();
         //resetButton();
     }

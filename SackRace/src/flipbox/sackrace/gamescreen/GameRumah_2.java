@@ -31,10 +31,10 @@ public class GameRumah_2 implements IGameScene {
 
     private Player player;
     ImageItem backgroundImage, awan, buttonCoin, buttonLife1, buttonLife2, buttonLife3;
-    ImageItem tutorDialog, successDialog, gameOverDialog, pauseDialog, storyDialog;
+    ImageItem successDialog, gameOverDialog, pauseDialog, storyDialog;
     ButtonImageItem buttonSlide, buttonJump, buttonPause;
     //AnimatedSprite sprite;
-    boolean start, tut, story;
+    boolean start, story;
     int finish;
     private boolean hasInit;
     boolean soundOn;
@@ -56,7 +56,6 @@ public class GameRumah_2 implements IGameScene {
 
     public void initResource() throws IOException {
         System.out.println("masuk init resource");
-        tutorDialog = new ImageItem("/resource/tambahan/tut.png").setX(30).setY(10).setVisible(true);
         storyDialog = new ImageItem("/resource/tambahan/Dialog 1_2.jpg").setX(0).setY(0).setVisible(true);
         pauseDialog = new ImageItem("/resource/tambahan/paused.png").setX(30).setY(10).setVisible(true);
         successDialog = new ImageItem("/resource/tambahan/success.png").setX(30).setY(10).setVisible(true);
@@ -68,7 +67,6 @@ public class GameRumah_2 implements IGameScene {
         hasInit = true;
         start = true;
         story = true;
-        tut = false;
         System.out.println("selesai init resource");
     }
 
@@ -137,17 +135,12 @@ public class GameRumah_2 implements IGameScene {
                             buttonPause.getY(), Graphics.TOP | Graphics.LEFT);
                 }
                 
-                if (tut) {
-                    LevelGenerator.pause();
-                    g.drawImage(tutorDialog.getImage(), tutorDialog.getX(), tutorDialog.getY(), Graphics.TOP | Graphics.LEFT);
-                }
-                
                 if (story) {
                     LevelGenerator.pause();
                     g.drawImage(storyDialog.getImage(), storyDialog.getX(), storyDialog.getY(), Graphics.TOP | Graphics.LEFT);
                 }
                 
-                if(!tut && !story && finish == TypeList.PLAYING && LevelGenerator.isPaused())
+                if(!story && finish == TypeList.PLAYING && LevelGenerator.isPaused())
                 {
                     //render pause image
                     g.drawImage(pauseDialog.getImage(), pauseDialog.getX(), pauseDialog.getY(), Graphics.TOP | Graphics.LEFT);
@@ -226,12 +219,9 @@ public class GameRumah_2 implements IGameScene {
         if (LevelGenerator.isPaused()) {
             LevelGenerator.resume();
             resetButton();
-            if (tut) {
-                tut = false;
-            }
+
             if (story) {
                 story = false;
-                tut = true;
             }
         }
 
@@ -278,7 +268,7 @@ public class GameRumah_2 implements IGameScene {
                             GameDataHelper.getHighScore(GameDataHelper.TOTAL_COIN) + player.getCoinCount());
                 }
                 releaseMemory();
-                GameMidlet.gameCanvas.setGameScene(new MapScene());
+                GameMidlet.gameCanvas.setGameScene(new MapScene(false));
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -321,7 +311,7 @@ public class GameRumah_2 implements IGameScene {
             } else if (GameDataHelper.getHighScore(GameDataHelper.PILIHAN_PLAYER) == TypeList.BAGONG) {
                 player = PlayerData.getBagong();
             }
-            player.getSprite().setPosition(17, 150);
+            player.getSprite().setPosition(17, 100);
             player.getSprite().play();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -386,7 +376,7 @@ public class GameRumah_2 implements IGameScene {
         player.setState(TypeList.SLIDE);
         player.getSprite().stop();
         player.setSprite(player.getSlideSprite());
-        player.getSprite().setPosition(17, 150);
+        player.getSprite().setPosition(17, 100);
         player.getSprite().play();
     }
 
@@ -397,7 +387,7 @@ public class GameRumah_2 implements IGameScene {
         player.setState(TypeList.JUMP);
         player.getSprite().stop();
         player.setSprite(player.getJumpSprite());
-        player.getSprite().setPosition(17, 150);
+        player.getSprite().setPosition(17, 100);
         player.getSprite().play();
     }
 
@@ -408,7 +398,7 @@ public class GameRumah_2 implements IGameScene {
         player.setState(TypeList.NORMAL);
         player.getSprite().stop();
         player.setSprite(player.getNormalSprite());
-        player.getSprite().setPosition(17, 150);
+        player.getSprite().setPosition(17, 100);
         player.getSprite().play();
         //resetButton();
     }

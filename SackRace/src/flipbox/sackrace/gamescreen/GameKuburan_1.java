@@ -271,7 +271,7 @@ public class GameKuburan_1 implements IGameScene {
                             GameDataHelper.getHighScore(GameDataHelper.TOTAL_COIN) + player.getCoinCount());
 
                     releaseMemory();
-                    GameMidlet.gameCanvas.setGameScene(new MapScene());
+                    GameMidlet.gameCanvas.setGameScene(new MapScene(false));
                 }
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -314,7 +314,7 @@ public class GameKuburan_1 implements IGameScene {
             } else if (GameDataHelper.getHighScore(GameDataHelper.PILIHAN_PLAYER) == TypeList.BAGONG) {
                 player = PlayerData.getBagong();
             }
-            player.getSprite().setPosition(17, 150);
+            player.getSprite().setPosition(17, 100);
             player.getSprite().play();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -379,7 +379,7 @@ public class GameKuburan_1 implements IGameScene {
         player.setState(TypeList.SLIDE);
         player.getSprite().stop();
         player.setSprite(player.getSlideSprite());
-        player.getSprite().setPosition(17, 150);
+        player.getSprite().setPosition(17, 100);
         player.getSprite().play();
     }
 
@@ -390,7 +390,7 @@ public class GameKuburan_1 implements IGameScene {
         player.setState(TypeList.JUMP);
         player.getSprite().stop();
         player.setSprite(player.getJumpSprite());
-        player.getSprite().setPosition(17, 150);
+        player.getSprite().setPosition(17, 100);
         player.getSprite().play();
     }
 
@@ -401,7 +401,7 @@ public class GameKuburan_1 implements IGameScene {
         player.setState(TypeList.NORMAL);
         player.getSprite().stop();
         player.setSprite(player.getNormalSprite());
-        player.getSprite().setPosition(17, 150);
+        player.getSprite().setPosition(17, 100);
         player.getSprite().play();
         //resetButton();
     }

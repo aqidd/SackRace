@@ -24,12 +24,21 @@ import javax.microedition.lcdui.Image;
 public class MapScene implements IGameScene {
 
     ButtonImageItem buttonHome, buttonGrave, buttonStage, buttonBack;
-    ImageItem backgroundImage, buttonCoin;
+    ImageItem backgroundImage, buttonCoin, dialogpre;
+    boolean ispre;
     boolean start;
     boolean hasInit;
     boolean soundOn;
     public GameMidlet midlet;
 
+    public MapScene() {
+        ispre = true;
+    }
+
+    public MapScene(boolean isPre) {
+        this.ispre = isPre;
+    }
+    
     public void initResource() throws IOException {
         soundOn = GameMidlet.isSoundOn();
 
@@ -38,8 +47,9 @@ public class MapScene implements IGameScene {
         buttonGrave = new ButtonImageItem("/resource/map/grave.png", "/resource/map/grave.png");
         buttonStage = new ButtonImageItem("/resource/map/stage.png", "/resource/map/stage.png");
         buttonBack = new ButtonImageItem("/resource/nav/back.png", "/resource/nav/back_pressed.png");
-
+        dialogpre = new ImageItem("/resource/tambahan/Dialog pre-game.jpg");
         buttonCoin = new ImageItem("/resource/button/coin.png");
+        dialogpre.setX(0).setY(0);
         buttonCoin.setX(200).setY(245-20);
         buttonHome.setX(160).setY(60);
         buttonGrave.setX(100).setY(130);
@@ -75,6 +85,11 @@ public class MapScene implements IGameScene {
             if (buttonStage.isVisible()) {
                 g.drawImage(buttonStage.getImage(), buttonStage.getX(), buttonStage.getY(), Graphics.TOP | Graphics.LEFT);
             }
+            
+            if(ispre)
+            {
+                g.drawImage(dialogpre.getImage(), 0, 0, Graphics.LEFT | Graphics.TOP);
+            }
         }
     }
 
@@ -106,6 +121,11 @@ public class MapScene implements IGameScene {
     }
 
     public void pointerReleased(int x, int y) {
+        if(ispre)
+        {
+            ispre = false;
+        }
+        
         if (buttonBack.isOnPressed()
                 && x >= buttonBack.getX() && x <= (buttonBack.getX() + buttonBack.getWidth())
                 && y >= buttonBack.getY() && y <= (buttonBack.getY() + buttonBack.getHeight())) {

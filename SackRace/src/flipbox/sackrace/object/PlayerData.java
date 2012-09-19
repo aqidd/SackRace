@@ -78,24 +78,24 @@ public class PlayerData {
         }
         pet.setSprite(new AnimatedSprite(sprite, 99, 280 / 4, 2));
         pet.setNormalSprite(new AnimatedSprite(sprite, 99, 280 / 4, 2));
-        Image bagong_slide = null;
+        Image petruk_slide = null;
         try {
-            bagong_slide = StaticData.rotateImage(Image.createImage(
+            petruk_slide = StaticData.rotateImage(Image.createImage(
                     "/resource/chars/sprite ngesot petruk.png"), 90);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        pet.setSlideSprite(new AnimatedSprite(bagong_slide, 77, bagong_slide.getHeight() / 4, 3));
+        pet.setSlideSprite(new AnimatedSprite(petruk_slide, 77, petruk_slide.getHeight() / 4, 3));
 
-        Image bagong_jump = null;
+        Image petruk_jump = null;
         try {
-            bagong_jump = StaticData.rotateImage(Image.createImage(
+            petruk_jump = StaticData.rotateImage(Image.createImage(
                     "/resource/chars/sprite loncat petruk.png"), 90);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
-        pet.setJumpSprite(new AnimatedSprite(bagong_jump, 126, bagong_jump.getHeight() / 10, 2));
+        pet.setJumpSprite(new AnimatedSprite(petruk_jump, 126, petruk_jump.getHeight() / 10, 2));
 
         Image petruk_crashUp=null;
         try {
@@ -105,7 +105,7 @@ public class PlayerData {
             ex.printStackTrace();
         }
         
-        pet.setCrashedUpSprite(new AnimatedSprite(petruk_crashUp, 78, petruk_crashUp.getHeight() / 4, 2));
+        pet.setCrashedUpSprite(new AnimatedSprite(petruk_crashUp, 99, petruk_crashUp.getHeight() / 4, 2));
         
         return pet;
     }

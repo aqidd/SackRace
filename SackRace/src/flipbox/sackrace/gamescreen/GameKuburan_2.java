@@ -97,6 +97,13 @@ public class GameKuburan_2 implements IGameScene {
                 renderScore(g);
                 //Akhir dari peletakkan Score
 
+                //buat normalisasi kejedot
+                if (player.getSprite() == player.getCrashedUpSprite()) {
+                    if (player.getSprite().getFrame() >= player.getSprite().getFrameSequenceLength() - 1) {
+                        setNormal();
+                    }
+                }
+                
                 //Algoritma jika tombol slide ditekan dan animasi slide
                 //sudah mencapai akhir
                 if (buttonSlide.isOnPressed()) {
@@ -284,7 +291,7 @@ public class GameKuburan_2 implements IGameScene {
      * Metode untuk menginisialisasi rintangan sesuai levelnya
      */
     private void initLevel() {
-        LevelGenerator.initConstraints(11, 14, 3, 4, 2, 3, 45, 60, speed);
+        LevelGenerator.initConstraints(12, 14, 3, 4, 2, 3, 45, 60, speed);
         LevelGenerator.initDistance(50, 300, 110, 200);
         LevelGenerator.initObjective(TypeList.DISTANCE, 2250);
         LevelGenerator.generateObstacles();

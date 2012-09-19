@@ -99,6 +99,13 @@ public class GameRumah_2 implements IGameScene {
                 renderScore(g);
                 //Akhir dari peletakkan Score
 
+                //buat normalisasi kejedot
+                if (player.getSprite() == player.getCrashedUpSprite()) {
+                    if (player.getSprite().getFrame() >= player.getSprite().getFrameSequenceLength() - 1) {
+                        setNormal();
+                    }
+                }
+                
                 //Algoritma jika tombol slide ditekan dan animasi slide
                 //sudah mencapai akhir
                 if (buttonSlide.isOnPressed()) {

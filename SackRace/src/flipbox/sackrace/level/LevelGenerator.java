@@ -271,7 +271,12 @@ public class LevelGenerator {
 
         if (img.getY() < p.getSprite().getY() - 10) {
             if (damaged && img.isVisible()) {
+                p.getSprite().stop();
+                p.setSprite(p.getCrashedUpSprite());
+                p.getSprite().setPosition(17, 100);
+                p.getSprite().play();
                 p.setBloodLevel(p.getBloodLevel() - 1);
+                
             }
             if (obstacleCounter < obstacleList.size()) {
                 obstacleCounter++;

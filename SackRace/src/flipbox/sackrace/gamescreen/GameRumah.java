@@ -102,6 +102,13 @@ public class GameRumah implements IGameScene {
                 renderScore(g);
                 //Akhir dari peletakkan Score
 
+                //buat normalisasi kejedot
+                if (player.getSprite() == player.getCrashedUpSprite()) {
+                    if (player.getSprite().getFrame() >= player.getSprite().getFrameSequenceLength() - 1) {
+                        setNormal();
+                    }
+                }
+
                 //Algoritma jika tombol slide ditekan dan animasi slide
                 //sudah mencapai akhir
                 if (buttonSlide.isOnPressed()) {
@@ -115,6 +122,8 @@ public class GameRumah implements IGameScene {
                         timeLapsed++;
                     }
                 } else {
+
+
                     //Algoritma jika karakter berjalan normal
                     player.getSprite().update(timeLapsed);
                     timeLapsed++;
@@ -233,10 +242,9 @@ public class GameRumah implements IGameScene {
             if (tut) {
                 tut = false;
             }
-            if(story2)
-            {
+            if (story2) {
                 story = story2 = false;
-                tut=true;
+                tut = true;
             }
             if (story) {
                 story = false;
@@ -290,7 +298,7 @@ public class GameRumah implements IGameScene {
                     releaseMemory();
                     GameMidlet.gameCanvas.setGameScene(new GameRumah_1());
                 } else if (finish == TypeList.GAMEOVER) {
-                                        if (GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_RUMAH) < player.getCoinCount()) {
+                    if (GameDataHelper.getHighScore(GameDataHelper.BALAP_KARUNG_RUMAH) < player.getCoinCount()) {
                         GameDataHelper.writeHighScore(GameDataHelper.BALAP_KARUNG_RUMAH, player.getCoinCount());
                     }
                     GameDataHelper.writeHighScore(GameDataHelper.TOTAL_COIN,

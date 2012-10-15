@@ -32,7 +32,7 @@ public class GameLomba_1 implements IGameScene {
     private Player player;
     ImageItem backgroundImage, backgroundImage2, awan, buttonCoin, buttonLife1, buttonLife2, buttonLife3;
     ImageItem successDialog, gameOverDialog, pauseDialog, storyDialog;
-    ButtonImageItem buttonSlide, buttonJump, buttonPause;
+    ButtonImageItem buttonSlide, buttonJump, buttonPause, buttonBack;
     //AnimatedSprite sprite;
     boolean start;
     private boolean hasInit;
@@ -134,6 +134,11 @@ public class GameLomba_1 implements IGameScene {
                     g.drawImage(buttonJump.getImage(), buttonJump.getX(),
                             buttonJump.getY(), Graphics.TOP | Graphics.LEFT);
                 }
+                
+                if (buttonBack.isVisible()) {
+                    g.drawImage(buttonBack.getImage(), buttonBack.getX(),
+                            buttonBack.getY(), Graphics.TOP | Graphics.LEFT);
+                }
 
                 if(buttonPause.isVisible()){
                     g.drawImage(buttonPause.getImage(), buttonPause.getX(),
@@ -216,6 +221,13 @@ public class GameLomba_1 implements IGameScene {
                 ex.printStackTrace();
             }
         }
+        
+        if (buttonBack.isCanClick()
+                && x >= buttonBack.getX() && x <= (buttonBack.getX() + buttonBack.getWidth())
+                && y >= buttonBack.getY() && y <= (buttonBack.getY() + buttonBack.getHeight())) {
+            buttonBack.setOnPressed(true);
+
+        }
     }
 
     public void pointerReleased(int x, int y) {
@@ -281,6 +293,17 @@ public class GameLomba_1 implements IGameScene {
                 releaseMemory();
                 GameMidlet.gameCanvas.setGameScene(new MapScene(false));
                 }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        
+        if (buttonBack.isOnPressed()
+                && x >= buttonBack.getX() && x <= (buttonBack.getX() + buttonBack.getWidth())
+                && y >= buttonBack.getY() && y <= (buttonBack.getY() + buttonBack.getHeight())) {
+            releaseMemory();
+            try {
+                GameMidlet.gameCanvas.setGameScene(new MapScene());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -362,6 +385,8 @@ public class GameLomba_1 implements IGameScene {
      * Metode untuk menginisialisasi tombol
      */
     private void initButton() throws IOException {
+        buttonBack = new ButtonImageItem("/resource/nav/back.png",
+                "/resource/nav/back_pressed.png");
         buttonSlide = new ButtonImageItem("/resource/button/slide.png",
                 "/resource/button/slide_pressed.png");
         buttonJump = new ButtonImageItem("/resource/button/jump.png",
@@ -374,6 +399,7 @@ public class GameLomba_1 implements IGameScene {
         buttonLife3 = new ImageItem("/resource/button/heart.png");
         buttonPause.setX(70).setY(0);
         buttonJump.setX(0).setY(250);
+        buttonBack.setX(160).setY(10);
         buttonCoin.setX(200).setY(20 + 245);
         buttonLife1.setX(230).setY(10);
         buttonLife2.setX(230).setY(10 + buttonLife2.getWidth() + 10);
@@ -422,6 +448,7 @@ public class GameLomba_1 implements IGameScene {
         buttonPause.setOnPressed(false);
         buttonSlide.setOnPressed(false);
         buttonJump.setOnPressed(false);
+        buttonBack.setOnPressed(false);
     }
 
     /*

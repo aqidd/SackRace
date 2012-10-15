@@ -9,6 +9,7 @@ import flipbox.sackrace.game.GameMidlet;
 import flipbox.sackrace.game.IGameScene;
 import flipbox.sackrace.level.LevelGenerator;
 import flipbox.sackrace.nongamescreen.ChooseCharacterScene;
+import flipbox.sackrace.nongamescreen.MapScene;
 import flipbox.sackrace.nongamescreen.StartMenuScene;
 import flipbox.sackrace.object.Player;
 import flipbox.sackrace.object.PlayerData;
@@ -32,7 +33,7 @@ public class GameInfinite implements IGameScene {
     private Player player;
     ImageItem backgroundImage, awan, buttonCoin, buttonLife1, buttonLife2, buttonLife3;
     ImageItem tutorDialog, successDialog, gameOverDialog, pauseDialog;
-    ButtonImageItem buttonSlide, buttonJump, buttonPause;
+    ButtonImageItem buttonSlide, buttonJump, buttonPause, buttonBack;
     //AnimatedSprite sprite;
     boolean start, tut;
     int finish;
@@ -105,7 +106,7 @@ public class GameInfinite implements IGameScene {
                         setNormal();
                     }
                 }
-                
+
                 //Algoritma jika tombol slide ditekan dan animasi slide
                 //sudah mencapai akhir
                 if (buttonSlide.isOnPressed()) {
@@ -140,6 +141,10 @@ public class GameInfinite implements IGameScene {
                 if (buttonPause.isVisible()) {
                     g.drawImage(buttonPause.getImage(), buttonPause.getX(),
                             buttonPause.getY(), Graphics.TOP | Graphics.LEFT);
+                }
+                if (buttonBack.isVisible()) {
+                    g.drawImage(buttonBack.getImage(), buttonBack.getX(),
+                            buttonBack.getY(), Graphics.TOP | Graphics.LEFT);
                 }
 
                 if (tut) {
@@ -218,6 +223,13 @@ public class GameInfinite implements IGameScene {
                 ex.printStackTrace();
             }
         }
+
+        if (buttonBack.isCanClick()
+                && x >= buttonBack.getX() && x <= (buttonBack.getX() + buttonBack.getWidth())
+                && y >= buttonBack.getY() && y <= (buttonBack.getY() + buttonBack.getHeight())) {
+            buttonBack.setOnPressed(true);
+
+        }
     }
 
     public void pointerReleased(int x, int y) {
@@ -267,14 +279,24 @@ public class GameInfinite implements IGameScene {
             try {
                 if (GameDataHelper.getHighScore(GameDataHelper.ENDLESS) < player.getCoinCount()) {
                     GameDataHelper.writeHighScore(GameDataHelper.ENDLESS, player.getCoinCount());
-                    finish=TypeList.SUCCESS;
-                }
-                else{
+                    finish = TypeList.SUCCESS;
+                } else {
                     finish = TypeList.GAMEOVER;
                 }
                 GameDataHelper.writeHighScore(GameDataHelper.TOTAL_COIN,
                         GameDataHelper.getHighScore(GameDataHelper.TOTAL_COIN) + player.getCoinCount());
                 releaseMemory();
+                GameMidlet.gameCanvas.setGameScene(new ChooseCharacterScene());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        if (buttonBack.isOnPressed()
+                && x >= buttonBack.getX() && x <= (buttonBack.getX() + buttonBack.getWidth())
+                && y >= buttonBack.getY() && y <= (buttonBack.getY() + buttonBack.getHeight())) {
+            releaseMemory();
+            try {
                 GameMidlet.gameCanvas.setGameScene(new ChooseCharacterScene());
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -358,6 +380,8 @@ public class GameInfinite implements IGameScene {
      * Metode untuk menginisialisasi tombol
      */
     private void initButton() throws IOException {
+        buttonBack = new ButtonImageItem("/resource/nav/back.png",
+                "/resource/nav/back_pressed.png");
         buttonSlide = new ButtonImageItem("/resource/button/slide.png",
                 "/resource/button/slide_pressed.png");
         buttonJump = new ButtonImageItem("/resource/button/jump.png",
@@ -370,6 +394,7 @@ public class GameInfinite implements IGameScene {
         buttonLife3 = new ImageItem("/resource/button/heart.png");
         buttonPause.setX(70).setY(0);
         buttonJump.setX(0).setY(250);
+        buttonBack.setX(160).setY(10);
         buttonCoin.setX(200).setY(20 + 245);
         buttonLife1.setX(230).setY(10);
         buttonLife2.setX(230).setY(10 + buttonLife2.getWidth() + 10);
@@ -418,6 +443,7 @@ public class GameInfinite implements IGameScene {
         buttonPause.setOnPressed(false);
         buttonSlide.setOnPressed(false);
         buttonJump.setOnPressed(false);
+        buttonBack.setOnPressed(false);
     }
 
     /*
